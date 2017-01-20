@@ -1,4 +1,5 @@
-#PRERELEASE!! Do not use
+#PRERELEASE
+Still testing, though right now the build process seems to be working...
 
 # SecureSockets
 A collection of secure socket layer utilities in Swift using openSSL.
@@ -41,7 +42,7 @@ The openSSL license is included at the end of this document.
 	- sslReceiverLoop
 	- sslAccept
 	- setupSslServer
-- Implements a framework on top of the POSIX calls with:
+- Implements a framework on top of the openSSL calls with:
 	- connectToSslServer (returns a SwifterSockets.Connection)
 	- SslServer (class, produces SwifterSockets.Connection's)
 - Builds as a library using the Swift Package Manager (SPM) & Xcode
