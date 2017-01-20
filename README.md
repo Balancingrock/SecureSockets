@@ -1,13 +1,15 @@
 #PRERELEASE!! Do not use
 
 # SecureSockets
-A collection of secure socket layer utilities in Swift using openSSL. SecureSockets depends on SwifterSockets.
+A collection of secure socket layer utilities in Swift using openSSL.
+
+Depends on SwifterSockets.
 
 SecureSockets is part of the 5 packages that make up the [Swiftfire](http://swiftfire.nl) webserver:
 
 #####[SwifterSockets](https://github.com/Swiftrien/SwifterSockets)
 
-An extension to SwifterSockets for SSL connections.
+Basic POSIX sockets utilities.
 
 #####[Swiftfire](https://github.com/Swiftrien/Swiftfire)
 
@@ -60,50 +62,68 @@ It thus takes a bit of work to create the library. Of course it is also possible
 
 To create the library use the following steps:
 
-1 - Clone the git repository
+Note: it is necessary to work around some shortcomings of the SPM and Xcode, so some steps may look arcane...
 
-    $ git clone https://github.com/Swiftrien/SecureSockets
+These are the exact steps used on a MacBook Pro with macOS 10.12, Xcode 8.2.1 for SecureSockets 0.1.0.
 
-2 - Create an Xcode project for SecureSockets
+1 - Create a SecureSockets directory:
+
+    $ mkdir SecureSockets
+
+2 - Go down the new directory and initialize a package:
+
+    $ cd SecureSockets
+    $ swift package init
+
+3 - Create a Xcode project:
 
     $ swift package generate-xcodeproj
-    
-3 - Activate the SPM to download SwifterSockets:
 
+4 - Clone the SecureSockets project but keep the xcode project that was generated:
+
+    $ cd ..
+    $ mv SecureSockets/SecureSockets.xcodeproj .
+    $ rm -rf SecureSockets
+    $ git clone https://github.com/Swiftrien/SecureSockets
+    $ mv SecureSockets.xcodeproj SecureSockets
+
+5 - Download the dependancy SwifterSockets by attempting a build of the SecureSocket project with SPM:
+
+    $ cd SecureSockets
     $ swift build
     
-4 - The SPM also tries to build the project. This will fail, but the download of SwifterSockets should be successful.
+6 - Note that the above step invokes a compilation that will fail. But the download of SwifterSockets should be successful.
 
-5 - Change directory to /Packages/SwifterSockets-0.9.8
+7 - Change directory to /Packages/SwifterSockets-0.9.8:
 
     $ cd Packages/SwifterSockets-0.9.8
 
-6 - Create an xcode project:
+8 - Create an xcode project:
 
     $ swift package generate-xcodeproj
     
-7 - Start Xcode and open the SwifterSockets project.
+9 - Start Xcode and open the SwifterSockets project.
 
-8 - Build SwifterSockets in Xcode.
+10 - Build SwifterSockets in Xcode.
 
-9 - Open the SecureSockets project in xcode
+11 - Open the SecureSockets project in xcode (the SwifterSockets project can be closed).
 
-10 - Select the target and add the SwifterSockets library that was created in:
+12 - From the file menu, use the "Add Files" to add the files in the _Sources_ folder to the project (all of them). 
 
-    Packages/SwifterSockets-0.9.8/build/Debug/SwifterSockets.framework
-
-13 - Add the openSSL libraries as well:
+13 - Select the target and add the _SwifterSockets.framework_ that was created (keep in mind that the location of that file depends on the Xcode settings, it is usually found in either a _Build_ folder in the (SwifterSockets) project directory or a _Build_ folder with a _DerivedData_ folder)
+    
+14 - Add the openSSL libraries as well:
 
 	openssl/lib/libssl.a
 	openssl/lib/libcrypto.a
 	
-13 - Add a search path for the openSSL header in the build settings under _Search Paths_, _Header Search Paths_ (note: the path should be: _openssl/include_)
+15 - Add a search path for the openSSL header in the build settings under _Search Paths_, _Header Search Paths_ (note: the path should be: _openssl/include_)
 
-14 - Add a search path for the openSSL libraries in the build settings under _Search Paths_, _Library Search Paths_ (note: the path should be: _openssl/lib_)
+16 - Add a search path for the openSSL libraries in the build settings under _Search Paths_, _Library Search Paths_ (note: the path should be: _openssl/lib_)
 
-15 - Add the bridge header in the build settings under _Swift Compiler - General_, _Objective-C Bridging Header_ (note: the path should be: _Sources/SecureSockets-Bridge.h_)
+17 - Add the bridge header in the build settings under _Swift Compiler - General_, _Objective-C Bridging Header_ (note: the path should be: _Sources/SecureSockets-Bridge.h_)
 
-16 - Build the project, there should be a SecureSockets.framework under the Products tab.
+18 - Build the project, there should be a SecureSockets.framework under the Products tab.
 
 #Version history
 
