@@ -104,13 +104,13 @@ These are the exact steps used on a MacBook Pro with macOS 10.12, Xcode 8.2.1 fo
     
 9 - Start Xcode and open the SwifterSockets project.
 
-10 - Build SwifterSockets in Xcode.
+10 - Build SwifterSockets in Xcode. When ready (no errors or warnings) select the SwifterSockets.framework in the Products folder and see where it is stored. This location is needed to import the framework into the SecureSockets project in step 13.
 
 11 - Open the SecureSockets project in xcode (the SwifterSockets project can be closed).
 
-12 - From the file menu, use the "Add Files" to add the files in the _Sources_ folder to the project (all of them). 
+12 - From the file menu, use the "Add Files" to add the files in the _Sources_ folder to the project (all of them. _SecureSockets.swift_ will be already present). 
 
-13 - Select the target and add the _SwifterSockets.framework_ that was created (keep in mind that the location of that file depends on the Xcode settings, it is usually found in either a _Build_ folder in the (SwifterSockets) project directory or a _Build_ folder with a _DerivedData_ folder)
+13 - Select the target and add the _SwifterSockets.framework_ that was created in step 10.
     
 14 - Add the openSSL libraries as well:
 
@@ -119,11 +119,13 @@ These are the exact steps used on a MacBook Pro with macOS 10.12, Xcode 8.2.1 fo
 	
 15 - Add a search path for the openSSL header in the build settings under _Search Paths_, _Header Search Paths_ (note: the path should be: _openssl/include_)
 
-16 - Add a search path for the openSSL libraries in the build settings under _Search Paths_, _Library Search Paths_ (note: the path should be: _openssl/lib_)
+16 - Add the bridge header in the build settings under _Swift Compiler - General_, _Objective-C Bridging Header_ (note: the path should be: _Sources/SecureSockets-Bridge.h_)
 
-17 - Add the bridge header in the build settings under _Swift Compiler - General_, _Objective-C Bridging Header_ (note: the path should be: _Sources/SecureSockets-Bridge.h_)
+17 - Since the openssl libraries have been compiled for macOS 10.11, the _Deployment Target_ should be set to 10.11.
 
-18 - Build the project, there should be a SecureSockets.framework under the Products tab.
+18 - Build the project, there should be no errors or warnings. In the Xcode Products folder there should be a SecureSockets.framework.
+
+
 
 #Version history
 
