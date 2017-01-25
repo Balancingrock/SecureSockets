@@ -115,6 +115,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 // Temporary variable used to concatenate error messages

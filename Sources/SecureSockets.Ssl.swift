@@ -54,6 +54,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 // Compare for function results

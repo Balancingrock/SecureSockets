@@ -26,11 +26,11 @@ General purpose JSON framework.
 
 #OpenSSL
 
-OpenSSL is available from [https://openssl.org](https://openssl.org)
+OpenSSL is available from [https://openssl.org](https://openssl.org).
 
-OpenSSL (v1.1.0b) headers and binary (compiled for macOS 10.11) are included in this distribution to prevent build errors during initial install.
+Due to limitations in the interface between Swift and C there are two functions that must be added to the openSSL libraries. Due to limitations in the Swift Package Manager, these functions cannot be added as a seperate library. The easiest solution is to put these functions in the openSSL code.
 
-However, please do not trust this binary and build your own from the openSSL.org website. Instructions are included below. Note that v1.1.0b is no longer the most recent version. This should add to the incentive to download & build openSSL yourself!
+Instructions are included below.
 
 The openSSL license is included at the end of this document.
 
@@ -45,7 +45,7 @@ The openSSL license is included at the end of this document.
 - Implements a framework on top of the openSSL calls with:
 	- connectToSslServer (returns a SwifterSockets.Connection)
 	- SslServer (class, produces SwifterSockets.Connection's)
-- Builds as a library using the Swift Package Manager (SPM) & Xcode
+- Builds as a library using the Swift Package Manager (SPM)
 - Supports
 	- certified server operations
 	- certified server & certified clients
@@ -53,80 +53,18 @@ The openSSL license is included at the end of this document.
 
 #Installation
 
-While SecureSockets is distributed as an SPM package, it currently cannot be build using SPM. This is due to the fact that SecureSockets uses (just a few lines) of C code. SPM currently only supports pure Swift code packages. Hopefully this will be fixed or added in the future.
+SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets __first__ install the openSSL libaries as detailed below.
 
-It is therefore __necessary to use both SPM and Xcode__.
+Once the openSSL libaries are available (in the default location in `/usr/local`) then proceed with the following steps to install SecureSockets.
 
-(Ironically Xcode also cannot build the SecureSockets library either since Xcode does not allow bridge headers in library targets)
-
-It thus takes a bit of work to create the library. Of course it is also possible to use the source as such. If that route is choosen, be sure to update (or add) the bridging header, the C module, the openSSL headers and the openSSL libraries.
-
-To create the library use the following steps:
-
-Note: it is necessary to work around some shortcomings of the SPM and Xcode, so some steps may look arcane...
-
-These are the exact steps used on a MacBook Pro with macOS 10.12, Xcode 8.2.1 for SecureSockets 0.1.0.
-
-1 - Create a SecureSockets directory:
-
-    $ mkdir SecureSockets
-
-2 - Go down the new directory and initialize a package:
-
-    $ cd SecureSockets
-    $ swift package init
-
-3 - Create a Xcode project:
-
-    $ swift package generate-xcodeproj
-
-4 - Clone the SecureSockets project but keep the xcode project that was generated:
-
-    $ cd ..
-    $ mv SecureSockets/SecureSockets.xcodeproj .
-    $ rm -rf SecureSockets
     $ git clone https://github.com/Swiftrien/SecureSockets
-    $ mv SecureSockets.xcodeproj SecureSockets
-
-5 - Download the dependancy SwifterSockets by attempting a build of the SecureSocket project with SPM:
-
-    $ cd SecureSockets
     $ swift build
-    
-6 - Note that the above step invokes a compilation that will fail. But the download of SwifterSockets should be successful.
 
-7 - Change directory to /Packages/SwifterSockets-0.9.8:
-
-    $ cd Packages/SwifterSockets-0.9.8
-
-8 - Create an xcode project:
+when necessary it is possible to create an xcode project after the installation finishes:
 
     $ swift package generate-xcodeproj
-    
-9 - Start Xcode and open the SwifterSockets project.
 
-10 - Build SwifterSockets in Xcode. When ready (no errors or warnings) select the SwifterSockets.framework in the Products folder and see where it is stored. This location is needed to import the framework into the SecureSockets project in step 13.
-
-11 - Open the SecureSockets project in xcode (the SwifterSockets project can be closed).
-
-12 - From the file menu, use the "Add Files" to add the files in the _Sources_ folder to the project (all of them. _SecureSockets.swift_ will be already present). 
-
-13 - Select the target and add the _SwifterSockets.framework_ that was created in step 10.
-    
-14 - Add the openSSL libraries as well:
-
-	openssl/lib/libssl.a
-	openssl/lib/libcrypto.a
-	
-15 - Add a search path for the openSSL header in the build settings under _Search Paths_, _Header Search Paths_ (note: the path should be: _openssl/include_)
-
-16 - Add the bridge header in the build settings under _Swift Compiler - General_, _Objective-C Bridging Header_ (note: the path should be: _Sources/SecureSockets-Bridge.h_)
-
-17 - Since the openssl libraries have been compiled for macOS 10.11, the _Deployment Target_ should be set to 10.11.
-
-18 - Build the project, there should be no errors or warnings. In the Xcode Products folder there should be a SecureSockets.framework.
-
-
+This xcode project will have all the sources necessary and should build without problems.
 
 #Version history
 
@@ -147,6 +85,8 @@ Note: Planned releases are for information only, they are subject to change with
 
 # Installing OpenSSL
 
+## Download & verification
+
 SecureSockets needs openSSL 1.1.0. (Note that this version is not compatible with the previous version 1.0.2)
 
 The download link for openSSL is: [https://www.openssl.org/source](https://www.openssl.org/source/)
@@ -161,15 +101,106 @@ The next line should display the checksum. Compare that with the downloaded chec
 
 Now unpack the gz and tar file to obtain the openssl-1.1.0c folder. A singe double click should do the trick.
 
+## Adding C to Swift glue code
+
+Note: being pragmatic about this, I used the files as shown below. Somebody with more openSSL knowledge could probably identify much better places for this. You yourself might find better places. In the end, it does not really matter, all that is necessary is for the Swift code to find the two pieces of glue code. Where it is placed is largely uncritical (as long as the C language visibility rules are respected).
+
+### ssl.h
+
+Find the file `openssl-1.1.0c/include/openssl/ssl.h`
+
+At the very end, but before the last line insert:
+
+    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg);
+
+After inserting this the last bit of the file should look as follows:
+
+    # define SSL_R_X509_LIB                                   268
+    # define SSL_R_X509_VERIFICATION_SETUP_PROBLEMS           269
+
+    # ifdef  __cplusplus
+    }
+    # endif
+
+    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg);
+
+    #endif
+ 
+### ssl_lib.c
+
+Find the file `openssl-1.1.0c/ssl/ssl_lib.c`
+At the very end, after the #endif, include the following:
+
+    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg) {
+        SSL_CTX_set_tlsext_servername_arg(ctx, arg);
+        SSL_CTX_set_tlsext_servername_callback(ctx, cb);
+    }
+
+After inserting this the last bit of the file should look as follows:
+
+    const CTLOG_STORE *SSL_CTX_get0_ctlog_store(const SSL_CTX *ctx)
+    {
+        return ctx->ctlog_store;
+    }
+
+    #endif
+
+    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg) {
+        SSL_CTX_set_tlsext_servername_arg(ctx, arg);
+        SSL_CTX_set_tlsext_servername_callback(ctx, cb);
+    }
+
+### x509v3.h
+
+Find the file `openssl-1.1.0c/include/openssl/x509v3.h`
+At the very end, before the #endif, include the following:
+
+    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names);
+
+After inserting this the last bit of the file should look as follows:
+
+    # define X509V3_R_UNSUPPORTED_TYPE                        167
+    # define X509V3_R_USER_TOO_LONG                           132
+
+    # ifdef  __cplusplus
+    }
+    # endif
+
+    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names);
+    #endif
+
+### v3_addr.c
+
+Find the file `openssl-1.1.0c/crypto/x509v3/v3_addr.c`
+At the very end, after the #endif, include the following:
+
+    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names) {
+        sk_GENERAL_NAME_pop_free(san_names, GENERAL_NAME_free);
+    }
+
+After inserting this the last bit of the file should look as follows:
+
+        return addr_validate_path_internal(NULL, chain, ext);
+    }
+
+    #endif                          /* OPENSSL_NO_RFC3779 */
+
+    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names) {
+        sk_GENERAL_NAME_pop_free(san_names, GENERAL_NAME_free);
+    }
+
+
+## Building the libraries
+
 Next we should build the libraries and include files.
 
 The OpenSSL 1.1.0 installer needs PERL 5.10 or later.
 
     $ perl -v
 
-The []installation instructions](https://wiki.openssl.org/index.php/Compilation_and_Installation) on the openSSL site are a little confusing, but the process is very simple. In the INSTALL file in the openssl-1.1.0c directory we find the proper installation instructions for Unix.
+The [installation instructions](https://wiki.openssl.org/index.php/Compilation_and_Installation) on the openSSL site are a little confusing, but the process is very simple. In the INSTALL file in the openssl-1.1.0c directory we find the proper installation instructions for Unix.
 
-By default openssl will be installed in /usr/local. Check that there is no 'ssl' directory in '/usr/local'. To change the default, see the INSTALL document.
+By default openssl will be installed in `/usr/local`. Check that there is no 'ssl' directory in `/usr/local`. To change the default, see the `INSTALL` document.
 
 First run config:
 
@@ -201,10 +232,6 @@ The next step:
 Again a lot of messages scrolls over the screen. (Note that this step takes by far the most time)
 
 Since this is for API use only there is no need to adjust PATH variables or anything.
-
-The header files can be found in _openssl-1.1.0c/include/openssl_ copy these to the _openssl/include/openssl_ path in the SecureSockets directory. The libcrypto.a and libssl.a are in _openssl-1.1.0c_ and should be copied over to the _openssl/lib_ path in the SecureSockets directory.
-
-Do not throw away the old headers and lib just yet, wait until a build of SecureSockets is successful. If such a build fails with a future version of openSSL, please let me know at rien@balancingrock.nl
 
 # OpenSSL License
 

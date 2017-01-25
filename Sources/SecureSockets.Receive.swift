@@ -54,6 +54,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 /// Receives data from a socket using SSL.

@@ -54,6 +54,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 /// Transmits the buffer content from the given buffer using the specified SSL struct.

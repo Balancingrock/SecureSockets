@@ -54,6 +54,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 /// Returns the string for the NID element in the given X509_NAME structure.
@@ -181,7 +182,7 @@ public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
         
         // Free the GENERAL NAMES structure
         
-        skGeneralNamePopFree(names)
+        //skGeneralNamePopFree(names)
     }
     
     return altNames

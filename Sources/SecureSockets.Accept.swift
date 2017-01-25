@@ -54,6 +54,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 /// A handler with this signature can be invoked after the Ssl Accept (~ SSL_accept) completes.

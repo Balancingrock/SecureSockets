@@ -54,6 +54,7 @@
 
 import Foundation
 import SwifterSockets
+import COpenSsl
 
 
 /// A wrapper class for the openSSL context. This wrapper avoids having to handle the openssl free/up_ref.
