@@ -55,16 +55,44 @@ The openSSL license is included at the end of this document.
 
 SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets __first__ install the openSSL libaries as detailed below.
 
+Note that the openSSL files are modified in the instructions below, so an existing openSSL cannot be used!
+
 Once the openSSL libaries are available (in the default location in `/usr/local`) then proceed with the following steps to install SecureSockets.
 
     $ git clone https://github.com/Swiftrien/SecureSockets
+    $ cd SecureSockets
     $ swift build
 
-when necessary it is possible to create an xcode project after the installation finishes:
+#Use
+Disclaimer: I am no expert on using modules and frameworks. Perhaps there are better ways to do this, if so, please let me know.
+
+When creating an executable with SPM we miss the setup for Cocoa etc. I have found it easier to create a project in Xcode and then to import the necessary frameworks.
+
+In order to create a framework from a SPM project like SecureSockets I found it easiest to generate an xcode project in the SecureSockets dictionary with:
 
     $ swift package generate-xcodeproj
 
-This xcode project will have all the sources necessary and should build without problems.
+This xcode project will have all the sources necessary and should build without problems. After building this, a framework (two in fact) are available for inclusion in other projects. (PS: The frameworks are SwifterSockets and SecureSockets)
+
+To import the frameworks into a project I found it necessary to create a bridging header and include the headers of the frameworks in there.
+
+The process is as follows:
+
+1. Create the frameworks per above.
+
+2. Drag & Drop the SwifterSockets.framework and SecureSockets.framework into the project. It is probably easiest to "copy files when needed", but you should choose whatever is more appropriate for your project. Note that in the following steps it is assumed that the files are copied.
+
+3. If the project does not have a bridging header, create one. For example `Project-Bridging-Header.h`. Open the target _Build Settings_ and add the path to this file under the `Objective-C Bridging Header` setting.
+
+4. In the bridging header add:
+    - \#include "SwifterSockets-Swift.h"
+    - \#include "SecureSockets-Swift.h"
+    
+5. Go to the target build settings again and add the search paths for the headers under `Header Search Paths`.  If the frameworks are at the top level in the project directory use:
+    - $(PROJECT_DIR)/SwifterSockets.framework/Headers
+    - $(PROJECT_DIR)/SecureSockets.framework/Headers
+
+That's it. Now the libraries can be used. 
 
 #Version history
 
