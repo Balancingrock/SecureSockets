@@ -199,7 +199,7 @@ public struct EncodedFile {
     
     let encoding: Int32
     
-    init(path: String, encoding: FileEncoding) {
+    public init(path: String, encoding: FileEncoding) {
         self.path = path
         self.encoding = encoding.asInt32
     }
@@ -221,7 +221,7 @@ public struct CertificateAndPrivateKeyFiles {
     /// - Parameter privateKeyFile: A file containing a private key.
     /// - Parameter errorProcessing: A closure that will be executed if an error is detected.
     
-    init?(certificateFile: EncodedFile, privateKeyFile: EncodedFile, errorProcessing: ((String) -> Void)?) {
+    public init?(certificateFile: EncodedFile, privateKeyFile: EncodedFile, errorProcessing: ((String) -> Void)? = nil) {
         
         self.certificate = certificateFile
         self.privateKey = privateKeyFile
@@ -266,7 +266,7 @@ public struct CertificateAndPrivateKeyFiles {
     /// - Parameter privateKeyFile: Path to a file containing a private key in the PEM format.
     /// - Parameter errorProcessing: A closure that will be executed if an error is detected.
     
-    init?(pemCertificateFile: String, pemPrivateKeyFile: String, errorProcessing: ((String) -> Void)?) {
+    public init?(pemCertificateFile: String, pemPrivateKeyFile: String, errorProcessing: ((String) -> Void)? = nil) {
         
         
         // Wrap the certificate and private key in an EncodedFile
@@ -296,7 +296,7 @@ public struct SslInterface: InterfaceAccess {
         }
     }
     
-    init(_ ssl: Ssl, _ socket: Int32) {
+    public init(_ ssl: Ssl, _ socket: Int32) {
         self.ssl = ssl
         self.socket = socket
     }
