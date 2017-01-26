@@ -405,7 +405,7 @@ public class X509 {
         
         /// Returns a readable description of this result.
         
-        var description: String {
+        public var description: String {
             
             switch self {
             case .x509_v_ok: return "X509_V_OK: The operation was successful."
@@ -482,7 +482,7 @@ public class X509 {
         
         /// Creates a new value from an Int32.
         
-        init(for value: Int32) {
+        public init(for value: Int32) {
             
             switch value {
             case X509_V_OK: self = .x509_v_ok
@@ -573,7 +573,7 @@ public class X509 {
     /// - Parameter ssl: The Ssl object from which to obtain the certificate.
     /// - Returns: nil if no certificate is present.
     
-    init?(ssl: Ssl) {
+    public init?(ssl: Ssl) {
         optr = SSL_get_peer_certificate(ssl.optr) // up_ref is implicit
         if optr == nil { return nil }
     }
@@ -584,7 +584,7 @@ public class X509 {
     /// - Parameter ctx: The Ctx object from which to obtain the certificate.
     /// - Returns: nil if no certificate is present.
     
-    init?(ctx: Ctx) {
+    public init?(ctx: Ctx) {
         if let p = SSL_CTX_get0_certificate(ctx.optr) {
             optr = p
             X509_up_ref(optr)
@@ -596,14 +596,14 @@ public class X509 {
     
     /// The common name of the certificate. A certificate that has no common name should be considered misformed.
     
-    var commonName: String? {
+    public var commonName: String? {
         return getX509CommonName(from: optr)
     }
     
     
     /// The subject alternative names contained in the x509 extension part of the certificate (if any).
     
-    var subjectAltNames: [String]? {
+    public var subjectAltNames: [String]? {
         return getX509SubjectAltNames(from: optr)
     }
     
@@ -612,7 +612,7 @@ public class X509 {
     ///
     /// - Returns: true if the certificate was issued for the gievn host name, false if not.
     
-    func checkHost(_ name: UnsafePointer<Int8>!) -> Bool {
+    public func checkHost(_ name: UnsafePointer<Int8>!) -> Bool {
         return X509_check_host(optr, name, 0, 0, nil) == 1
     }
 }
