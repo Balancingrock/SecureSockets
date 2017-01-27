@@ -1,7 +1,7 @@
 #SecureSockets
 A collection of secure socket layer utilities in Swift using openSSL.
 
-Depends on SwifterSockets.
+Depends on SwifterSockets and COpenSsl.
 
 SecureSockets is part of the 5 packages that make up the [Swiftfire](http://swiftfire.nl) webserver:
 
