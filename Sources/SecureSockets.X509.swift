@@ -63,12 +63,12 @@ import COpenSsl
 /// - Parameter withNid: An integer indicating the NID element (see openssl/objects.h)
 /// - Returns: nil if the value is not present. The String value if it was read correctly.
 
-fileprivate func valueFrom(x509Name: OpaquePointer!, withNid: Int32) -> String? {
+fileprivate func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
     
     
     // Get the position of the common name in the subject
     
-    let position = X509_NAME_get_index_by_NID(x509Name, withNid, -1)
+    let position = X509_NAME_get_index_by_NID(x509Name, nid, -1)
     if position == -1 { return nil }
     
     
@@ -107,25 +107,6 @@ fileprivate func valueFrom(x509Name: OpaquePointer!, withNid: Int32) -> String? 
     // And create a string from the c-string
     
     return str
-}
-
-
-/// Reads the common name from the certificate in the x509 structure.certificate
-///
-/// - Parameter from: An OpaquePointer to an x509 structure that was created by -or retrieved from- OpenSSL.
-/// - Returns: nil if the common name could not be read. A String value if it was read correctly.
-
-public func getX509CommonName(from x509: OpaquePointer!) -> String? {
-    
-    
-    // The common name is located in the subject entry
-    
-    let subject = X509_get_subject_name(x509)
-    
-    
-    // Get the value from the subject
-    
-    return valueFrom(x509Name: subject, withNid: NID_commonName)
 }
 
 
@@ -562,10 +543,42 @@ public class X509 {
     
     private(set) var optr: OpaquePointer!
     
+    private func setSubjectNameField(_ nid: Int32, _ value: String) -> Bool {
+        let subjectName = X509_get_subject_name(optr)
+        return X509_NAME_add_entry_by_NID(subjectName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
+    }
+    
+    private func getSubjectNameField(by nid: Int32) -> String? {
+        let subjectName = X509_get_subject_name(optr)
+        return valueFrom(x509Name: subjectName, with: nid)
+    }
+    
+    private func setIssuerNameField(_ nid: Int32, _ value: String) -> Bool {
+        let issuerName = X509_get_subject_name(optr)
+        return X509_NAME_add_entry_by_NID(issuerName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
+    }
+    
+    private func getIssuerNameField(by nid: Int32) -> String? {
+        let issuerName = X509_get_subject_name(optr)
+        return valueFrom(x509Name: issuerName, with: nid)
+    }
+
+    
+    /// Some operations can generate an error, if so the error message will be set. If an operation can generate an error it will always first set this error var to nil before attempting execution.
+    
+    public var errorMessage: String?
+    
     
     /// Frees the memory associated with the opaque pointer.
     
     deinit { X509_free(optr) }
+    
+    
+    /// Create a new certificate
+    
+    public init() {
+        optr = X509_new()
+    }
     
     
     /// Creates a new X509 object from the certifcate received from the peer.
@@ -594,17 +607,398 @@ public class X509 {
     }
     
     
-    /// The common name of the certificate. A certificate that has no common name should be considered misformed.
+    /// The common name in the subject name.
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
-    public var commonName: String? {
-        return getX509CommonName(from: optr)
+    public var subjectCommonName: String? {
+        set { _ = setSubjectNameField(NID_commonName, newValue!) }
+        get { return getSubjectNameField(by: NID_commonName) }
     }
     
+    
+    /// The country code in the subject name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+
+    public var subjectCountryCode: String? {
+        set { _ = setSubjectNameField(NID_countryName, newValue!) }
+        get { return getSubjectNameField(by: NID_countryName) }
+    }
+    
+    
+    /// The organization name in the subject name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+
+    public var subjectOrganizationName: String? {
+        set { _ = setSubjectNameField(NID_organizationName, newValue!) }
+        get { return getSubjectNameField(by: NID_organizationName) }
+    }
+    
+    
+    /// The organizational unit name in the subject name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+
+    public var subjectOrganizationalUnitName: String? {
+        set { _ = setSubjectNameField(NID_organizationalUnitName, newValue!) }
+        get { return getSubjectNameField(by: NID_organizationalUnitName) }
+    }
+    
+    
+    /// The state or province name in the subject name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+
+    public var subjectStateOrProvinceName: String? {
+        set { _ = setSubjectNameField(NID_stateOrProvinceName, newValue!) }
+        get { return getSubjectNameField(by: NID_stateOrProvinceName) }
+    }
+
+    
+    /// The locality name in the subject name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var subjectLocalityName: String? {
+        set { _ = setSubjectNameField(NID_localityName, newValue!) }
+        get { return getSubjectNameField(by: NID_localityName) }
+    }
+
+    
+    /// The common name in the issuer name.
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var issuerCommonName: String? {
+        set { _ = setIssuerNameField(NID_commonName, newValue!) }
+        get { return getIssuerNameField(by: NID_commonName) }
+    }
+    
+    
+    /// The country code in the issuer name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var issuerCountryCode: String? {
+        set { _ = setIssuerNameField(NID_countryName, newValue!) }
+        get { return getIssuerNameField(by: NID_countryName) }
+    }
+    
+    
+    /// The organization name in the issuer name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var issuerOrganizationName: String? {
+        set { _ = setIssuerNameField(NID_organizationName, newValue!) }
+        get { return getIssuerNameField(by: NID_organizationName) }
+    }
+    
+    
+    /// The organizational unit name in the issuer name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var issuerOrganizationalUnitName: String? {
+        set { _ = setIssuerNameField(NID_organizationalUnitName, newValue!) }
+        get { return getIssuerNameField(by: NID_organizationalUnitName) }
+    }
+    
+    
+    /// The state or province name in the issuer name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var issuerStateOrProvinceName: String? {
+        set { _ = setIssuerNameField(NID_stateOrProvinceName, newValue!) }
+        get { return getIssuerNameField(by: NID_stateOrProvinceName) }
+    }
+    
+    
+    /// The locality name in the issuer name
+    /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
+    
+    public var issuerLocalityName: String? {
+        set { _ = setIssuerNameField(NID_localityName, newValue!) }
+        get { return getIssuerNameField(by: NID_localityName) }
+    }
+
     
     /// The subject alternative names contained in the x509 extension part of the certificate (if any).
     
     public var subjectAltNames: [String]? {
         return getX509SubjectAltNames(from: optr)
+    }
+    
+    
+    /// The serial number in the certificate
+    /// - Note: The instance variable errorMessage will be set if an error occured.
+    
+    public var serialNumber: Int {
+        
+        set {
+            
+            // Clear the error info
+            
+            errorMessage = nil
+            SecureSockets.errClearError()
+            
+            
+            // Get a pointer to the integer
+            
+            guard let asn1IntegerPointer = X509_get_serialNumber(optr) else {
+                errorMessage = "OpenSSL ASN1_INTEGER_set operation failed to retrieve the ASN1 integer pointer.\n\(SecureSockets.errPrintErrors())"
+                return
+            }
+            
+            
+            // Set the new value
+            
+            if ASN1_INTEGER_set(asn1IntegerPointer, newValue) == 0 {
+                // 1 = success, 0 = failure
+                // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+                errorMessage = "OpenSSL ASN1_INTEGER_set operation could not allocate the necessary memory.\n\(SecureSockets.errPrintErrors())"
+            }
+        }
+        
+        get {
+            
+            // Clear the error info
+            
+            errorMessage = nil
+            SecureSockets.errClearError()
+
+            
+            // Get a pointer to the integer
+            
+            guard let asn1IntegerPointer = X509_get_serialNumber(optr) else {
+                errorMessage = "OpenSSL ASN1_INTEGER_set operation failed to retrieve the ASN1 integer pointer.\n\(SecureSockets.errPrintErrors())"
+                return -1
+            }
+
+            
+            // Get the serial number
+            
+            return ASN1_INTEGER_get(asn1IntegerPointer)
+        }
+    }
+    
+    
+    /// The valid not before time contained in the certificate as a double in seconds since 1970-01-01.
+    /// - Note: The instance variable errorMessage will be set if an error occured.
+
+    public var validNotBefore: Int64 {
+    
+        set {
+            
+            // Clear the error info
+            
+            errorMessage = nil
+
+            
+            // Convert the new time
+            
+            let value = time_t(newValue)
+            
+            
+            // Create a new ASN1 time value
+            
+            guard let asn1NotBefore = ASN1_TIME_set(nil, value) else {
+                // nil = failure. In case of failure the OpenSSL doc does not specify (or hint) at additional info on the error stack
+                errorMessage = "OpenSSL ASN1_TIME_set operation failed"
+                return
+            }
+            defer { ASN1_STRING_free(asn1NotBefore) }
+            
+            
+            // Writethe ASN1 time to the certificate
+            if X509_set1_notBefore(optr, asn1NotBefore) == 0 {
+                // 1 = success, 0 = failure
+                // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+                errorMessage = "OpenSSL X509_set1_notBefore failed.\n\(SecureSockets.errPrintErrors())"
+            }
+        }
+        
+        get {
+            
+            // Clear the error info
+            
+            errorMessage = nil
+            
+            
+            // Read the ASN1 time value
+            
+            let asn1TimeValue = X509_get0_notBefore(optr)
+            if asn1TimeValue == nil { errorMessage = "Could not retrieve Not Before time value"; return 0 }
+            
+            
+            // Get the time value
+            
+            var days: Int32 = 0
+            var seconds: Int32 = 0
+            if ASN1_TIME_diff(&days, &seconds, nil, asn1TimeValue) == 0 {
+                errorMessage = "Failure determining time difference between now and ASN1 time"
+                return 0
+            }
+            
+            let now = Date().addingTimeInterval(Double(days * 24 * 60 * 60 + seconds))
+            
+            return Int64(now.timeIntervalSince1970)
+        }
+    }
+    
+    
+    /// The valid not after time contained in the certificate as a double in seconds since 1970-01-01.
+    /// - Note: The instance variable errorMessage will be set if an error occured.
+    
+    public var validNotAfter: Int64 {
+        
+        set {
+            
+            // Clear the error info
+            
+            errorMessage = nil
+            
+            
+            // Convert the new time
+            
+            let value = time_t(newValue)
+            
+            
+            // Create a new ASN1 time value
+            
+            guard let asn1NotAfter = ASN1_TIME_set(nil, value) else {
+                // nil = failure. In case of failure the OpenSSL doc does not specify (or hint) at additional info on the error stack
+                errorMessage = "OpenSSL ASN1_TIME_set operation failed"
+                return
+            }
+            defer { ASN1_STRING_free(asn1NotAfter) }
+            
+            
+            // Writethe ASN1 time to the certificate
+            if X509_set1_notAfter(optr, asn1NotAfter) == 0 {
+                // 1 = success, 0 = failure
+                // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+                errorMessage = "OpenSSL X509_set1_notAfter failed.\n\(errPrintErrors())"
+            }
+        }
+        
+        get {
+            
+            // Clear the error info
+            
+            errorMessage = nil
+            
+            
+            // Read the ASN1 time value
+            
+            let asn1TimeValue = X509_get0_notAfter(optr)
+            if asn1TimeValue == nil { errorMessage = "Could not retrieve Not After time value"; return 0 }
+            
+            
+            // Get the time value
+            
+            var days: Int32 = 0
+            var seconds: Int32 = 0
+            if ASN1_TIME_diff(&days, &seconds, nil, asn1TimeValue) == 0 {
+                errorMessage = "Failure determining time difference between now and ASN1 time"
+                return 0
+            }
+            
+            let now = Date().addingTimeInterval(Double(days * 24 * 60 * 60 + seconds))
+            
+            return Int64(now.timeIntervalSince1970)
+        }
+    }
+    
+    
+    /// Writes the key in the file at the given path as the public key to the certificate.
+    ///
+    /// - Parameter from: The filepath of the public key.
+    ///
+    /// - Returns: Either .success(tru) or .eror(message: String) when an error occured.
+    
+    public func setPublicKey(from filepath: String) -> Result<Bool> {
+        
+        // Open the file with the public key
+        
+        guard let pubkeyfile = fopen(filepath, "r") else {
+            // nil = Failed, the error is indicated in the global 'errno'
+            let message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
+            return .error(message: message)
+        }
+        defer { fclose(pubkeyfile) }
+        
+        
+        // Read the key from the file and put it in a new ENV_PKEY structure
+        
+        guard let pkey = PEM_read_PUBKEY(pubkeyfile, nil, nil, nil) else {
+            // nil = Failure
+            // Note: the documentation does not mention it, but in case of errors there may be info in the error stack
+            return .error(message: "Failed to read public key from file: \(filepath)\n\(errPrintErrors())")
+        }
+        defer { EVP_PKEY_free(pkey) }
+        
+        
+        // Now add the public key to the certificate
+        
+        if X509_set_pubkey(optr!, pkey) == 0 {
+            // 1 = success, 0 = failure
+            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+            return .error(message: "Failed to set the public key in the certificate.\n\(errPrintErrors())")
+        }
+
+        return .success(true)
+    }
+    
+    
+    /// Signs the certificate with the key from the given file.
+    ///
+    /// - Parameter with: The filepath of the private key.
+    ///
+    /// - Returns: Either .success(tru) or .eror(message: String) when an error occured.
+    
+    public func sign(withKeyAt filepath: String) -> Result<Bool> {
+        
+        guard let keyfile = fopen(filepath, "r") else {
+            let message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
+            return .error(message: message)
+        }
+        defer { fclose(keyfile) }
+        
+        
+        guard let pkey = PEM_read_PrivateKey(keyfile, nil, nil, nil) else {
+            // nil in case of failure, a pointer to pkey on success.
+            return .error(message: "Failure while reading the private key")
+        }
+        defer { EVP_PKEY_free(pkey) }
+        
+        
+        // Encrypt
+        
+        if X509_sign(optr, pkey, EVP_sha256()) == 0 {
+            // 1 = success, 0 = failure.
+            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+            return .error(message: "Failed to encrypt the certificate.\n\(errPrintErrors())")
+        }
+
+        return .success(true)
+    }
+    
+    
+    /// Write the ceritificate to file
+    
+    public func write(to filepath: String) -> Result<Bool> {
+        
+        
+        // Open the file for writing
+        
+        guard let file = fopen(filepath, "w") else {
+            return .error(message: "Failed to open file \(filepath) for writing")
+        }
+        defer { fclose(file) }
+        
+        
+        // Write the certificate to file
+        
+        if PEM_write_X509(file, optr) == 0 {
+            // 1 = success, 0 = failure.
+            // The OpenSSL doc do not state or hint at additional error info on the error stack.
+            return .error(message: "Failed to write certificate to file \(filepath)")
+        }
+        
+        return .success(true)
     }
     
     
