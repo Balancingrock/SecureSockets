@@ -65,6 +65,10 @@ Disclaimer: I am no expert on using modules and frameworks. Perhaps there are be
 
 When creating an executable with SPM we miss the setup for Cocoa etc. I have found it easier to create a project in Xcode and then to import the necessary frameworks.
 
+In the distribution a defaut xcode project is included. Use that one to create the frameworks, or generate a new one with the following steps:
+
+###Optional: create new xcode project to build the frameworks
+
 In order to create a framework from a SPM project like SecureSockets I found it easiest to generate an xcode project in the SecureSockets dictionary with:
 
     $ swift package generate-xcodeproj
@@ -74,7 +78,9 @@ After the project is created, there will be three targets: SwifterSockets, Secur
 Select all three target frameworks and navigate to the `Build Settings` subsection `Packaging` and set the `Defines Module` property to `Yes`
 Now build the targets. The SwifterSockets and SecureSockets target will be build by default, switch to the COpenSsl scheme to build that target also.
 
-To import the frameworks into a project navigate to the place where the frameworks are generated (select a framework, right-click and "Show in Finder"). Select all three frameworks and drag/drop them onto the project that needs them. It's is probably best to make sure they are copied and not referenced, but select whatever option suits the project needs.
+###Copy the frameworks to your project
+
+To import the frameworks into a project navigate to the place where the frameworks are generated. Select all three frameworks and drag/drop them onto the project that needs them. It's is probably best to make sure they are copied and not referenced, but select whatever option suits the project needs.
 
 In the new project, make sure that in the target's `General` settings the `Embedded Binaries` also contains the three frameworks. Otherwise the runtime will not be able to find them. (Most likely this will cause the frameworks to appear twice in the `Linked Frameworks and Libraries` section. That does not hurt, but it is possible to simply delete the duplicates.)
 
