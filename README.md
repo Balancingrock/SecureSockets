@@ -80,9 +80,7 @@ Now build the targets. The SwifterSockets and SecureSockets target will be build
 
 ###Copy the frameworks to your project
 
-To import the frameworks into a project navigate to the place where the frameworks are generated. Select all three frameworks and drag/drop them onto the project that needs them. It's is probably best to make sure they are copied and not referenced, but select whatever option suits the project needs.
-
-In the new project, make sure that in the target's `General` settings the `Embedded Binaries` also contains the three frameworks. Otherwise the runtime will not be able to find them. (Most likely this will cause the frameworks to appear twice in the `Linked Frameworks and Libraries` section. That does not hurt, but it is possible to simply delete the duplicates.)
+To import the frameworks into a project navigate to the target's `General` settings and add the frameworks to the `Embedded Binaries` section (by clicking the "+" button). This ensures that the frameworks are not only present when building, but also when running.
 
 Note: When develloping code and using a debugger it is possible to step into the source code of the libaries. It is also possible to then change the source code used to build the libraries, however the binaries contained in the library are not updated until the project producing the libraries is re-build. And the libraries copied to the application.
 
@@ -99,7 +97,11 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-####v0.1.0 (Upcoming)
+####v0.2.0 (Current)
+
+- Simplified the installation and use in another project
+
+####v0.1.0
 
 - Initial release
 
