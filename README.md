@@ -50,7 +50,7 @@ The openSSL license is included at the end of this document.
 
 #Installation
 
-SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets __first__ install the openSSL libaries as detailed below.
+SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets ___first___ install the openSSL libaries as detailed below.
 
 Note that the openSSL files are modified in the instructions below, so an existing openSSL cannot be used!
 
@@ -69,35 +69,16 @@ In order to create a framework from a SPM project like SecureSockets I found it 
 
     $ swift package generate-xcodeproj
 
-This xcode project will have all the sources necessary and should build without problems. After building this, a framework (two in fact) are available for inclusion in other projects. (PS: The frameworks are SwifterSockets and SecureSockets)
+After the project is created, there will be three targets: SwifterSockets, SecureSockets and SecureSocketsTests. The last one is not needed. As a work around for a possible bug in the Swift Package Manager, we need a another framework: COpenSsl. So go ahead and add another target to the project, select the "Cocoa Framework" template and call it "COpenSsl" (exactly as written, mind the capitalisation) 
 
-Due to a bug (??) any project that needs the SecureSockets.framework also needs the COpenSsl.framework to be present. Even when the project does not need it. To work around this issue create an empty framework target called COpenSsl and include it in the project. (Note: Start xcode, create new project, select the Library template and name it COpenSsl. Then Build. The COpenSsl.framework can be found in the Products)
+Select all three target frameworks and navigate to the `Build Settings` subsection `Packaging` and set the `Defines Module` property to `Yes`
+Now build the targets. The SwifterSockets and SecureSockets target will be build by default, switch to the COpenSsl scheme to build that target also.
 
-To import the frameworks into a project I found it necessary to create a bridging header and include the headers of the frameworks in there.
+To import the frameworks into a project navigate to the place where the frameworks are generated (select a framework, right-click and "Show in Finder"). Select all three frameworks and drag/drop them onto the project that needs them. It's is probably best to make sure they are copied and not referenced, but select whatever option suits the project needs.
 
-The process is as follows:
+In the new project, make sure that in the target's `General` settings the `Embedded Binaries` also contains the three frameworks. Otherwise the runtime will not be able to find them. (Most likely this will cause the frameworks to appear twice in the `Linked Frameworks and Libraries` section. That does not hurt, but it is possible to simply delete the duplicates.)
 
-1. Create the frameworks per above.
-
-2. Drag & Drop the SwifterSockets.framework, SecureSockets.framework and the dummy COpenSsl.framework into the project. It is probably easiest to "copy files when needed", but you should choose whatever is more appropriate for your project. Note that in the following steps it is assumed that the files are copied.
-
-3. Make sure that the files do not just appear in _General setings_ subsection `Linked Frameworks and Libraries` but also under `Embedded Binaries`. Otherwise the application will not be able to load the dynamic libaries at runtime.
-
-3. If the project does not have a bridging header, create one. For example `Project-Bridging-Header.h`. Open the target _Build Settings_ and add the path to this file under the `Objective-C Bridging Header` setting.
-
-4. In the bridging header file add:
-    - \#include "SwifterSockets-Swift.h"
-    - \#include "SecureSockets-Swift.h"
-    - \#include "COpenSsl-Swift.h"
-    
-5. Go to the target build settings again and add the search paths for the headers under `Header Search Paths`.  If the frameworks are at the top level in the project directory use:
-    - $(PROJECT_DIR)/SwifterSockets.framework/Headers
-    - $(PROJECT_DIR)/SecureSockets.framework/Headers
-    - $(PROJECT_DIR)/COpenSsl.framework/Headers
-
-That's it. Now the libraries can be used.
-
-Note: When develloping code and using a debugger it is possible to step into the source code of the libaries. It is also possible to change the source code used to build the libraries, however the binaries contained in the library are not updated until the project producing the libraries is re-build. And the libraries copied to the application (see step 2 above).
+Note: When develloping code and using a debugger it is possible to step into the source code of the libaries. It is also possible to then change the source code used to build the libraries, however the binaries contained in the library are not updated until the project producing the libraries is re-build. And the libraries copied to the application.
 
 #Version history
 
