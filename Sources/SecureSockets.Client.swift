@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Client.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -120,7 +121,7 @@ public func connectToSslServer(
     // Make sure there is at least a trusted certificate file or a callee provided ctxSetup.
     
     if (((trustedServerCertificates?.count ?? 0) == 0) && (clientCtx == nil)) {
-        fatalError("SwifterSockets.Secure.Client.connectToServer: Need either trustedServerCertificate or ctxSetup")
+        fatalError("SecureSockets.Client.connectToSslServer: Need either trustedServerCertificate or ctxSetup")
     }
     
     
@@ -132,7 +133,7 @@ public func connectToSslServer(
     // Create the CTX
     
     guard let ctx = clientCtx ?? ClientCtx() else {
-        return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to create ClientCtx, error = '\(errPrintErrors)'")
+        return .error(message: "SecureSockets.Client.connectToSslServer: Failed to create ClientCtx, error = '\(errPrintErrors)'")
     }
     
     
@@ -141,11 +142,11 @@ public func connectToSslServer(
     
     if let ck = certificateAndPrivateKeyFiles {
         switch ctx.useCertificate(file: ck.certificate) {
-        case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to use certificate at path \(ck.certificate.path),\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to use certificate at path \(ck.certificate.path),\n\(message)")
         case .success: break
         }
         switch ctx.usePrivateKey(file: ck.privateKey) {
-        case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to use private key at path \(ck.privateKey.path),\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to use private key at path \(ck.privateKey.path),\n\(message)")
         case .success: break
         }
     }
@@ -158,7 +159,7 @@ public func connectToSslServer(
         for certpath in (trustedServerCertificates ?? [String]()) {
             
             switch ctx.loadVerify(location: certpath) {
-            case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to set load verificaty for path \(certpath),\n\(message)")
+            case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to set load verificaty for path \(certpath),\n\(message)")
             case .success: break
             }
         }
@@ -173,7 +174,7 @@ public func connectToSslServer(
     
     ERR_clear_error()
     guard let ssl = Ssl(context: ctx) else {
-        return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to create Ssl,\n\n\(errPrintErrors())")
+        return .error(message: "SecureSockets.Client.connectToSslServer: Failed to create Ssl,\n\n\(errPrintErrors())")
     }
     
     
@@ -186,7 +187,7 @@ public func connectToSslServer(
     
     var socket: Int32
     switch connectToTipServer(atAddress: address, atPort: port) {
-    case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to connect to server at \(address) on port \(port),\n\(message)")
+    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to connect to server at \(address) on port \(port),\n\(message)")
     case let .success(s): socket = s
     }
     
@@ -194,7 +195,7 @@ public func connectToSslServer(
     /// Attach SSL to socket
     
     switch ssl.setFd(socket) {
-    case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to set socket to ssl,\n\(message)")
+    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to set socket to ssl,\n\(message)")
     case .success: break
     }
     
@@ -203,8 +204,8 @@ public func connectToSslServer(
     
     switch ssl.connect(socket: socket, timeout: timeoutTime) {
     case .timeout: return .timeout
-    case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Failed to connect via SSL,\n\(message)")
-    case .closed: return .error(message: "SwifterSockets.Ssl.Client.connectToServer: Connection unexpectedly closed")
+    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to connect via SSL,\n\(message)")
+    case .closed: return .error(message: "SecureSockets.Client.connectToSslServer: Connection unexpectedly closed")
     case .ready: break
     }
     
@@ -212,7 +213,7 @@ public func connectToSslServer(
     // Verify step 1: Verify that a certificate was received.
     
     guard let x509 = ssl.getPeerCertificate() else {
-        return .error(message: "SwifterSockets.Secure.Clients.connectToServer: Verification failed, no certificate received")
+        return .error(message: "SecureSockets.Client.connectToSslServer: Verification failed, no certificate received")
     }
     
     
@@ -226,7 +227,7 @@ public func connectToSslServer(
         
         let acceptCertificate = callback?(x509) ?? false
         if !acceptCertificate {
-            return .error(message: "SwifterSockets.Secure.Client.connectToServer: Server certificate verification failed,\n\(message)")
+            return .error(message: "SecureSockets.Client.connectToSslServer: Server certificate verification failed,\n\(message)")
         }
         
         fallthrough
@@ -279,9 +280,9 @@ public func connectToSslServer(
         trustedServerCertificates: trustedServerCertificates,
         callback: callback) {
         
-    case let .error(message): return .error(message: "SwifterSockets.Secure.Client.connectToServer: Error,\n\(message)")
+    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Error,\n\(message)")
         
-    case .timeout: return .error(message: "SwifterSockets.Secure.Client.connectToServer: Timeout")
+    case .timeout: return .error(message: "SecureSockets.Client.connectToSslServer: Timeout")
         
     case let .success(ssl, socket):
         
@@ -300,7 +301,7 @@ public func connectToSslServer(
             
         } else {
             
-            return .error(message: "SwifterSockets.Secure.Client.connectToServer: connectionObjectFactory closure did not provide a connection object")
+            return .error(message: "SecureSockets.Client.connectToSslServer: connectionObjectFactory closure did not provide a connection object")
         }
     }
 }

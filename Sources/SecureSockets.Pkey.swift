@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.0  - Fixed error message text
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -156,7 +157,7 @@ public class Pkey {
         
         var exp = BN_new()
         guard exp != nil else {
-            return .error(message: "Failed to create a BigNumber")
+            return .error(message: "Securesockets.Pkey.Pkey.assignNewRsa: Failed to create a BigNumber")
         }
         defer { BN_free(exp) }
         
@@ -165,14 +166,14 @@ public class Pkey {
         
         var result = BN_dec2bn(&exp, exponent.description)
         if result == 0 {
-            return .error(message: "BigNumber could not set value")
+            return .error(message: "Securesockets.Pkey.Pkey.assignNewRsa: BigNumber could not set value")
         }
         
         
         // Create the RSA key pair
         
         guard let rsa = RSA_new() else {
-            return .error(message: "Could not create new RSA structure")
+            return .error(message: "Securesockets.Pkey.Pkey.assignNewRsa: Could not create new RSA structure")
         }
         // Will be freed when the pkey (later) is freed.
         
@@ -206,7 +207,7 @@ public class Pkey {
         // Open the file
         
         guard let file = fopen(path, "w") else {
-            return .error(message: "Failed to open file \(path) for writing")
+            return .error(message: "Securesockets.Pkey.Pkey.writePrivateKeyToFile: Failed to open file \(path) for writing")
         }
         defer { fclose(file) }
 
@@ -222,7 +223,7 @@ public class Pkey {
         }
         
         if result != 1 {
-            return .error(message: "Failed to write the private key to file \(path)")
+            return .error(message: "Securesockets.Pkey.Pkey.writePrivateKeyToFile: Failed to write the private key to file \(path)")
         } else {
             return .success(true)
         }
@@ -237,7 +238,7 @@ public class Pkey {
         // Open the file
         
         guard let file = fopen(path, "w") else {
-            return .error(message: "Failed to open file \(path) for writing")
+            return .error(message: "Securesockets.Pkey.Pkey.writePublicKeyToFile: Failed to open file \(path) for writing")
         }
         defer { fclose(file) }
         
@@ -245,7 +246,7 @@ public class Pkey {
         // Write the key to file
 
         if PEM_write_PUBKEY(file, optr) != 1 {
-            return .error(message: "Failed to write the public key to file \(path)")
+            return .error(message: "Securesockets.Pkey.Pkey.writePublicKeyToFile: Failed to write the public key to file \(path)")
         }
         
         return .success(true)

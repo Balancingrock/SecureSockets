@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -272,7 +273,7 @@ public class Ssl {
     public func setFd(_ sock: Int32) -> SwifterSockets.Result<Bool> {
         ERR_clear_error()
         if SSL_set_fd(optr, sock) != 1 {
-            return .error(message: "SwifterSockets.Secure.Ssl.setSocket: Failed to set socket,\n\n\(errPrintErrors())")
+            return .error(message: "SecureSockets.Ssl.Ssl.setFd: Failed to set socket,\n\n\(errPrintErrors())")
         }
         return .success(true)
     }
@@ -326,13 +327,13 @@ public class Ssl {
                 
                 switch selres {
                 case .timeout: return .timeout
-                case .closed: return .error(message: "SwifterSockets.Secure.Ssl.connect: Connection was unexpectedly closed,\n\n\(errPrintErrors())")
+                case .closed: return .error(message: "SecureSockets.Ssl.Ssl.connect: Connection was unexpectedly closed,\n\n\(errPrintErrors())")
                 case .ready: break // Continues the SSL_CONNECT loop
-                case let .error(message): return .error(message: "SwifterSockets.Secure.Ssl.connect: Socket error,\n\n \(message)")
+                case let .error(message): return .error(message: "SecureSockets.Ssl.Ssl.connect: Socket error,\n\n \(message)")
                 }
                 
             default:
-                return .error(message: "SwifterSockets.Secure.Ssl.connect: Error,\n\n\(errPrintErrors())")
+                return .error(message: "SecureSockets.Ssl.Ssl.connect: Error,\n\n\(errPrintErrors())")
             }
         }
         
@@ -433,7 +434,7 @@ public class Ssl {
         let verifyResult = X509.VerificationResult(for: Int32(SSL_get_verify_result(optr)))
         
         if verifyResult != .x509_v_ok {
-            return .error(message: "SwifterSockets.Secure.Ssl.getVerifyResult: Verification failed,\n\n\(verifyResult.description)")
+            return .error(message: "SecureSockets.Ssl.Ssl.getVerifyResult: Verification failed,\n\n\(verifyResult.description)")
         } else {
             return .success(true)
         }

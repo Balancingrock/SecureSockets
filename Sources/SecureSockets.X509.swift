@@ -3,7 +3,7 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.0  - Fixed error message text
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -738,7 +739,7 @@ public class X509 {
             // Get a pointer to the integer
             
             guard let asn1IntegerPointer = X509_get_serialNumber(optr) else {
-                errorMessage = "OpenSSL ASN1_INTEGER_set operation failed to retrieve the ASN1 integer pointer.\n\(SecureSockets.errPrintErrors())"
+                errorMessage = "SecureSockets.X509.X509.serialNumber.set: OpenSSL ASN1_INTEGER_set operation failed to retrieve the ASN1 integer pointer.\n\(SecureSockets.errPrintErrors())"
                 return
             }
             
@@ -748,7 +749,7 @@ public class X509 {
             if ASN1_INTEGER_set(asn1IntegerPointer, newValue) == 0 {
                 // 1 = success, 0 = failure
                 // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-                errorMessage = "OpenSSL ASN1_INTEGER_set operation could not allocate the necessary memory.\n\(SecureSockets.errPrintErrors())"
+                errorMessage = "SecureSockets.X509.X509.serialNumber.set: OpenSSL ASN1_INTEGER_set operation could not allocate the necessary memory.\n\(SecureSockets.errPrintErrors())"
             }
         }
         
@@ -763,7 +764,7 @@ public class X509 {
             // Get a pointer to the integer
             
             guard let asn1IntegerPointer = X509_get_serialNumber(optr) else {
-                errorMessage = "OpenSSL ASN1_INTEGER_set operation failed to retrieve the ASN1 integer pointer.\n\(SecureSockets.errPrintErrors())"
+                errorMessage = "SecureSockets.X509.X509.serialNumber.get: OpenSSL ASN1_INTEGER_set operation failed to retrieve the ASN1 integer pointer.\n\(SecureSockets.errPrintErrors())"
                 return -1
             }
 
@@ -796,7 +797,7 @@ public class X509 {
             
             guard let asn1NotBefore = ASN1_TIME_set(nil, value) else {
                 // nil = failure. In case of failure the OpenSSL doc does not specify (or hint) at additional info on the error stack
-                errorMessage = "OpenSSL ASN1_TIME_set operation failed"
+                errorMessage = "SecureSockets.X509.X509.validNotBefore.set: OpenSSL ASN1_TIME_set operation failed"
                 return
             }
             defer { ASN1_STRING_free(asn1NotBefore) }
@@ -806,7 +807,7 @@ public class X509 {
             if X509_set1_notBefore(optr, asn1NotBefore) == 0 {
                 // 1 = success, 0 = failure
                 // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-                errorMessage = "OpenSSL X509_set1_notBefore failed.\n\(SecureSockets.errPrintErrors())"
+                errorMessage = "SecureSockets.X509.X509.validNotBefore.set: OpenSSL X509_set1_notBefore failed.\n\(SecureSockets.errPrintErrors())"
             }
         }
         
@@ -820,7 +821,7 @@ public class X509 {
             // Read the ASN1 time value
             
             let asn1TimeValue = X509_get0_notBefore(optr)
-            if asn1TimeValue == nil { errorMessage = "Could not retrieve Not Before time value"; return 0 }
+            if asn1TimeValue == nil { errorMessage = "SecureSockets.X509.X509.validNotBefore.get: Could not retrieve Not Before time value"; return 0 }
             
             
             // Get the time value
@@ -828,7 +829,7 @@ public class X509 {
             var days: Int32 = 0
             var seconds: Int32 = 0
             if ASN1_TIME_diff(&days, &seconds, nil, asn1TimeValue) == 0 {
-                errorMessage = "Failure determining time difference between now and ASN1 time"
+                errorMessage = "SecureSockets.X509.X509.validNotBefore.get: Failure determining time difference between now and ASN1 time"
                 return 0
             }
             
@@ -860,7 +861,7 @@ public class X509 {
             
             guard let asn1NotAfter = ASN1_TIME_set(nil, value) else {
                 // nil = failure. In case of failure the OpenSSL doc does not specify (or hint) at additional info on the error stack
-                errorMessage = "OpenSSL ASN1_TIME_set operation failed"
+                errorMessage = "SecureSockets.X509.X509.validNotAfter.set: OpenSSL ASN1_TIME_set operation failed"
                 return
             }
             defer { ASN1_STRING_free(asn1NotAfter) }
@@ -870,7 +871,7 @@ public class X509 {
             if X509_set1_notAfter(optr, asn1NotAfter) == 0 {
                 // 1 = success, 0 = failure
                 // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-                errorMessage = "OpenSSL X509_set1_notAfter failed.\n\(errPrintErrors())"
+                errorMessage = "SecureSockets.X509.X509.validNotAfter.set: OpenSSL X509_set1_notAfter failed.\n\(errPrintErrors())"
             }
         }
         
@@ -884,7 +885,7 @@ public class X509 {
             // Read the ASN1 time value
             
             let asn1TimeValue = X509_get0_notAfter(optr)
-            if asn1TimeValue == nil { errorMessage = "Could not retrieve Not After time value"; return 0 }
+            if asn1TimeValue == nil { errorMessage = "SecureSockets.X509.X509.validNotAfter.get: Could not retrieve Not After time value"; return 0 }
             
             
             // Get the time value
@@ -892,7 +893,7 @@ public class X509 {
             var days: Int32 = 0
             var seconds: Int32 = 0
             if ASN1_TIME_diff(&days, &seconds, nil, asn1TimeValue) == 0 {
-                errorMessage = "Failure determining time difference between now and ASN1 time"
+                errorMessage = "SecureSockets.X509.X509.validNotAfter.get: Failure determining time difference between now and ASN1 time"
                 return 0
             }
             
@@ -926,7 +927,7 @@ public class X509 {
         guard let pkey = PEM_read_PUBKEY(pubkeyfile, nil, nil, nil) else {
             // nil = Failure
             // Note: the documentation does not mention it, but in case of errors there may be info in the error stack
-            return .error(message: "Failed to read public key from file: \(filepath)\n\(errPrintErrors())")
+            return .error(message: "SecureSockets.X509.X509.setPublicKey: Failed to read public key from file: \(filepath)\n\(errPrintErrors())")
         }
         defer { EVP_PKEY_free(pkey) }
         
@@ -936,7 +937,7 @@ public class X509 {
         if X509_set_pubkey(optr!, pkey) == 0 {
             // 1 = success, 0 = failure
             // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-            return .error(message: "Failed to set the public key in the certificate.\n\(errPrintErrors())")
+            return .error(message: "SecureSockets.X509.X509.setPublicKey: Failed to set the public key in the certificate.\n\(errPrintErrors())")
         }
 
         return .success(true)
@@ -960,7 +961,7 @@ public class X509 {
         
         guard let pkey = PEM_read_PrivateKey(keyfile, nil, nil, nil) else {
             // nil in case of failure, a pointer to pkey on success.
-            return .error(message: "Failure while reading the private key")
+            return .error(message: "SecureSockets.X509.X509.sign: Failure while reading the private key")
         }
         defer { EVP_PKEY_free(pkey) }
         
@@ -970,7 +971,7 @@ public class X509 {
         if X509_sign(optr, pkey, EVP_sha256()) == 0 {
             // 1 = success, 0 = failure.
             // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-            return .error(message: "Failed to encrypt the certificate.\n\(errPrintErrors())")
+            return .error(message: "SecureSockets.X509.X509.sign: Failed to encrypt the certificate.\n\(errPrintErrors())")
         }
 
         return .success(true)
@@ -985,7 +986,7 @@ public class X509 {
         // Open the file for writing
         
         guard let file = fopen(filepath, "w") else {
-            return .error(message: "Failed to open file \(filepath) for writing")
+            return .error(message: "SecureSockets.X509.X509.write: Failed to open file \(filepath) for writing")
         }
         defer { fclose(file) }
         
@@ -995,7 +996,7 @@ public class X509 {
         if PEM_write_X509(file, optr) == 0 {
             // 1 = success, 0 = failure.
             // The OpenSSL doc do not state or hint at additional error info on the error stack.
-            return .error(message: "Failed to write certificate to file \(filepath)")
+            return .error(message: "SecureSockets.X509.X509.write: Failed to write certificate to file \(filepath)")
         }
         
         return .success(true)

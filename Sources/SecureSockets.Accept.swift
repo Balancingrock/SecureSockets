@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Accept.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -141,11 +142,11 @@ public func sslAccept(
         
         guard let ssl = Ssl(context: ctx) else {
             let message = errPrintErrors()
-            return .error(message: "SwifterSockets.Secure.accept: Failed to allocate a new SSL structure,\n\(message)")
+            return .error(message: "SecureSockets.Accept.sslAccept: Failed to allocate a new SSL structure,\n\(message)")
         }
         
         switch ssl.setFd(receiveSocket) {
-        case let .error(message): return .error(message: "SwifterSockets.Secure.accept: Could not set socket,\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.Accept.sslAccept: Could not set socket,\n\(message)")
         case .success: break
         }
         
@@ -173,7 +174,7 @@ public func sslAccept(
                 // An API user provided ssl session handler can reject this connection.
                 
                 if !(sslSessionHandler?(ssl, clientIp) ?? true) {
-                    return .error(message: "SwifterSockets.Secure.accept: Ssl session rejected by SslSessionHandler")
+                    return .error(message: "SecureSockets.Accept.sslAccept: Ssl session rejected by SslSessionHandler")
                 }
                 
                 
@@ -197,7 +198,7 @@ public func sslAccept(
                 switch selres {
                 case .timeout: return .timeout
                 case .closed: return .closed
-                case let .error(message): return .error(message: "SwifterSockets.Secure.accept: Waiting for a read select returned an error,\n\(message)")
+                case let .error(message): return .error(message: "SecureSocketsAccept.sslAccept: Waiting for a read select returned an error,\n\(message)")
                 case .ready: break
                 }
                 
@@ -210,14 +211,14 @@ public func sslAccept(
                 switch selres {
                 case .timeout: return .timeout
                 case .closed: return .closed
-                case let .error(message): return .error(message: "SwifterSockets.Secure.accept: Waiting for a write select returned an error,\n\(message)")
+                case let .error(message): return .error(message: "SecureSockets.Accept.sslAccept: Waiting for a write select returned an error,\n\(message)")
                 case .ready: break
                 }
                 
                 
             // All of these are error's
             case .wantConnect, .wantAccept, .wantX509Lookup, .wantAsync, .wantAsyncJob, .syscall, .ssl, .bios_errno, .errorMessage, .undocumentedSslError, .undocumentedSslFunctionResult:
-                return .error(message: "SwifterSockets.Secure.accept: An error occured,\n\(result.description)")
+                return .error(message: "SecureSockets.Accept.sslAccept: An error occured,\n\(result.description)")
             }
         }
     }

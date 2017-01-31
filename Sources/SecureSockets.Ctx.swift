@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -97,7 +98,7 @@ public class Ctx {
         
         if SSL_CTX_use_certificate_file(optr, encodedFile.path, encodedFile.encoding) != 1 {
             
-            return .error(message: "SwifterSockets.Secure.Ctx.useCertificate: Could not add certificate to CTX,\n\n\(errPrintErrors())")
+            return .error(message: "SecureSockets.Ctx.Ctx.useCertificate: Could not add certificate to CTX,\n\n\(errPrintErrors())")
             
         } else {
             
@@ -116,7 +117,7 @@ public class Ctx {
         
         if SSL_CTX_use_PrivateKey_file(optr, encodedFile.path, encodedFile.encoding) != 1 {
             
-            return .error(message: "SwifterSockets.Secure.Ctx.usePrivateKey: Could not add private key to CTX,\n\n\(errPrintErrors())")
+            return .error(message: "SecureSockets.Ctx.Ctx.usePrivateKey: Could not add private key to CTX,\n\n\(errPrintErrors())")
             
         } else {
             
@@ -134,7 +135,7 @@ public class Ctx {
         
         if SSL_CTX_check_private_key(optr) != 1 {
             
-            return .error(message: "SwifterSockets.Secure.Ctx.checkPrivateKey: Private Key check failed,\n\n\(errPrintErrors)")
+            return .error(message: "SecureSockets.Ctx.Ctx.checkPrivateKey: Private Key check failed,\n\n\(errPrintErrors)")
             
         } else {
             
@@ -160,20 +161,20 @@ public class Ctx {
                 
                 if SSL_CTX_load_verify_locations(optr, nil, path) != 1 {
                     
-                    return .error(message: "SwifterSockets.Secure.Ctx.loadVerifyLocation: Could not set verify location for folder \(path),\n\n'\(errPrintErrors())")
+                    return .error(message: "SecureSockets.Ctx.Ctx.loadVerify: Could not set verify location for folder \(path),\n\n'\(errPrintErrors())")
                 }
                 
             } else {
                 
                 if SSL_CTX_load_verify_locations(optr, path, nil) != 1 {
                     
-                    return .error(message: "SwifterSockets.Secure.Ctx.loadVerifyLocation: Could not set verify location for file \(path),\n\n'\(errPrintErrors())")
+                    return .error(message: "SecureSockets.Ctx.Ctx.loadVerify: Could not set verify location for file \(path),\n\n'\(errPrintErrors())")
                 }
             }
             
         } else {
             
-            return .error(message: "SwifterSockets.Secure.Ctx.loadVerifyLocation: File or folder no longer exists at \(path)")
+            return .error(message: "SecureSockets.Ctx.Ctx.loadVerify: File or folder no longer exists at \(path)")
         }
         
         return .success(true)

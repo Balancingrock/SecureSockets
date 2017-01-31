@@ -42,6 +42,7 @@
 		866EBA3F1E3C950900EB4BE6 /* COpenSsl.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = COpenSsl.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		866EBA411E3C950900EB4BE6 /* COpenSsl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = COpenSsl.h; sourceTree = "<group>"; };
 		866EBA421E3C950900EB4BE6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		86CA94A51E3C9BB4003040B9 /* COpenSsl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = COpenSsl.framework; path = ../COpenSsl/build/Debug/COpenSsl.framework; sourceTree = "<group>"; };
 		OBJ_10 /* SwifterSockets.Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Client.swift; sourceTree = "<group>"; };
 		OBJ_11 /* SwifterSockets.Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Connection.swift; sourceTree = "<group>"; };
 		OBJ_12 /* SwifterSockets.Receive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Receive.swift; sourceTree = "<group>"; };
@@ -100,6 +101,14 @@
 			path = COpenSsl;
 			sourceTree = "<group>";
 		};
+		86CA94A41E3C9BB3003040B9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				86CA94A51E3C9BB4003040B9 /* COpenSsl.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		OBJ_16 /* SecureSockets */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +162,7 @@
 				OBJ_27 /* Tests */,
 				866EBA401E3C950900EB4BE6 /* COpenSsl */,
 				OBJ_32 /* Products */,
+				86CA94A41E3C9BB3003040B9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -609,6 +619,7 @@
 				866EBA461E3C950900EB4BE6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 		OBJ_2 /* Build configuration list for PBXProject "SecureSockets" */ = {
 			isa = XCConfigurationList;
