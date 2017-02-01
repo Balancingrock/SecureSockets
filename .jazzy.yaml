@@ -2,6 +2,9 @@
 
 copyright: Copyright 2016-2017 Rien van der Lugt
 author: Rien van der Lugt
+module: SecureSockets
+hide_documentation_coverage: true
+xcodebuild_arguments: [-target, SecureSockets]
 github_url: https://github.com/Balancingrock/SecureSockets
 output: ~/Documents/Websites/sf/projects/securesockets/reference
 clean: true
