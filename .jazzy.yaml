@@ -1,0 +1,8 @@
+# SecureSockets document generator jazzy settings
+
+copyright: Copyright 2016-2017 Rien van der Lugt
+author: Rien van der Lugt
+github_url: https://github.com/Balancingrock/SecureSockets
+output: ~/Documents/Websites/sf/projects/securesockets/reference
+clean: true
+theme: fullwidth
