@@ -1,27 +1,27 @@
-#SecureSockets
+# SecureSockets
 A collection of secure socket layer utilities in Swift using openSSL.
 
 Depends on SwifterSockets and COpenSsl.
 
 SecureSockets is part of the 5 packages that make up the [Swiftfire](http://swiftfire.nl) webserver:
 
-#####[SwifterSockets](https://github.com/Swiftrien/SwifterSockets)
+#####[SwifterSockets](https://github.com/Balancingrock/SwifterSockets)
 
 Basic POSIX sockets utilities.
 
-#####[Swiftfire](https://github.com/Swiftrien/Swiftfire)
+#####[Swiftfire](https://github.com/Balancingrock/Swiftfire)
 
 An open source web server in Swift.
 
-#####[SwifterLog](https://github.com/Swiftrien/SwifterLog)
+#####[SwifterLog](https://github.com/Balancingrock/SwifterLog)
 
 General purpose logging utility.
 
-#####[SwifterJSON](https://github.com/Swiftrien/SwifterJSON)
+#####[SwifterJSON](https://github.com/Balancingrock/SwifterJSON)
 
 General purpose JSON framework.
 
-#OpenSSL
+# OpenSSL
 
 OpenSSL is available from [https://openssl.org](https://openssl.org).
 
@@ -29,9 +29,7 @@ Due to limitations in the interface between Swift and C there are two functions 
 
 Instructions are included below.
 
-The openSSL license is included at the end of this document.
-
-#Features
+# Features
 - Shields the Swift application from the complexity of the Unix socket and openSSL calls.
 - Directly interfaces with the openSSL calls using:
 	- connectToSslServer
@@ -42,13 +40,20 @@ The openSSL license is included at the end of this document.
 - Implements a framework on top of the openSSL calls with:
 	- connectToSslServer (returns a SwifterSockets.Connection)
 	- SslServer (class, produces SwifterSockets.Connection's)
-- Builds as a library using the Swift Package Manager (SPM)
+- Builds as a package using the Swift Package Manager (SPM)
+- Builds as a modular framework using Xcode.
 - Supports
 	- certified server operations
 	- certified server & certified clients
 	- multiple domain certificates (SNI) on a certified server
 
-#Installation
+# Documentation
+
+Project page: [SecureSockets](http://swiftfire.nl/projects/securesockets/securesockets.html)
+
+Reference: [reference manual](http://swiftfire.nl/projects/securesockets/securesockets.html)
+
+# Installation
 
 SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets ___first___ install the openSSL libaries as detailed below.
 
@@ -97,7 +102,15 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-####v0.2.0 (Current)
+####v0.3.1 (Current)
+
+- Updated documentation
+
+####v0.3.0
+
+- Updated error messages
+
+####v0.2.0
 
 - Simplified the installation and use in another project
 
