@@ -51,7 +51,7 @@ Instructions are included below.
 
 Project page: [SecureSockets](http://swiftfire.nl/projects/securesockets/securesockets.html)
 
-Reference: [reference manual](http://swiftfire.nl/projects/securesockets/securesockets.html)
+Reference: [reference manual](http://swiftfire.nl/projects/securesockets/reference/index.html)
 
 # Installation
 
