@@ -59,36 +59,6 @@ import SwifterSockets
 import COpenSsl
 
 
-/// Compares two ssl results, returns true when they are equal.
-
-public func == (lhs: Ssl.Result, rhs: Ssl.Result) -> Bool {
-    switch lhs {
-    case let .completed(lnum): if case let .completed(rnum) = rhs { return lnum == rnum } else { return false }
-    case .zeroReturn: if case .zeroReturn = rhs { return true } else { return false }
-    case .wantRead: if case .wantRead = rhs { return true } else { return false }
-    case .wantWrite: if case .wantWrite = rhs { return true } else { return false }
-    case .wantConnect: if case .wantConnect = rhs { return true } else { return false }
-    case .wantAccept: if case .wantAccept = rhs { return true } else { return false }
-    case .wantX509Lookup: if case .wantX509Lookup = rhs { return true } else { return false }
-    case .wantAsync: if case .wantAsync = rhs { return true } else { return false }
-    case .wantAsyncJob: if case .wantAsyncJob = rhs { return true } else { return false }
-    case .syscall: if case .syscall = rhs { return true } else { return false }
-    case .ssl: if case .ssl = rhs { return true } else { return false }
-    case let .errorMessage(lmsg): if case let .errorMessage(rmsg) = rhs { return lmsg == rmsg } else { return false }
-    case let .bios_errno(lval): if case let .bios_errno(rval) = rhs { return lval == rval } else { return false }
-    case let .undocumentedSslError(lval): if case let .undocumentedSslError(rval) = rhs { return lval == rval } else { return false }
-    case let .undocumentedSslFunctionResult(lval): if case let .undocumentedSslFunctionResult(rval) = rhs { return lval == rval } else { return false }
-    }
-}
-
-
-/// Compares two ssl results, returns true when they are not equal.
-
-public func != (lhs: Ssl.Result, rhs: Ssl.Result) -> Bool {
-    return !(lhs == rhs)
-}
-
-
 /// A wrapper class for an openSSL session (SSL).
 
 public class Ssl {
@@ -217,6 +187,35 @@ public class Ssl {
         /// The textual description of the value
         
         public var debugDescription: String { return description }
+        
+        /// Compares two ssl results, returns true when they are equal.
+        
+        public static func == (lhs: Result, rhs: Result) -> Bool {
+            switch lhs {
+            case let .completed(lnum): if case let .completed(rnum) = rhs { return lnum == rnum } else { return false }
+            case .zeroReturn: if case .zeroReturn = rhs { return true } else { return false }
+            case .wantRead: if case .wantRead = rhs { return true } else { return false }
+            case .wantWrite: if case .wantWrite = rhs { return true } else { return false }
+            case .wantConnect: if case .wantConnect = rhs { return true } else { return false }
+            case .wantAccept: if case .wantAccept = rhs { return true } else { return false }
+            case .wantX509Lookup: if case .wantX509Lookup = rhs { return true } else { return false }
+            case .wantAsync: if case .wantAsync = rhs { return true } else { return false }
+            case .wantAsyncJob: if case .wantAsyncJob = rhs { return true } else { return false }
+            case .syscall: if case .syscall = rhs { return true } else { return false }
+            case .ssl: if case .ssl = rhs { return true } else { return false }
+            case let .errorMessage(lmsg): if case let .errorMessage(rmsg) = rhs { return lmsg == rmsg } else { return false }
+            case let .bios_errno(lval): if case let .bios_errno(rval) = rhs { return lval == rval } else { return false }
+            case let .undocumentedSslError(lval): if case let .undocumentedSslError(rval) = rhs { return lval == rval } else { return false }
+            case let .undocumentedSslFunctionResult(lval): if case let .undocumentedSslFunctionResult(rval) = rhs { return lval == rval } else { return false }
+            }
+        }
+        
+        
+        /// Compares two ssl results, returns true when they are not equal.
+        
+        public static func != (lhs: Result, rhs: Result) -> Bool {
+            return !(lhs == rhs)
+        }
     }
     
     
