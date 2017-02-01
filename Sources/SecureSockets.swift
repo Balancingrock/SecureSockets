@@ -3,13 +3,13 @@
 //  File:       SecureSockets.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.1  - Updated documentation for use with jazzy.
+// v0.1.0  - Initial release
 // =====================================================================================================================
 //
 // When encountering error messages of the following kind
@@ -134,16 +135,16 @@ fileprivate func sslErrorMessageReader(message: UnsafePointer<Int8>?, _ : Int, _
 }
 
 
-/// Clears the error stack.
+/// Clears the openSSL error stack.
 
 public func errClearError() {
     ERR_clear_error()
 }
 
 
-/// Collects the errors in this thread since the previous call or a preceding 'errClearError'.
+/// Collects the openSSL errors in this thread since the previous call or a preceding 'errClearError'.
 ///
-/// - Returns: The error message(s) that have occured in the current thread in openSSL.
+/// - Returns: The openSSL error message(s) that have occured in the current thread.
 
 public func errPrintErrors() -> String {
     
@@ -174,13 +175,22 @@ public func errPrintErrors() -> String {
 }
 
 
-/// The supported filetypes for keys and certificates
+/// The supported filetypes for keys and certificates.
 
 public enum FileEncoding {
     
-    case ans1 // 1 key/certificate per file
     
-    case pem  // Multiple certificates or keys per file, often only the first is used
+    // ANS1 contains 1 key or certificate per file.
+    
+    case ans1
+    
+    
+    // PEM formats can contain multiple certificates and/or keys per file. Often only the first one is used.
+    
+    case pem
+    
+    
+    // The SSL file encoding constant for this item.
     
     var asInt32: Int32 {
         switch self {
@@ -195,9 +205,22 @@ public enum FileEncoding {
 
 public struct EncodedFile {
     
+    
+    /// The path of the file.
+    
     let path: String
     
+    
+    /// The type of file.
+    
     let encoding: Int32
+    
+    
+    /// Creates a new EncodedFile.
+    ///
+    /// - Parameter
+    ///   - path: The path of the file.
+    ///   - encoding: The type of the file.
     
     public init(path: String, encoding: FileEncoding) {
         self.path = path
@@ -210,16 +233,23 @@ public struct EncodedFile {
 
 public struct CertificateAndPrivateKeyFiles {
     
+    
+    /// The file with the certificate.
+    
     let certificate: EncodedFile
+    
+    
+    /// The file with the private key.
     
     let privateKey: EncodedFile
     
     
     /// Creates a new association of certificate and private key. It will be checked if the private key is paired with the public key that is contained in the certificate.
     ///
-    /// - Parameter certificateFile: A file containing a certificate.
-    /// - Parameter privateKeyFile: A file containing a private key.
-    /// - Parameter errorProcessing: A closure that will be executed if an error is detected.
+    /// - Parameter
+    ///   - certificateFile: A file containing a certificate.
+    ///   - privateKeyFile: A file containing a private key.
+    ///   - errorProcessing: A closure that will be executed if an error is detected.
     
     public init?(certificateFile: EncodedFile, privateKeyFile: EncodedFile, errorProcessing: ((String) -> Void)? = nil) {
         
@@ -262,9 +292,10 @@ public struct CertificateAndPrivateKeyFiles {
     
     /// Creates a new association of certificate and private key. It will be checked if the private key is paired with the public key that is contained in the certificate.
     ///
-    /// - Parameter certificateFile: Path to a file containing a certificate in the PEM format.
-    /// - Parameter privateKeyFile: Path to a file containing a private key in the PEM format.
-    /// - Parameter errorProcessing: A closure that will be executed if an error is detected.
+    /// - Parameters:
+    ///   - certificateFile: Path to a file containing a certificate in the PEM format.
+    ///   - privateKeyFile: Path to a file containing a private key in the PEM format.
+    ///   - errorProcessing: A closure that will be executed if an error is detected.
     
     public init?(pemCertificateFile: String, pemPrivateKeyFile: String, errorProcessing: ((String) -> Void)? = nil) {
         
@@ -282,10 +313,15 @@ public struct CertificateAndPrivateKeyFiles {
 }
 
 
+/// The structure that glues a Connection to an SSL interface.
+
 public struct SslInterface: InterfaceAccess {
     
     private(set) var ssl: Ssl?
     private(set) var socket: Int32?
+    
+    
+    // True when the connection is preent.
     
     var isValid: Bool {
         get {
@@ -296,10 +332,20 @@ public struct SslInterface: InterfaceAccess {
         }
     }
     
+    
+    /// Creates a new SslInterface for a Connection object.
+    ///
+    /// - Parameters:
+    ///   - ssl: The Ssl session.
+    ///   - socket: The socket.
+    
     public init(_ ssl: Ssl, _ socket: Int32) {
         self.ssl = ssl
         self.socket = socket
     }
+    
+    
+    /// Closes and invalidates the interface.
     
     public mutating func close() {
         
@@ -311,11 +357,18 @@ public struct SslInterface: InterfaceAccess {
         }
     }
     
-    public func transfer(
-        buffer: UnsafeBufferPointer<UInt8>,
-        timeout: TimeInterval?,
-        callback: TransmitterProtocol? = nil,
-        progress: TransmitterProgressMonitor? = nil) -> TransferResult? {
+    
+    /// Transfers the data in the buffer to the peer.
+    ///
+    /// - Parameters:
+    ///   - buffer: The buffer with data to be transferred.
+    ///   - timeout: The maximum duration of the transfer.
+    ///   - callback: The destination for the TransmitterProtocol methods calls.
+    ///   - progress: The closure to invoke for progress updates.
+    ///
+    /// - Returns: See the definition of TransferResult.
+    
+    public func transfer(buffer: UnsafeBufferPointer<UInt8>, timeout: TimeInterval?, callback: TransmitterProtocol? = nil, progress: TransmitterProgressMonitor? = nil) -> TransferResult? {
         
         if isValid {
             
@@ -330,11 +383,15 @@ public struct SslInterface: InterfaceAccess {
         return nil
     }
     
-    public func receiverLoop(
-        bufferSize: Int,
-        duration: TimeInterval,
-        receiver: ReceiverProtocol
-        ) {
+    
+    /// Starts a rceiver loop.
+    ///
+    /// - Parameters:
+    ///   - bufferSize: The size of the buffer to allocate.
+    ///   - duration: The loop duration.
+    ///   - receiver: The destination for the ReceiverProtocol method calls.
+    
+    public func receiverLoop(bufferSize: Int, duration: TimeInterval, receiver: ReceiverProtocol) {
         
         if isValid {
             

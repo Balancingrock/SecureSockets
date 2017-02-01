@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,7 +59,7 @@ import SwifterSockets
 import COpenSsl
 
 
-/// A wrapper class for the openSSL context. This wrapper avoids having to handle the openssl free/up_ref.
+/// A wrapper class for an openSSL context (SSL_CTX).
 
 public class Ctx {
     
@@ -73,7 +74,9 @@ public class Ctx {
     deinit { SSL_CTX_free(optr) }
     
     
-    /// Initialises a new object from the given opaquepointer that was generated or retrieved using an openSSL call. The ref count of the  structure pointed will be decremented (and thus possibly deallocated) when the Ctx object is freed. It should not be nil, nor should the ref count be 0.
+    /// Initialises a new object from the given opaquepointer. The (openSSL) reference count of the structure must be 1.
+    ///
+    /// - Parameter ctx: A pointer to a SSL_CTX structure with an reference count of 1.
     
     public init(ctx: OpaquePointer) { self.optr = ctx }
     
@@ -83,14 +86,16 @@ public class Ctx {
     public var x509: X509? { return X509(ctx: self) }
     
     
-    // The list with CTX's for the domains. This list is used for the SNI protocol extension. Each CTX must have a certificate and private key (belonging to the certificate) set.
+    // A list with Ctx's for domains beiing hosted by the server that uses this Ctx. Should be empty for client Ctx's. May be empty for server Ctx's if the server hosts just one domain.
     
     private var domainCtxs = [Ctx]()
     
     
     /// Assigns the certificate in the given file.
+    ///
     /// - Parameter file: An encoded file in PEM or ASN1 format with the certificate.
-    /// - Returns: .success(true) or an .error(message: String).
+    ///
+    /// - Returns: Either .success(true) or .error(message: String).
     
     public func useCertificate(file encodedFile: EncodedFile) -> Result<Bool> {
         
@@ -108,8 +113,10 @@ public class Ctx {
     
     
     /// Assigns the private key in the given file.
+    ///
     /// - Parameter file: An encoded file in PEM or ASN1 format with the private key.
-    /// - Returns: .success(true) or an .error(message: String).
+    ///
+    /// - Returns: Either .success(true) or .error(message: String).
     
     public func usePrivateKey(file encodedFile: EncodedFile) -> Result<Bool> {
         
@@ -126,8 +133,11 @@ public class Ctx {
     }
     
     
-    /// Verifies if the private key and the certificate that were last set belong together. The certificate contains a public key. The private key most recently set will be tested for compatibilty with the public key in the certificate that was most recently set.
-    /// - Returns: .success(true) or an .error(message: String).
+    /// Verifies if the private key and the certificate that were last set belong together.
+    ///
+    /// The private key most recently set will be tested for compatibilty with the public key in the certificate that was most recently set.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String).
     
     public func checkPrivateKey() -> Result<Bool> {
         
@@ -145,9 +155,12 @@ public class Ctx {
     
     
     /// Adds the file or folder at the given path to the list of trusted certificates.
+    ///
     /// - Note: There is no test performed on the trusted certificated, the paths are accepted as is.
-    /// - Parameter location: The path of the file or folder containing the trusted certificates.
-    /// - Returns: .success(true) or an .error(message: String)
+    ///
+    /// - Parameter location: The path of the file or folder containing the trusted certificate(s).
+    ///
+    /// - Returns: Either .success(true) or .error(message: String)
     
     public func loadVerify(location path: String) -> Result<Bool> {
         
@@ -181,7 +194,9 @@ public class Ctx {
     }
     
     
-    /// Sets the 'SSL_VERIFY_PEER' and 'SSL_VERIFY_FAIL_IF_NO_PEER_CERT' options to true. This enforces a verification of the certificate from the peer. The peer can be either a server or client.
+    /// Sets the 'SSL_VERIFY_PEER' and 'SSL_VERIFY_FAIL_IF_NO_PEER_CERT' options to true.
+    ///
+    /// This enforces the verification of the certificate from the peer. The peer can be either a server or client.
     
     public func setVerifyPeer() {
         
@@ -189,9 +204,9 @@ public class Ctx {
     }
     
     
-    /// This adds a domain context. The added context should have a certificate and private key. Note that no checks are made if the certificate is already in use by another domainCtx.
+    /// This adds a domain Ctx. The Ctx should have a certificate and private key. The given Ctx is accepted as is without aditional checks.
     ///
-    /// - Parameter ctx: The ctx to be added.
+    /// - Parameter ctx: The Ctx to be added.
     
     public func addDomainCtx(_ ctx: Ctx) {
         
@@ -266,12 +281,13 @@ public class Ctx {
 }
 
 
-/// A context for a server setup with the default options.
-/// - Note: If the creations fails, the SwifterSockets.Secure.errPrintErrors may have more information on the cause.
+/// A context for a server.
 
 public final class ServerCtx: Ctx {
     
-    /// If the creations fails, the SwifterSockets.Secure.errPrintErrors may have more information on the cause.
+    /// Creates a new ServerCtx.
+    ///
+    /// If the creations fails, the SecureSockets.errPrintErrors may have more information on the cause.
     
     public init?() {
         
@@ -292,12 +308,13 @@ public final class ServerCtx: Ctx {
 }
 
 
-/// A context for a client setup with the default options.
-/// - Note: If the creations fails, the SwifterSockets.Secure.errPrintErrors may have more information on the cause.
+/// A context for a client.
 
 public final class ClientCtx: Ctx {
     
-    /// If the creations fails, the SwifterSockets.Secure.errPrintErrors may have more information on the cause.
+    /// Creates a new ClientCtx.
+    ///
+    /// If the creations fails, the SecureSockets.errPrintErrors may have more information on the cause.
     
     public init?() {
         

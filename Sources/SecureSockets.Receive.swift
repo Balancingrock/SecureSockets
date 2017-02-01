@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Receive.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.1.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,7 +49,8 @@
 //
 // History
 //
-// v0.1.0 - Initial release
+// v0.3.1  - Updated documentation for use with jazzy.
+// v0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -57,22 +58,19 @@ import SwifterSockets
 import COpenSsl
 
 
-/// Receives data from a socket using SSL.
+/// Starts a receiver loop on an SSL session.
 ///
 /// - Note: This operation does not close the socket or free the SSL structure when an error occurs.
 ///
-/// - Note: This operation can be resume transfers after a timeout occurs. I.e. after a timeout the operation can be called again with the same parameter values as before. This can be used to implement -for example- progress tracking.
+/// - Note: This operation can resume transfers after a timeout occurs. I.e. after a timeout the operation can be called again with the same parameter values as before. This can be used to implement -for example- progress tracking.
 ///
-/// - Parameter ssl: The session to use.
-/// - Parameter bufferSize: The size of the buffer that will be allocated for the data to be received.
-/// - Parameter duration: The maximum duration of a single receive loop.
-/// - Parameter receiver: The object that implements the receiver protocol.
+/// - Parameters:
+///   - ssl: The session to use.
+///   - bufferSize: The size of the buffer that will be allocated for the data to be received.
+///   - duration: The maximum duration of a single receive loop.
+///   - receiver: The destination for the ReceiverProtocol method calls.
 
-public func sslReceiverLoop(
-    ssl: Ssl,
-    bufferSize: Int,
-    duration: TimeInterval,
-    receiver: ReceiverProtocol?) {
+public func sslReceiverLoop(ssl: Ssl, bufferSize: Int, duration: TimeInterval, receiver: ReceiverProtocol?) {
     
     // Find programming errors
     

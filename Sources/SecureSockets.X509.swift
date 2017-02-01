@@ -3,13 +3,13 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,10 +59,12 @@ import SwifterSockets
 import COpenSsl
 
 
-/// Returns the string for the NID element in the given X509_NAME structure.
+/// The string for the NID element in the given X509_NAME structure.
 ///
-/// - Parameter x509Name: A pointer to the X509_NAME
-/// - Parameter withNid: An integer indicating the NID element (see openssl/objects.h)
+/// - Parameters:
+//    - x509Name: A pointer to the X509_NAME
+///   - with: An integer indicating the NID element (see openssl/objects.h)
+///
 /// - Returns: nil if the value is not present. The String value if it was read correctly.
 
 fileprivate func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
@@ -111,9 +114,10 @@ fileprivate func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String?
 }
 
 
-/// Read the Subject Alt Names stored in the extension.
+/// The Subject Alt Names stored in the extension.
 ///
 /// - Parameter from: An OpaquePointer to an x509 structure that was created by -or retrieved from- OpenSSL.
+///
 /// - Returns: nil if no subject alt names could be read, an array with Strings if subject alt names were read.
 
 public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
@@ -171,7 +175,7 @@ public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
 }
 
 
-/// A wrapper class for a x509 structure. This wrapper avoids having to handle the free/up_ref.
+/// A wrapper class for a x509 structure.
 
 public class X509 {
     
@@ -385,7 +389,7 @@ public class X509 {
         case unknown
         
         
-        /// Returns a readable description of this result.
+        /// A readable description of this result.
         
         public var description: String {
             
@@ -462,7 +466,7 @@ public class X509 {
         }
         
         
-        /// Creates a new value from an Int32.
+        /// A new value from an Int32.
         
         public init(for value: Int32) {
             
@@ -544,21 +548,53 @@ public class X509 {
     
     private(set) var optr: OpaquePointer!
     
+    
+    /// Sets the string value for a given NID in the subject name.
+    ///
+    /// - Parameters:
+    ///   - nid: An integer specifying the NID of the field to be updated.
+    ///   - value: The string to be placed in the field.
+    ///
+    /// - Returns: true on success, false on failure.
+    
     private func setSubjectNameField(_ nid: Int32, _ value: String) -> Bool {
         let subjectName = X509_get_subject_name(optr)
         return X509_NAME_add_entry_by_NID(subjectName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
     }
+    
+    
+    /// Retrieves the string value of the specified field in the subject name.
+    ///
+    /// - Parameter by: An integer specifying the NID of the field to be retrieved.
+    ///
+    /// - Returns: If the field is present, its string value. Otherwise nil.
     
     private func getSubjectNameField(by nid: Int32) -> String? {
         let subjectName = X509_get_subject_name(optr)
         return valueFrom(x509Name: subjectName, with: nid)
     }
     
+    
+    /// Sets the string value for a given NID in the issuer name.
+    ///
+    /// - Parameters:
+    ///   - nid: An integer specifying the NID of the field to be updated.
+    ///   - value: The string to be placed in the field.
+    ///
+    /// - Returns: true on success, false on failure.
+
     private func setIssuerNameField(_ nid: Int32, _ value: String) -> Bool {
         let issuerName = X509_get_subject_name(optr)
         return X509_NAME_add_entry_by_NID(issuerName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
     }
     
+    
+    /// Retrieves the string value of the specified field in the issuer name.
+    ///
+    /// - Parameter by: An integer specifying the NID of the field to be retrieved.
+    ///
+    /// - Returns: If the field is present, its string value. Otherwise nil.
+
     private func getIssuerNameField(by nid: Int32) -> String? {
         let issuerName = X509_get_subject_name(optr)
         return valueFrom(x509Name: issuerName, with: nid)
@@ -582,9 +618,10 @@ public class X509 {
     }
     
     
-    /// Creates a new X509 object from the certifcate received from the peer.
+    /// A X509 object with the peer certificate of the ssl-session (if any).
     ///
-    /// - Parameter ssl: The Ssl object from which to obtain the certificate.
+    /// - Parameter ssl: The Ssl object from which to obtain the peer certificate.
+    ///
     /// - Returns: nil if no certificate is present.
     
     public init?(ssl: Ssl) {
@@ -593,9 +630,10 @@ public class X509 {
     }
     
     
-    /// Creates a new X509 object from the certifcate received from the peer.
+    /// A X509 object from the given context (if any).
     ///
     /// - Parameter ctx: The Ctx object from which to obtain the certificate.
+    ///
     /// - Returns: nil if no certificate is present.
     
     public init?(ctx: Ctx) {
@@ -609,6 +647,7 @@ public class X509 {
     
     
     /// The common name in the subject name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var subjectCommonName: String? {
@@ -617,7 +656,8 @@ public class X509 {
     }
     
     
-    /// The country code in the subject name
+    /// The country code in the subject name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
 
     public var subjectCountryCode: String? {
@@ -626,7 +666,8 @@ public class X509 {
     }
     
     
-    /// The organization name in the subject name
+    /// The organization name in the subject name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
 
     public var subjectOrganizationName: String? {
@@ -635,7 +676,8 @@ public class X509 {
     }
     
     
-    /// The organizational unit name in the subject name
+    /// The organizational unit name in the subject name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
 
     public var subjectOrganizationalUnitName: String? {
@@ -644,7 +686,8 @@ public class X509 {
     }
     
     
-    /// The state or province name in the subject name
+    /// The state or province name in the subject name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
 
     public var subjectStateOrProvinceName: String? {
@@ -653,7 +696,8 @@ public class X509 {
     }
 
     
-    /// The locality name in the subject name
+    /// The locality name in the subject name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var subjectLocalityName: String? {
@@ -663,6 +707,7 @@ public class X509 {
 
     
     /// The common name in the issuer name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var issuerCommonName: String? {
@@ -671,7 +716,8 @@ public class X509 {
     }
     
     
-    /// The country code in the issuer name
+    /// The country code in the issuer name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var issuerCountryCode: String? {
@@ -680,7 +726,8 @@ public class X509 {
     }
     
     
-    /// The organization name in the issuer name
+    /// The organization name in the issuer name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var issuerOrganizationName: String? {
@@ -689,7 +736,8 @@ public class X509 {
     }
     
     
-    /// The organizational unit name in the issuer name
+    /// The organizational unit name in the issuer name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var issuerOrganizationalUnitName: String? {
@@ -698,7 +746,8 @@ public class X509 {
     }
     
     
-    /// The state or province name in the issuer name
+    /// The state or province name in the issuer name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var issuerStateOrProvinceName: String? {
@@ -707,7 +756,8 @@ public class X509 {
     }
     
     
-    /// The locality name in the issuer name
+    /// The locality name in the issuer name.
+    ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
     
     public var issuerLocalityName: String? {
@@ -724,6 +774,7 @@ public class X509 {
     
     
     /// The serial number in the certificate
+    ///
     /// - Note: The instance variable errorMessage will be set if an error occured.
     
     public var serialNumber: Int {
@@ -776,7 +827,8 @@ public class X509 {
     }
     
     
-    /// The valid not before time contained in the certificate as a double in seconds since 1970-01-01.
+    /// The 'valid not before' time contained in the certificate in seconds since 1970-01-01.
+    ///
     /// - Note: The instance variable errorMessage will be set if an error occured.
 
     public var validNotBefore: Int64 {
@@ -840,7 +892,8 @@ public class X509 {
     }
     
     
-    /// The valid not after time contained in the certificate as a double in seconds since 1970-01-01.
+    /// The 'valid not after' time contained in the certificate in seconds since 1970-01-01.
+    ///
     /// - Note: The instance variable errorMessage will be set if an error occured.
     
     public var validNotAfter: Int64 {
@@ -904,11 +957,11 @@ public class X509 {
     }
     
     
-    /// Writes the key in the file at the given path as the public key to the certificate.
+    /// Sets the key in the file at the given path as the public key for this certificate.
     ///
     /// - Parameter from: The filepath of the public key.
     ///
-    /// - Returns: Either .success(tru) or .eror(message: String) when an error occured.
+    /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
     
     public func setPublicKey(from filepath: String) -> Result<Bool> {
         
@@ -946,9 +999,9 @@ public class X509 {
     
     /// Signs the certificate with the key from the given file.
     ///
-    /// - Parameter with: The filepath of the private key.
+    /// - Parameter withKeyAt: The filepath of the private key.
     ///
-    /// - Returns: Either .success(tru) or .eror(message: String) when an error occured.
+    /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
     
     public func sign(withKeyAt filepath: String) -> Result<Bool> {
         
@@ -978,7 +1031,11 @@ public class X509 {
     }
     
     
-    /// Write the ceritificate to file
+    /// Write the ceritificate to file at the given path.
+    ///
+    /// - Parameter to: The filepath of the private key.
+    ///
+    /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
     
     public func write(to filepath: String) -> Result<Bool> {
         
@@ -1005,7 +1062,7 @@ public class X509 {
     
     /// Checks if the certificate was issued for the given hostname in either the common name or subject alternative names. Wildcard names are supported.
     ///
-    /// - Returns: true if the certificate was issued for the gievn host name, false if not.
+    /// - Returns: true if the certificate was issued for the given host name, false if not.
     
     public func checkHost(_ name: UnsafePointer<Int8>!) -> Bool {
         return X509_check_host(optr, name, 0, 0, nil) == 1

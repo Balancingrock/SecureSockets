@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Transmit.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,23 +59,19 @@ import SwifterSockets
 import COpenSsl
 
 
-/// Transmits the buffer content from the given buffer using the specified SSL struct.
+/// Transmits the buffer content using a SSL session.
 ///
-/// - Parameter ssl: The ssl session.
-/// - Parameter buffer: A pointer to a buffer containing the bytes to be transferred.
-/// - Parameter timeout: The time in seconds for the complete transfer attempt.
-/// - Parameter callback: An object that will receive the SwifterSocketsTransmitterCallback protocol operations.
-/// - Parameter progress: A closure that will be activated to keep tracks of the progress of the transfer.
+/// - Parameters:
+///   - ssl: The ssl session to use.
+///   - buffer: A pointer to a buffer containing the bytes to be transferred.
+///   - timeout: The time in seconds for the complete transfer attempt.
+///   - callback: The destination for the TransmitterProtocol methods calls.
+///   - progress: The closure to invoke for progress monitoring.
 ///
-/// - Returns: .ready when all bytes were send, otherwise .error(message: String) or .timeout.
+/// - Returns: See the TransferResult definition.
 
 @discardableResult
-public func sslTransfer(
-    ssl: Ssl,
-    buffer: UnsafeBufferPointer<UInt8>,
-    timeout: TimeInterval,
-    callback: TransmitterProtocol?,
-    progress: TransmitterProgressMonitor?) -> TransferResult {
+public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: TimeInterval, callback: TransmitterProtocol?, progress: TransmitterProgressMonitor?) -> TransferResult {
     
     
     // Get the socket
@@ -152,23 +149,19 @@ public func sslTransfer(
 }
 
 
-/// Transmits the bytes from the given Data object using the specified SSL struct.
+/// Transmits the content of the data object using a SSL session.
 ///
-/// - Parameter ssl: The ssl session.
-/// - Parameter data: A Data object containing the bytes to be transferred.
-/// - Parameter timeout: The time in seconds for the complete transfer attempt.
-/// - Parameter callback: An object that will receive the SwifterSocketsTransmitterCallback protocol operations.
-/// - Parameter progress: A closure that will be activated to keep tracks of the progress of the transfer.
+/// - Parameters:
+///   - ssl: The ssl session to use.
+///   - data: The data object containing the bytes to be transferred.
+///   - timeout: The time in seconds for the complete transfer attempt.
+///   - callback: The destination for the TransmitterProtocol methods calls.
+///   - progress: The closure to invoke for progress monitoring.
 ///
-/// - Returns: READY when all bytes were send, ERROR on error or TIMEOUT on timeout.
+/// - Returns: See the TransferResult definition.
 
 @discardableResult
-public func sslTransfer(
-    ssl: Ssl,
-    data: Data,
-    timeout: TimeInterval,
-    callback: TransmitterProtocol?,
-    progress: TransmitterProgressMonitor?) -> TransferResult {
+public func sslTransfer(ssl: Ssl, data: Data, timeout: TimeInterval, callback: TransmitterProtocol?, progress: TransmitterProgressMonitor?) -> TransferResult {
     
     return data.withUnsafeBytes { (ptr: UnsafePointer<UInt8>) -> TransferResult in
         let ubptr = UnsafeBufferPointer<UInt8>.init(start: ptr, count: data.count)
@@ -177,23 +170,19 @@ public func sslTransfer(
 }
 
 
-/// Transmits the given string as a UTF-8 byte sequence using the specified SSL struct.
+/// Transmits the string utf-8 encoded using a SSL session.
 ///
-/// - Parameter ssl: The ssl session.
-/// - Parameter string: The string to be converted to a UTF-8 bytes sequence for transfer.
-/// - Parameter timeout: The time in seconds for the complete transfer attempt.
-/// - Parameter callback: An object that will receive the SwifterSocketsTransmitterCallback protocol operations.
-/// - Parameter progress: A closure that will be activated to keep tracks of the progress of the transfer.
+/// - Parameters:
+///   - ssl: The ssl session to use.
+///   - string: The string to be transferred encoded as utf-8.
+///   - timeout: The time in seconds for the complete transfer attempt.
+///   - callback: The destination for the TransmitterProtocol methods calls.
+///   - progress: The closure to invoke for progress monitoring.
 ///
-/// - Returns: READY when all bytes were send, ERROR on error or TIMEOUT on timeout.
+/// - Returns: See the TransferResult definition.
 
 @discardableResult
-public func sslTransfer(
-    ssl: Ssl,
-    string: String,
-    timeout: TimeInterval,
-    callback: TransmitterProtocol?,
-    progress: TransmitterProgressMonitor?) -> TransferResult {
+public func sslTransfer(ssl: Ssl, string: String, timeout: TimeInterval, callback: TransmitterProtocol?, progress: TransmitterProgressMonitor?) -> TransferResult {
     
     if let data = string.data(using: String.Encoding.utf8) {
         return sslTransfer(ssl: ssl, data: data, timeout: timeout, callback: callback, progress: progress)

@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Client.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,19 +59,22 @@ import SwifterSockets
 import COpenSsl
 
 
-/// The return type for the setupServer functions. Possible values are:
-/// - error(String)
-/// - success(ssl: OpaquePointer, socket: Int32)
+/// The return type for the connectToSslServer function.
 
 public enum ConnectResult: CustomStringConvertible {
     
     
-    /// An error occured, enclosed is either errno or the getaddrinfo return value and the string is the textual representation of the error
+    /// An error occured
+    ///
+    /// - Parameter message: The textual representation of the error.
     
     case error(message: String)
     
     
-    /// The socket descriptor of the open socket
+    /// The connection was established.
+    ///
+    /// - Parameter ssl: The ssl-session that can be used to transfer data.
+    /// - Parameter socket: The socket used for the connection.
     
     case success(ssl: Ssl, socket: Int32)
     
@@ -92,30 +96,23 @@ public enum ConnectResult: CustomStringConvertible {
 }
 
 
-/// Connect to the specified server using https. The default setup for the SSL connection context are: server certificate (SSL_VERIFY_PEER) will be verified, SSLv2 and SSLv3 are disabled, all OpenSSL bugfixes are enabled, the client certificate is optional.
+/// Connect to the server using ssl. The default setup for the session context is: server certificate (SSL_VERIFY_PEER) will be verified, SSLv2 and SSLv3 are disabled, all OpenSSL bugfixes are enabled, the client certificate is optional.
 ///
 /// - Note: Using all default values for this method is invalid. Either _ctxSetup_ or _trustedServerCertificates_ (with at least 1 certificate) must be provided.
 ///
-/// - Parameter atAddress: The address of the remote computer.
-/// - Parameter atPort: The port number on which to connect.
-/// - Parameter host: The name of the host to be reached (usually something like 'domain.com'). If a server hosts multiple certified domains, this name is used to select the certificate at the server.
-/// - Parameter timeout: The time within which the connection should be established.
-/// - Parameter clientCtx: An openSSL context wrapper (Ctx) that can be used as a client. If none is provided, a SwifterSockets.Secure.ClientCtx will be created. __Note__: If ctx is nil (default) or has no trusted server certificate then at least one trustedServercertificate must be provided.
-/// - Parameter certificateAndPrivateKeyFiles: The certificate and private key to be used as the client certificate. Only needed for certified clients.
-/// - Parameter trustedServerCertificates: A list of paths to file(s) or folder(s) that contain the certificate(s) of the acceptable servers. If none is provided, a clientCtx must be provided that has a trusted server certificate set.
-/// - Parameter callback: A closure that is called when a certificate verification failed. It is up to the closure to accept or reject the server. If the closure is nil, the server will be rejected when the certificate verification failed.
+/// - Parameters:
+///   - address: The ip address of the server.
+///   - port: The port number on which to connect.
+///   - host: The name of the host to be reached (usually something like 'domain.com'). If a server hosts multiple certified domains, this name is used to select the certificate at the server.
+///   - timeout: The time within which the connection should be established.
+///   - clientCtx: An openSSL context wrapper (Ctx) that can be used for a client. If none is provided, a SwifterSockets.Secure.ClientCtx will be created. __Note__: If clientCtx is nil (default) or has no trusted server certificate preloaded, then at least one trustedServerCertificate must be provided.
+///   - certificateAndPrivateKeyFiles: The certificate and private key to be used as the client certificate. Only needed for certified clients.
+///   - trustedServerCertificates: A list of paths to file(s) or folder(s) that contain the certificate(s) of the acceptable servers. If none is provided, a clientCtx must be provided that has a trusted server certificate set.
+///   - callback: A closure that is called when a certificate verification failed. It is up to the closure to accept or reject the server. If the closure is nil, the server will be rejected when the certificate verification failed.
 ///
 /// - Returns: Either .success(Ssl), .error(message: String) or .timeout
 
-public func connectToSslServer(
-    atAddress address: String,
-    atPort port: String,
-    host: String? = nil,
-    timeout: TimeInterval = 10.0,
-    clientCtx: Ctx? = nil,
-    certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil,
-    trustedServerCertificates: [String]? = nil,
-    callback: ((_ x509: X509) -> Bool)? = nil) -> ConnectResult {
+public func connectToSslServer(atAddress address: String, atPort port: String, host: String? = nil, timeout: TimeInterval = 10.0, clientCtx: Ctx? = nil, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedServerCertificates: [String]? = nil, callback: ((_ x509: X509) -> Bool)? = nil) -> ConnectResult {
     
     
     // Make sure there is at least a trusted certificate file or a callee provided ctxSetup.
@@ -239,33 +236,25 @@ public func connectToSslServer(
 }
 
 
-/// Connect to the specified server using https and start a receiver. The default setup for the SSL connection context are: server certificate (SSL_VERIFY_PEER) will be verified, SSLv2 and SSLv3 are disabled, all OpenSSL bugfixes are enabled, the client certificate is optional.
+/// Connect to the server using ssl. The default setup for the session context is: server certificate (SSL_VERIFY_PEER) will be verified, SSLv2 and SSLv3 are disabled, all OpenSSL bugfixes are enabled, the client certificate is optional.
 ///
 /// - Note: Using all default values for this method is invalid. Either _ctxSetup_ or _trustedServerCertificates_ (with at least 1 certificate) must be provided.
 ///
-/// - Parameter atAddress: The address of the remote computer.
-/// - Parameter atPort: The port number on which to connect.
-/// - Parameter host: The name of the host to be reached (usually something like 'domain.com'). If a server hosts multiple certified domains, this name is used to select the certificate at the server.
-/// - Parameter timeout: The time within which the connection should be established.
-/// - Parameter clientCtx: An openSSL context wrapper (Ctx) that can be used as a client. If none is provided, a SwifterSockets.Secure.ClientCtx will be created. __Note__: If ctx is nil (default) or has no trusted server certificate then at least one trustedServercertificate must be provided.
-/// - Parameter certificateAndPrivateKeyFiles: The certificate and private key to be used as the client certificate. Only needed for certified clients.
-/// - Parameter trustedServerCertificates: A list of paths to file(s) or folder(s) that contain the certificate(s) of the acceptable servers. If none is provided, a clientCtx must be provided that has a trusted server certificate set.
-/// - Parameter callback: A closure that is called when a certificate verification failed. It is up to the closure to accept or reject the server. If the closure is nil, the server will be rejected when the certificate verification failed.
-/// - Parameter connectionObjectFactory: The factory that is invoked when a connection was made.
+/// - Parameters:
+///   - address: The ip address of the server.
+///   - port: The port number on which to connect.
+///   - host: The name of the host to be reached (usually something like 'domain.com'). If a server hosts multiple certified domains, this name is used to select the certificate at the server.
+///   - timeout: The time within which the connection should be established.
+///   - clientCtx: An openSSL context wrapper (Ctx) that can be used for a client. If none is provided, a SwifterSockets.Secure.ClientCtx will be created. __Note__: If clientCtx is nil (default) or has no trusted server certificate preloaded, then at least one trustedServerCertificate must be provided.
+///   - certificateAndPrivateKeyFiles: The certificate and private key to be used as the client certificate. Only needed for certified clients.
+///   - trustedServerCertificates: A list of paths to file(s) or folder(s) that contain the certificate(s) of the acceptable servers. If none is provided, a clientCtx must be provided that has a trusted server certificate set.
+///   - callback: A closure that is called when a certificate verification failed. It is up to the closure to accept or reject the server. If the closure is nil, the server will be rejected when the certificate verification failed.
+///   - connectionObjectFactory: The factory closure that is invoked when a connection was established.
 ///
-/// - Returns: Either a connection (with the receiverloop active) or an error message.
+/// - Returns: Either .success(connection: Connection) or .error(message: String). If a connection is returned the receiverLoop will have been started.
 
 
-public func connectToSslServer(
-    atAddress address: String,
-    atPort port: String,
-    host: String? = nil,
-    timeout: TimeInterval,
-    clientCtx: Ctx? = nil,
-    certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil,
-    trustedServerCertificates: [String]? = nil,
-    callback: ((_ x509: X509) -> Bool)? = nil,
-    connectionObjectFactory: ConnectionObjectFactory) -> Result<Connection> {
+public func connectToSslServer(atAddress address: String, atPort port: String, host: String? = nil, timeout: TimeInterval, clientCtx: Ctx? = nil, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedServerCertificates: [String]? = nil, callback: ((_ x509: X509) -> Bool)? = nil, connectionObjectFactory: ConnectionObjectFactory) -> Result<Connection> {
     
     
     // Initiate the connection

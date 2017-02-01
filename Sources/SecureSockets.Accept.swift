@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Accept.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,32 +59,35 @@ import SwifterSockets
 import COpenSsl
 
 
-/// A handler with this signature can be invoked after the Ssl Accept (~ SSL_accept) completes.
+/// A closure with this signature can be invoked after an Ssl.accept completes.
+///
+/// - Note: The return value of the closure can be used to deny a successfull Ssl Accept, but not to force an accept of a failed Ssl Accept. The main purpose of this is for logging and blacklisting.
 ///
 /// - Parameter ssl: The SSL session.
 /// - Parameter clientIp: The IP address of the client.
-/// - Note: The return value of the closure can be used to deny a successfull Ssl Accept, but not to force an accept of a failed Ssl Accept. The main purpose of this is for logging and blacklisting.
-/// - Returns: 'false' if the session should be terminated. 'true' otherwise.
+///
+/// - Returns: 'false' if the session should be terminated. 'true' to continue.
 
 public typealias SslSessionHandler = (_ ssl: Ssl, _ clientIp: String) -> Bool
 
 
-/// The result for the accept function accept. Possible values are:
-///
-/// - accepted(socket: Int32, ssl: OpaquePointer, clientIp: String)
-/// - error(message: String)
-/// - timeout
-/// - closed
+/// The result for the sslAccept function.
 
 public enum SslAcceptResult {
     
     
-    /// A connection was accepted, the ssl session, the socket descriptor and the client IP adddress are enclosed
+    /// A session was accepted.
+    ///
+    /// - Parameter ssl: The ssl-session
+    /// - Parameter socket: The socket that is used
+    /// - Parameter clientIp: The IP adddress of the peer
     
     case accepted(ssl: Ssl, socket: Int32, clientIp: String)
     
     
-    /// An error occured, the error message is enclosed.
+    /// An error occured.
+    ///
+    /// Parameter message: A textual description of the error.
     
     case error(message: String)
     
@@ -93,28 +97,24 @@ public enum SslAcceptResult {
     case timeout
     
     
-    /// Another thread closed the socket
+    /// Somebody else (another thread or the peer) closed the socket
     
     case closed
 }
 
 
-/// Accepts a secure connection request. First accepts a connection on TCP/IP level and then performs an SSL-Handshake with a call to SSL_accept.
+/// Accepts a secure connection request. First accepts a connection on TCP/IP level and then performs an SSL level accept.
 ///
-/// - Parameter onSocket: The socket on which to accept incoming connection requests. This socket will not be closed by this function.
-/// - Parameter useCtx: The context for the SSL structure that will be created for the connection.
-/// - Parameter timeout: The maximum wait for a connection request.
-/// - Parameter addressHandler: A closure that is invoked after the TCP/IP accept completes. Can be used to blacklist IP addresses or for logging purposes.
-/// - Parameter sslSessionHandler: A closure that is invoked after the SSL_accept completes. Can be used for logging or other purposes.
+/// - Parameters:
+///   - acceptSocket: The socket on which to accept incoming connection requests. This socket will not be closed by this function.
+///   - ctx: The context for the SSL structure that will be created for the accepted connection.
+///   - timeout: The maximum wait for a connection request.
+///   - addressHandler: A closure that is invoked after the TCP/IP accept completes. Can be used to blacklist IP addresses or for logging purposes.
+///   - sslSessionHandler: A closure that is invoked after the SSL_accept completes. Can be used for logging or other purposes.
 ///
-/// - Returns: An AcceptResult.
+/// - Returns: See SslAcceptResult definition.
 
-public func sslAccept(
-    onSocket acceptSocket: Int32,
-    useCtx ctx: Ctx,
-    timeout: TimeInterval,
-    addressHandler: AddressHandler? = nil,
-    sslSessionHandler: SslSessionHandler? = nil) -> SslAcceptResult {
+public func sslAccept(onSocket acceptSocket: Int32, useCtx ctx: Ctx, timeout: TimeInterval, addressHandler: AddressHandler? = nil, sslSessionHandler: SslSessionHandler? = nil) -> SslAcceptResult {
     
     
     let timeoutTime = Date().addingTimeInterval(timeout)

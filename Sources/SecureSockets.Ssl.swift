@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,7 +59,7 @@ import SwifterSockets
 import COpenSsl
 
 
-// Compare for function results
+/// Compares two ssl results, returns true when they are equal.
 
 public func == (lhs: Ssl.Result, rhs: Ssl.Result) -> Bool {
     switch lhs {
@@ -81,10 +82,14 @@ public func == (lhs: Ssl.Result, rhs: Ssl.Result) -> Bool {
 }
 
 
+/// Compares two ssl results, returns true when they are not equal.
+
 public func != (lhs: Ssl.Result, rhs: Ssl.Result) -> Bool {
     return !(lhs == rhs)
 }
 
+
+/// A wrapper class for an openSSL session (SSL).
 
 public class Ssl {
     
@@ -163,7 +168,9 @@ public class Ssl {
         case undocumentedSslFunctionResult(Int32)
         
         
-        /// Converts the result from a SSL_get_error call into a SsL.Result.
+        /// Creates a Ssl.Result from a SSL_get_error result.
+        ///
+        /// - Parameter for: The result from a SSL_get_error call.
         
         public init(for value: Int32) {
             switch value {
@@ -183,7 +190,7 @@ public class Ssl {
         }
         
         
-        /// The CustomStringConvertible protocol
+        /// The textual description of the value
         
         public var description: String {
             switch self {
@@ -207,7 +214,7 @@ public class Ssl {
         }
         
         
-        /// The CustomDebugStringConvertible protocol
+        /// The textual description of the value
         
         public var debugDescription: String { return description }
     }
@@ -218,7 +225,7 @@ public class Ssl {
     private(set) var optr: OpaquePointer
     
     
-    /// The context used by this session.
+    /// The Ctx used by this session.
     
     public var ctx: Ctx? {
         
@@ -242,9 +249,11 @@ public class Ssl {
     deinit { SSL_free(optr) }
     
     
-    /// A new SSL session or nil. If nil, use errPrintErrors() to find out why.
+    /// Creates a new session.
     ///
-    /// - Parameter context: The context to be used in creating a new Ssl.
+    /// If nil, use errPrintErrors() to find out why.
+    ///
+    /// - Parameter context: The Ctx to be used when creating a new Ssl.
     
     public init?(context: Ctx) {
         
@@ -258,7 +267,7 @@ public class Ssl {
     
     /// Assign the given name to the session. For a client session this will be the name used to request a domain certificate.
     ///
-    /// - Parameter name: The name of the expected host.
+    /// - Parameter name: The name of the requested domain.
     
     public func setTlsextHostname(_ name: UnsafePointer<Int8>) {
         SSL_ctrl(optr, SSL_CTRL_SET_TLSEXT_HOSTNAME, Int(TLSEXT_NAMETYPE_host_name), UnsafeMutableRawPointer(mutating: name))
@@ -267,7 +276,8 @@ public class Ssl {
     
     /// Assign a socket (file descriptor) to this session
     ///
-    /// - Parameter sock: The file descriptor to be used.
+    /// - Parameter sock: The file descriptor (socket) to be used.
+    ///
     /// - Returns: Either .success(true) or .error(message: String)
     
     public func setFd(_ sock: Int32) -> SwifterSockets.Result<Bool> {
@@ -279,7 +289,7 @@ public class Ssl {
     }
     
     
-    /// Return the socket of this session
+    /// Return the socket used in this session.
     ///
     /// - Returns: The file descriptor of this session.
     
@@ -290,7 +300,11 @@ public class Ssl {
     
     /// Returns a Result for the parameter returned by SSL_connect(), SSL_accept(), SSL_doHandshake(), SSL_read(), SSL_peek() or SSL_write().
     ///
-    /// In addition to ssl and ret, SSL_get_error() inspects the current thread's OpenSSL error queue. Thus, SSL_get_error() must be used in the same thread that performed the TLS/SSL I/O operation, and no other OpenSSL function calls should appear in between. The current thread's error queue must be empty before the TLS/SSL I/O operation is attempted, or SSL_get_error() will not work reliably.
+    /// openSSL: In addition to ssl and ret, SSL_get_error() inspects the current thread's OpenSSL error queue. Thus, SSL_get_error() must be used in the same thread that performed the TLS/SSL I/O operation, and no other OpenSSL function calls should appear in between. The current thread's error queue must be empty before the TLS/SSL I/O operation is attempted, or SSL_get_error() will not work reliably.
+    ///
+    /// - Parameter ret: The return value from one of the SSL_.... routines.
+    ///
+    /// - Returns: The corresponding Result.
     
     public func getError(_ ret: Int32) -> Result {
         return Result(for: SSL_get_error(optr, ret))
@@ -299,9 +313,11 @@ public class Ssl {
     
     /// Establish a secure connection on the given socket. The socket must already be connected to the server at the TCP/IP level.
     ///
-    /// - Parameter socket: The socket on which to make the connect attempt.
-    /// - Parameter timeout: The time when the attempt should be aborted.
-    /// - Returns: The result of the connection attempt.
+    /// - Parameters
+    ///   - socket: The socket on which to make the connect attempt.
+    ///   - timeout: The maximum duration of the attempt.
+    ///
+    /// - Returns: See the definition of SelectResult.
     
     public func connect(socket: Int32, timeout: Date) -> SelectResult {
         
@@ -407,7 +423,7 @@ public class Ssl {
     }
     
     
-    /// Return the name of the server (after a connection was established)
+    /// The name of the server
     ///
     /// - Returns: The name of the server or nil if not available.
     
@@ -443,9 +459,11 @@ public class Ssl {
     
     /// Tries to read num bytes from the peer.
     ///
-    /// - Parameter buf: A pointer to a memory area containg at least 'num' bytes.
-    /// - Parameter num: The maximum number of bytes to read.
-    /// - Returns: The result code from the operation.
+    /// - Parameters:
+    ///   - buf: A pointer to a memory area containg at least 'num' bytes.
+    ///   - num: The maximum number of bytes to read.
+    ///
+    /// - Returns: The Result code from the operation.
     
     public func read(buf: UnsafeMutableRawPointer, num: Int32) -> Result {
         
@@ -509,8 +527,10 @@ public class Ssl {
     
     /// Writes num bytes from the buffer to the ssl session for transfer to the peer.
     ///
-    /// - Parameter buf: A pointer to a memory area containg at least 'num' bytes.
-    /// - Parameter num: The maximum number of bytes to read.
+    /// - Parameters:
+    ///   - buf: A pointer to a memory area containg at least 'num' bytes.
+    ///   - num: The maximum number of bytes to read.
+    ///
     /// - Returns: The result code from the operation.
     
     public func write(buf: UnsafeRawPointer, num: Int32) -> Result {

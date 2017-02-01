@@ -3,13 +3,13 @@
 //  File:       SecureSockets.Server.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.0
+//  Version:    0.3.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
-//  Website:    http://swiftfire.nl/pages/projects/securesockets/
+//  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Blog:       http://swiftrien.blogspot.com
-//  Git:        https://github.com/Swiftrien/SecureSockets
+//  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
 //
@@ -30,7 +30,7 @@
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
 //  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  whishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
+//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
 //
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
 //
@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.1  - Updated documentation for use with jazzy.
 // v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -58,30 +59,25 @@ import SwifterSockets
 import COpenSsl
 
 
-/// Starts listening on the given port.
+/// Starts listening on the given port for SSL connection requests.
 ///
 /// When no trusted client certificates are present, the server will accept uncertified clients. If client certificates are specified, then only clients with those certificates are accepted.
 ///
-/// To listen for incoming requests, at least one SSL-Context (CTX) is needed. This is called the server CTX. A default server CTX will be provided if the serverCtx parameter is absent or nil. The default configuration is: use TLS server method, no SSLv2, no SSLv3, enable all openSSL bugfixes, and if a trustedClientCertificate is present the SSL_VERIFY_PEER and SSL_VERIFY_FAIL_IF_NO_PEER_CERT are also set (i.e. client certificates are enforced if present).
+/// To listen for incoming requests, at least one Ctx is needed, the serverCtx. A default serverCtx will be provided if the serverCtx parameter is absent or nil. The default configuration for a generated serverCtx is: use TLS server method, no SSLv2, no SSLv3, enable all openSSL bugfixes, and if a trustedClientCertificate is present the SSL_VERIFY_PEER and SSL_VERIFY_FAIL_IF_NO_PEER_CERT are also set (i.e. client certificates are enforced if present).
 ///
-/// - Note: Calling this operation with all parameters set to default values is invalid. At a minimum specify either _serverCtx_ __or__ _certificateAndPrivateKeyFiles_.
-///
-/// - Parameter onPort: A string identifying the number of the port to listen on.
-/// - Parameter maxPendingConnectionRequest: The number of connections that can be kept pending before they are accepted. A connection request can be put into a queue before it is accepted or rejected. This argument specifies the size of the queue. If the queue is full further connection requests will be rejected.
-/// - Parameter certificateAndPrivateKeyFiles: The certificate and private key for the server to use. If a serverCtx is provided with the certificate and private key already set, then leave this parameter nil.
-/// - Parameter trustedClientCertificates: An optional list of paths to certificates (either files or folders) of trusted clients.
-/// - Parameter serverCtx: An optional CTX that will be used for the server CTX. If it is 'nil' then a default ServerCtx will be created.
-/// - Parameter domainCtxs: An optional list of domain CTXs to be used for SNI. Each domain with a certificate should provide a CTX with the certificate and private key for that domain.
-///
-/// - Returns: The SSL session on which is beiing listened or a string with the error description.
+/// - Note: Calling this operation with all parameters set to default values is invalid. At a minimum specify either _serverCtx_ or _certificateAndPrivateKeyFiles_.
 
-public func setupSslServer(
-    onPort port: String,
-    maxPendingConnectionRequest: Int32,
-    certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil,
-    trustedClientCertificates: [String]? = nil,
-    serverCtx: Ctx? = nil,
-    domainCtxs: [Ctx]? = nil) -> Result<(socket: Int32, ctx: Ctx)> {
+/// - Parameters:
+///   - port: The number of the port to listen on.
+///   - maxPendingConnectionRequest: The number of connections that can be kept pending before they are accepted. A connection request can be put into a queue before it is accepted or rejected. This argument specifies the size of the queue. If the queue is full further connection requests will be rejected.
+///   - certificateAndPrivateKeyFiles: The certificate and private key for the server to use. If a serverCtx is provided with the certificate and private key already set, then leave this parameter nil.
+///   - trustedClientCertificates: An optional list of paths to certificates (either files or folders) of trusted clients.
+///   - serverCtx: An optional Ctx that will be used for the server. A default ServerCtx will be created if this parameter is nil.
+///   - domainCtxs: An optional list of domain Ctx's to be used for SNI. Each domain with a certificate should provide a Ctx with the certificate and private key for that domain.
+
+/// - Returns: Either .success(socket: Int32, ctx: Ctx) or .error(message: String)
+
+public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int32, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedClientCertificates: [String]? = nil, serverCtx: Ctx? = nil, domainCtxs: [Ctx]? = nil) -> Result<(socket: Int32, ctx: Ctx)> {
     
     
     // Prevent errors
@@ -156,7 +152,7 @@ public func setupSslServer(
 
 
 
-/// A secure server.
+/// A secure socket layer server.
 
 public class SslServer: ServerProtocol {
     
@@ -167,87 +163,104 @@ public class SslServer: ServerProtocol {
         
         
         /// The port on which the server will be listening.
-        /// - Note: Default = "443"
+        ///
+        /// Default = "443"
         
         case port(String)
         
         
         /// The maximum number of connection requests that will be queued.
-        /// - Note: Default = 20
+        ///
+        /// Default = 20
         
         case maxPendingConnectionRequests(Int)
         
         
         /// This specifies the duration of the accept loop when no connection requests arrive.
-        /// - Note: By implication this also specifies the minimum time between two 'pulsHandler' invocations.
-        /// - Note: Default = 5 seconds
+        ///
+        /// Default = 5 seconds
         
         case acceptLoopDuration(TimeInterval)
         
         
-        /// The server socket operations (Accept loop and "errorProcessor") run synchronously on this queue.
-        /// - Note: Default = serial with default qos.
+        /// The server socket operations (Accept loop and "errorProcessor") will run synchronously on this queue.
+        ///
+        /// Default = serial with default qos.
         
         case acceptQueue(DispatchQueue)
         
         
         /// This closure will be invoked after a connection is accepted. It will run on the acceptQueue and block further accepts until it finishes.
-        /// - Note: Default = nil
+        ///
+        /// Default = nil
         
         case connectionObjectFactory(ConnectionObjectFactory?)
         
         
-        /// This specifies the quality of service for the transmission dispatch queue. Each client wil create its own transfer queue (serial thread) when data must be transmitted to the client. This parameter specifies the QoS of that dispatch queue.
-        /// - Note: Default = .default
+        /// This specifies the quality of service for the transmission dispatch queue. Each client wil create its own serial transfer queue when data must be transmitted to the client. This parameter specifies the QoS of that dispatch queue.
+        ///
+        /// Default = .default
         
         case transmitQueueQoS(DispatchQoS)
         
         
         /// This specifies the timout given to the transmit operation (once a connection has been established)
-        /// - Note: Default = 1 seconds
+        ///
+        /// Default = 1 seconds
         
         case transmitTimeout(TimeInterval)
         
         
         /// This closure will be called when the accept loop wraps around without any activity.
-        /// - Note: Default = nil
+        ///
+        /// Default = nil
         
         case aliveHandler(TipServer.AliveHandler?)
         
         
         /// This closure will be called to inform the callee of possible error's during the accept loop. The accept loop will try to continue after reporting an error.
-        /// - Note: Default = nil
+        ///
+        /// Default = nil
         
         case errorHandler(ErrorHandler?)
         
         
-        /// This closure is started right after a connection has been accepted, before the SSL handshake occurs. If it returns 'true' processing resumes as normal and SSL handshake is initiated. If it returns false, the connection will be terminated.
+        /// This closure is started right after a connection has been accepted, but before the SSL handshake occurs. If it returns 'true' processing resumes as normal and SSL handshake is initiated. If it returns false, the connection will be terminated.
+        ///
+        /// Default = nil
         
         case addressHandler(AddressHandler?)
         
         
         /// This closure is started right after the SSL handshake was completed, before the connection object factory is called. If it returns 'true' processing resumes as normal and the connection object factor is called. If it returns false, the connection will be terminated.
+        ///
+        /// Default = nil
         
         case sslSessionHandler(SslSessionHandler?)
         
         
-        /// The certificate and private key for the server to use. Is ignored if a ctxSetup closure is present.
-        
+        /// The certificate and private key for the server to use.
+        ///
+        /// Default = nil
+
         case certificateAndPrivateKeyFiles(CertificateAndPrivateKeyFiles?)
         
         
-        /// An optional list of paths to certificates (either files or folders). Is ignored if a ctxSetup closure is present.
+        /// An optional list of paths to certificates (either files or folders).
+        ///
+        /// Default = nil
         
         case trustedClientCertificates([String]?)
         
         
-        /// An optional closure to create the server-wide CTX. Use this if the default setup is insufficient. See 'setupServer' for a description of the default setup.
-        /// - Note: If present, it will only be invoked for the server CTX.
+        /// An optional serverCtx. Use this if the default setup is insufficient.
+        ///
+        /// Default = nil
         
         case serverCtx(Ctx?)
         
         
-        /// A list of server CTXs that can be used for the SNI protocol extension. There should be one context for each domain that has a certificate associated with it.
+        /// A list of server Ctx's that can be used for the SNI protocol extension. There should be one Ctx for each domain that has a certificate associated with it.
         
         case domainCtxs([Ctx]?)
     }
@@ -275,6 +288,10 @@ public class SslServer: ServerProtocol {
     // Interface properties
     
     private(set) var socket: Int32?
+    
+    
+    /// - Returns true when the server is running
+    
     public var isRunning: Bool { return socket != nil }
     
     
@@ -284,12 +301,16 @@ public class SslServer: ServerProtocol {
     private var ctx: Ctx?
     
     
-    /// Allow the creation of placeholder objects.
+    /// Creates a new SslServer but does not set any options. The default SslServer is not capable of running. Use 'setOption' to provided the minimum configuration.
+    ///
+    /// As a minimum set either the serverCtx or the certificateAndPrivateKeyFiles.
     
     public init() {}
     
     
-    /// Create a new server socket with the given options. Only initializes internal data. Does not allocate system resources.
+    /// Create a new server socket with the given options.
+    ///
+    /// - Parameter options: A set of configuration options.
     
     public init?(_ options: Option ...) {
         switch setOptions(options) {
@@ -299,11 +320,18 @@ public class SslServer: ServerProtocol {
     }
     
     
-    /// Set one or more options. Note that once "start" has been called, it is no longer possible to set options without first calling "stop".
+    /// Set one or more SslServer options. Can only be used while the server is not running.
+    ///
+    /// - Parameter options: An array with SslServer options.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String).
     
     public func setOptions(_ options: [Option]) -> Result<Bool> {
+        
         guard ctx == nil else { return .error(message: "SecureSockets.Server.Server.setOptions: Socket is already active, no changes made") }
+        
         for option in options {
+        
             switch option {
             case let .port(str): port = str
             case let .maxPendingConnectionRequests(num): maxPendingConnectionRequests = num
@@ -326,11 +354,30 @@ public class SslServer: ServerProtocol {
     }
     
     
-    /// Set one or more options. Note that once "startAccept" has been called, it is no longer possible to set options without first calling "stopAccepting".
+    /// Set one or more SslServer options. Can only be used while the server is not running.
+    ///
+    /// - Parameter options: A set of SslServer options.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String).
     
     public func setOptions(_ options: Option ...) -> Result<Bool> {
         return setOptions(options)
     }
+    
+    
+    /// Add to the trusted client certificate(s).
+    ///
+    /// - Parameter at: The path to a file with the certificate(s) or a directory with certificate(s).
+    ///
+    /// - Returns: Either .success(true) or .error(message: String).
+    
+    public func addTrustedClientCertificate(at path: String) -> Result<Bool> {
+        
+        return ctx?.loadVerify(location: path) ?? .error(message: "SecureSockets.Server.Server.addTrustedClientCertificate: No ctx present")
+    }
+
+    
+    // MARK: - ServerProtocol
     
     
     /// Starts the server.
@@ -422,20 +469,9 @@ public class SslServer: ServerProtocol {
     }
     
     
-    /// Instructs the server socket to stop accepting new connection requests. Notice that it might take some time for all activity to cease due to the accept loop duration, receiver timeout and consumer processing time.
+    /// Instructs the server to stop accepting new requests. Notice that it might take some time for all activity to cease due to the accept loop duration, receiver timeout and reply processing time.
     
     public func stop() {
         _stop = true
-    }
-    
-    
-    /// Add to the trusted client certificate(s).
-    ///
-    /// - Parameter at: The path to a file with the certificate(s) or a directory with certificate(s).
-    /// - Returns: Either .success(true) or .error(message: String).
-    
-    public func addTrustedClientCertificate(at path: String) -> Result<Bool> {
-        
-        return ctx?.loadVerify(location: path) ?? .error(message: "SecureSockets.Server.Server.addTrustedClientCertificate: No ctx present")
     }
 }
