@@ -102,7 +102,11 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-####v0.3.1 (Current)
+####v0.3.2 (Current)
+
+- Updated to SwifterSockets 0.9.12
+
+####v0.3.1
 
 - Updated documentation
 
