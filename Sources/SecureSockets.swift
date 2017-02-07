@@ -49,6 +49,7 @@
 //
 // History
 //
+// v0.3.3  - Added logId to the SslInterface
 // v0.3.1  - Updated documentation for use with jazzy.
 // v0.1.0  - Initial release
 // =====================================================================================================================
@@ -107,11 +108,6 @@
 // certificate_required(116),
 // (255)
 //
-// =====================================================================================================================
-//
-// History
-//
-// v0.1.0 - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -319,7 +315,14 @@ public struct SslInterface: InterfaceAccess {
     
     private(set) var ssl: Ssl?
     private(set) var socket: Int32?
+
     
+    /// An id that can be used for logging purposes and will differentiate between interfaces on a temporary basis.
+    ///
+    /// It should be guaranteed that no two interfaces with the same logId are active at the same time.
+    
+    public var logId: Int32 { return socket ?? -1 }
+
     
     // True when the connection is preent.
     
