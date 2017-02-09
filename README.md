@@ -3,23 +3,7 @@ A collection of secure socket layer utilities in Swift using openSSL.
 
 Depends on SwifterSockets and COpenSsl.
 
-SecureSockets is part of the 5 packages that make up the [Swiftfire](http://swiftfire.nl) webserver:
-
-#####[SwifterSockets](https://github.com/Balancingrock/SwifterSockets)
-
-Basic POSIX sockets utilities.
-
-#####[Swiftfire](https://github.com/Balancingrock/Swiftfire)
-
-An open source web server in Swift.
-
-#####[SwifterLog](https://github.com/Balancingrock/SwifterLog)
-
-General purpose logging utility.
-
-#####[SwifterJSON](https://github.com/Balancingrock/SwifterJSON)
-
-General purpose JSON framework.
+SecureSockets is part of [Swiftfire](http://swiftfire.nl), the next generation personal webserver.
 
 # OpenSSL
 
@@ -102,7 +86,13 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-####v0.3.2 (Current)
+####v0.3.3 (Current)
+
+- Reassigned access levels
+- Added logId to sslInterface
+- Updated comments
+
+####v0.3.2
 
 - Updated to SwifterSockets 0.9.12
 

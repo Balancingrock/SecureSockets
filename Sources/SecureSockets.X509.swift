@@ -3,7 +3,7 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.1
+//  Version:    0.3.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -22,9 +22,8 @@
 //
 //  I also ask you to please leave this header with the source code.
 //
-//  I strongly believe that the Non Agression Principle is the way for societies to function optimally. I thus reject
-//  the implicit use of force to extract payment. Since I cannot negotiate with you about the price of this code, I
-//  have choosen to leave it up to you to determine its price. You pay me whatever you think this code is worth to you.
+//  I strongly believe that voluntarism is the way for societies to function optimally. Thus I have choosen to leave it
+//  up to you to determine the price for this code. You pay me whatever you think this code is worth to you.
 //
 //   - You can send payment via paypal to: sales@balancingrock.nl
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
@@ -49,9 +48,11 @@
 //
 // History
 //
-// v0.3.1  - Updated documentation for use with jazzy.
-// v0.3.0  - Fixed error message text
-// v0.1.0  - Initial release
+// 0.3.3  - Comment section update
+//        - Added logId to the SslInterface
+// 0.3.1  - Updated documentation for use with jazzy.
+// 0.3.0  - Fixed error message text
+// 0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -67,7 +68,7 @@ import COpenSsl
 ///
 /// - Returns: nil if the value is not present. The String value if it was read correctly.
 
-fileprivate func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
+public func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
     
     
     // Get the position of the common name in the subject
@@ -177,7 +178,7 @@ public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
 
 /// A wrapper class for a x509 structure.
 
-public class X509 {
+open class X509 {
     
     
     /// The result of a certificate verification
@@ -546,7 +547,7 @@ public class X509 {
     
     /// The openSSL Opaque structure pointer.
     
-    private(set) var optr: OpaquePointer!
+    public private(set) var optr: OpaquePointer!
     
     
     /// Sets the string value for a given NID in the subject name.
@@ -557,7 +558,7 @@ public class X509 {
     ///
     /// - Returns: true on success, false on failure.
     
-    private func setSubjectNameField(_ nid: Int32, _ value: String) -> Bool {
+    public func setSubjectNameField(_ nid: Int32, _ value: String) -> Bool {
         let subjectName = X509_get_subject_name(optr)
         return X509_NAME_add_entry_by_NID(subjectName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
     }
@@ -569,7 +570,7 @@ public class X509 {
     ///
     /// - Returns: If the field is present, its string value. Otherwise nil.
     
-    private func getSubjectNameField(by nid: Int32) -> String? {
+    public func getSubjectNameField(by nid: Int32) -> String? {
         let subjectName = X509_get_subject_name(optr)
         return valueFrom(x509Name: subjectName, with: nid)
     }
@@ -583,7 +584,7 @@ public class X509 {
     ///
     /// - Returns: true on success, false on failure.
 
-    private func setIssuerNameField(_ nid: Int32, _ value: String) -> Bool {
+    public func setIssuerNameField(_ nid: Int32, _ value: String) -> Bool {
         let issuerName = X509_get_subject_name(optr)
         return X509_NAME_add_entry_by_NID(issuerName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
     }
@@ -595,7 +596,7 @@ public class X509 {
     ///
     /// - Returns: If the field is present, its string value. Otherwise nil.
 
-    private func getIssuerNameField(by nid: Int32) -> String? {
+    public func getIssuerNameField(by nid: Int32) -> String? {
         let issuerName = X509_get_subject_name(optr)
         return valueFrom(x509Name: issuerName, with: nid)
     }
@@ -603,7 +604,7 @@ public class X509 {
     
     /// Some operations can generate an error, if so the error message will be set. If an operation can generate an error it will always first set this error var to nil before attempting execution.
     
-    public var errorMessage: String?
+    public private(set) var errorMessage: String?
     
     
     /// Frees the memory associated with the opaque pointer.

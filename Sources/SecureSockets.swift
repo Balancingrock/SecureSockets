@@ -3,7 +3,7 @@
 //  File:       SecureSockets.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.1
+//  Version:    0.3.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -22,9 +22,8 @@
 //
 //  I also ask you to please leave this header with the source code.
 //
-//  I strongly believe that the Non Agression Principle is the way for societies to function optimally. I thus reject
-//  the implicit use of force to extract payment. Since I cannot negotiate with you about the price of this code, I
-//  have choosen to leave it up to you to determine its price. You pay me whatever you think this code is worth to you.
+//  I strongly believe that voluntarism is the way for societies to function optimally. Thus I have choosen to leave it
+//  up to you to determine the price for this code. You pay me whatever you think this code is worth to you.
 //
 //   - You can send payment via paypal to: sales@balancingrock.nl
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
@@ -49,9 +48,10 @@
 //
 // History
 //
-// v0.3.3  - Added logId to the SslInterface
-// v0.3.1  - Updated documentation for use with jazzy.
-// v0.1.0  - Initial release
+// 0.3.3  - Comment section update
+//        - Added logId to the SslInterface
+// 0.3.1  - Updated documentation for use with jazzy.
+// 0.1.0  - Initial release
 // =====================================================================================================================
 //
 // When encountering error messages of the following kind
@@ -232,12 +232,12 @@ public struct CertificateAndPrivateKeyFiles {
     
     /// The file with the certificate.
     
-    let certificate: EncodedFile
+    public let certificate: EncodedFile
     
     
     /// The file with the private key.
     
-    let privateKey: EncodedFile
+    public let privateKey: EncodedFile
     
     
     /// Creates a new association of certificate and private key. It will be checked if the private key is paired with the public key that is contained in the certificate.
@@ -313,8 +313,8 @@ public struct CertificateAndPrivateKeyFiles {
 
 public struct SslInterface: InterfaceAccess {
     
-    private(set) var ssl: Ssl?
-    private(set) var socket: Int32?
+    public private(set) var ssl: Ssl?
+    public private(set) var socket: Int32?
 
     
     /// An id that can be used for logging purposes and will differentiate between interfaces on a temporary basis.
@@ -326,7 +326,7 @@ public struct SslInterface: InterfaceAccess {
     
     // True when the connection is preent.
     
-    var isValid: Bool {
+    public var isValid: Bool {
         get {
             if ssl == nil { return false }
             if socket == nil { return false }

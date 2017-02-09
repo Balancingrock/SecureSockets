@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Server.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.1
+//  Version:    0.3.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -22,9 +22,8 @@
 //
 //  I also ask you to please leave this header with the source code.
 //
-//  I strongly believe that the Non Agression Principle is the way for societies to function optimally. I thus reject
-//  the implicit use of force to extract payment. Since I cannot negotiate with you about the price of this code, I
-//  have choosen to leave it up to you to determine its price. You pay me whatever you think this code is worth to you.
+//  I strongly believe that voluntarism is the way for societies to function optimally. Thus I have choosen to leave it
+//  up to you to determine the price for this code. You pay me whatever you think this code is worth to you.
 //
 //   - You can send payment via paypal to: sales@balancingrock.nl
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
@@ -49,9 +48,11 @@
 //
 // History
 //
-// v0.3.1  - Updated documentation for use with jazzy.
-// v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
-// v0.1.0  - Initial release
+// 0.3.3  - Comment section update
+//        - Reassigned access levels
+// 0.3.1  - Updated documentation for use with jazzy.
+// 0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
+// 0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -268,26 +269,26 @@ public class SslServer: ServerProtocol {
     
     // Optioned properties
     
-    private(set) var port: String = "443"
-    private(set) var maxPendingConnectionRequests: Int = 20
-    private(set) var acceptLoopDuration: TimeInterval = 5
-    private(set) var acceptQueue: DispatchQueue!
-    private(set) var connectionObjectFactory: ConnectionObjectFactory?
-    private(set) var transmitQueueQoS: DispatchQoS = .default
-    private(set) var transmitTimeout: TimeInterval = 1
-    private(set) var aliveHandler: TipServer.AliveHandler?
-    private(set) var errorHandler: ErrorHandler?
-    private(set) var addressHandler: AddressHandler?
-    private(set) var sslSessionHandler: SslSessionHandler?
-    private(set) var certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles?
-    private(set) var trustedClientCertificates: [String]?
-    private(set) var serverCtx: Ctx?
-    private(set) var domainCtxs: [Ctx]?
+    public private(set) var port: String = "443"
+    public private(set) var maxPendingConnectionRequests: Int = 20
+    public private(set) var acceptLoopDuration: TimeInterval = 5
+    public private(set) var acceptQueue: DispatchQueue!
+    public private(set) var connectionObjectFactory: ConnectionObjectFactory?
+    public private(set) var transmitQueueQoS: DispatchQoS = .default
+    public private(set) var transmitTimeout: TimeInterval = 1
+    public private(set) var aliveHandler: TipServer.AliveHandler?
+    public private(set) var errorHandler: ErrorHandler?
+    public private(set) var addressHandler: AddressHandler?
+    public private(set) var sslSessionHandler: SslSessionHandler?
+    public private(set) var certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles?
+    public private(set) var trustedClientCertificates: [String]?
+    public private(set) var serverCtx: Ctx?
+    public private(set) var domainCtxs: [Ctx]?
     
     
     // Interface properties
     
-    private(set) var socket: Int32?
+    public private(set) var socket: Int32?
     
     
     /// - Returns true when the server is running

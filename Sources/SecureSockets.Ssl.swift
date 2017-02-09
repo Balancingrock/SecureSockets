@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.1
+//  Version:    0.3.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -22,9 +22,8 @@
 //
 //  I also ask you to please leave this header with the source code.
 //
-//  I strongly believe that the Non Agression Principle is the way for societies to function optimally. I thus reject
-//  the implicit use of force to extract payment. Since I cannot negotiate with you about the price of this code, I
-//  have choosen to leave it up to you to determine its price. You pay me whatever you think this code is worth to you.
+//  I strongly believe that voluntarism is the way for societies to function optimally. Thus I have choosen to leave it
+//  up to you to determine the price for this code. You pay me whatever you think this code is worth to you.
 //
 //   - You can send payment via paypal to: sales@balancingrock.nl
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
@@ -49,9 +48,11 @@
 //
 // History
 //
-// v0.3.1  - Updated documentation for use with jazzy.
-// v0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
-// v0.1.0  - Initial release
+// 0.3.3  - Comment section update
+//        - Reassigned access levels
+// 0.3.1  - Updated documentation for use with jazzy.
+// 0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
+// 0.1.0  - Initial release
 // =====================================================================================================================
 
 import Foundation
@@ -61,7 +62,7 @@ import COpenSsl
 
 /// A wrapper class for an openSSL session (SSL).
 
-public class Ssl {
+open class Ssl {
     
     
     /// The return condition from several methods
@@ -221,7 +222,7 @@ public class Ssl {
     
     // The OpaquePointer to the OpenSSL session structure.
     
-    private(set) var optr: OpaquePointer
+    public private(set) var optr: OpaquePointer
     
     
     /// The Ctx used by this session.
@@ -417,7 +418,7 @@ public class Ssl {
     
     /// Controlled shutdown of the session
     
-    func shutdown() {
+    public func shutdown() {
         SSL_shutdown(optr)
     }
     
@@ -426,7 +427,7 @@ public class Ssl {
     ///
     /// - Returns: The name of the server or nil if not available.
     
-    func getServerName() -> UnsafePointer<Int8>? {
+    public func getServerName() -> UnsafePointer<Int8>? {
         return SSL_get_servername(optr, TLSEXT_NAMETYPE_host_name)
     }
     
@@ -435,7 +436,7 @@ public class Ssl {
     ///
     /// - Returns: An X509 formatted certificate or nil.
     
-    func getPeerCertificate() -> X509? {
+    public func getPeerCertificate() -> X509? {
         return X509(ssl: self)
     }
     
@@ -444,7 +445,7 @@ public class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    func getVerifyResult() -> SwifterSockets.Result<Bool> {
+    public func getVerifyResult() -> SwifterSockets.Result<Bool> {
         
         let verifyResult = X509.VerificationResult(for: Int32(SSL_get_verify_result(optr)))
         

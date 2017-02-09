@@ -11,7 +11,7 @@
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "3F2107A8-C79D-4A74-B42D-CCE14FCEA021",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "17759B64286E15B58BD85ED0A9CCD1F5975D8BCD" : "COpenSsl\/",
-    "5B20DC5A3688C85EB1A5785522EE90A45D6C6FB2" : "SecureSockets\/Packages\/SwifterSockets-0.9.8\/",
+    "5B20DC5A3688C85EB1A5785522EE90A45D6C6FB2" : "SecureSockets\/Packages\/SwifterSockets-0.9.13\/",
     "ACB900593AFBAA918E902BFC95EA466C9AFC1110" : "SecureSockets\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "SecureSockets",
