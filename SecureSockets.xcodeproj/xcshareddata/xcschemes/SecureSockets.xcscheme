@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "OBJ_36"
+               BlueprintIdentifier = "OBJ_37"
                BuildableName = "SwifterSockets.framework"
                BlueprintName = "SwifterSockets"
                ReferencedContainer = "container:SecureSockets.xcodeproj">
@@ -28,7 +28,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "OBJ_49"
+               BlueprintIdentifier = "OBJ_51"
                BuildableName = "SecureSockets.framework"
                BlueprintName = "SecureSockets"
                ReferencedContainer = "container:SecureSockets.xcodeproj">
@@ -46,7 +46,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "OBJ_67"
+               BlueprintIdentifier = "OBJ_69"
                BuildableName = "SecureSocketsTests.xctest"
                BlueprintName = "SecureSocketsTests"
                ReferencedContainer = "container:SecureSockets.xcodeproj">
@@ -69,7 +69,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "OBJ_36"
+            BlueprintIdentifier = "OBJ_37"
             BuildableName = "SwifterSockets.framework"
             BlueprintName = "SwifterSockets"
             ReferencedContainer = "container:SecureSockets.xcodeproj">

@@ -7,49 +7,50 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		OBJ_41 /* SwifterSockets.Accept.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* SwifterSockets.Accept.swift */; };
-		OBJ_42 /* SwifterSockets.Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* SwifterSockets.Client.swift */; };
-		OBJ_43 /* SwifterSockets.Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* SwifterSockets.Connection.swift */; };
-		OBJ_44 /* SwifterSockets.Receive.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* SwifterSockets.Receive.swift */; };
-		OBJ_45 /* SwifterSockets.Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* SwifterSockets.Server.swift */; };
-		OBJ_46 /* SwifterSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* SwifterSockets.swift */; };
-		OBJ_47 /* SwifterSockets.Transmit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* SwifterSockets.Transmit.swift */; };
-		OBJ_54 /* SecureSockets.Accept.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* SecureSockets.Accept.swift */; };
-		OBJ_55 /* SecureSockets.Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* SecureSockets.Client.swift */; };
-		OBJ_56 /* SecureSockets.Ctx.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* SecureSockets.Ctx.swift */; };
-		OBJ_57 /* SecureSockets.Pkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* SecureSockets.Pkey.swift */; };
-		OBJ_58 /* SecureSockets.Receive.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* SecureSockets.Receive.swift */; };
-		OBJ_59 /* SecureSockets.Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* SecureSockets.Server.swift */; };
-		OBJ_60 /* SecureSockets.Ssl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* SecureSockets.Ssl.swift */; };
-		OBJ_61 /* SecureSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* SecureSockets.swift */; };
-		OBJ_62 /* SecureSockets.Transmit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* SecureSockets.Transmit.swift */; };
-		OBJ_63 /* SecureSockets.X509.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* SecureSockets.X509.swift */; };
-		OBJ_65 /* SwifterSockets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* SwifterSockets.framework */; };
-		OBJ_72 /* SecureSocketsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* SecureSocketsTests.swift */; };
-		OBJ_74 /* SwifterSockets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* SwifterSockets.framework */; };
-		OBJ_75 /* SecureSockets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* SecureSockets.framework */; };
+		OBJ_42 /* SwifterSockets.Accept.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* SwifterSockets.Accept.swift */; };
+		OBJ_43 /* SwifterSockets.Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* SwifterSockets.Client.swift */; };
+		OBJ_44 /* SwifterSockets.Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* SwifterSockets.Connection.swift */; };
+		OBJ_45 /* SwifterSockets.ConnectionPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* SwifterSockets.ConnectionPool.swift */; };
+		OBJ_46 /* SwifterSockets.Receive.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* SwifterSockets.Receive.swift */; };
+		OBJ_47 /* SwifterSockets.Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* SwifterSockets.Server.swift */; };
+		OBJ_48 /* SwifterSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* SwifterSockets.swift */; };
+		OBJ_49 /* SwifterSockets.Transmit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* SwifterSockets.Transmit.swift */; };
+		OBJ_56 /* SecureSockets.Accept.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* SecureSockets.Accept.swift */; };
+		OBJ_57 /* SecureSockets.Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* SecureSockets.Client.swift */; };
+		OBJ_58 /* SecureSockets.Ctx.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* SecureSockets.Ctx.swift */; };
+		OBJ_59 /* SecureSockets.Pkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* SecureSockets.Pkey.swift */; };
+		OBJ_60 /* SecureSockets.Receive.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* SecureSockets.Receive.swift */; };
+		OBJ_61 /* SecureSockets.Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* SecureSockets.Server.swift */; };
+		OBJ_62 /* SecureSockets.Ssl.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* SecureSockets.Ssl.swift */; };
+		OBJ_63 /* SecureSockets.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* SecureSockets.swift */; };
+		OBJ_64 /* SecureSockets.Transmit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* SecureSockets.Transmit.swift */; };
+		OBJ_65 /* SecureSockets.X509.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* SecureSockets.X509.swift */; };
+		OBJ_67 /* SwifterSockets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* SwifterSockets.framework */; };
+		OBJ_74 /* SecureSocketsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* SecureSocketsTests.swift */; };
+		OBJ_76 /* SwifterSockets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* SwifterSockets.framework */; };
+		OBJ_77 /* SecureSockets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* SecureSockets.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		86C5A52A1E4CD9EE001203CE /* PBXContainerItemProxy */ = {
+		86BC570F1E5620430087F0D7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = OBJ_36;
+			remoteGlobalIDString = OBJ_37;
 			remoteInfo = SwifterSockets;
 		};
-		86C5A52B1E4CD9EE001203CE /* PBXContainerItemProxy */ = {
+		86BC57101E5620430087F0D7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = OBJ_36;
+			remoteGlobalIDString = OBJ_37;
 			remoteInfo = SwifterSockets;
 		};
-		86C5A52C1E4CD9EE001203CE /* PBXContainerItemProxy */ = {
+		86BC57111E5620430087F0D7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = OBJ_49;
+			remoteGlobalIDString = OBJ_51;
 			remoteInfo = SecureSockets;
 		};
 /* End PBXContainerItemProxy section */
@@ -57,99 +58,100 @@
 /* Begin PBXFileReference section */
 		OBJ_10 /* SwifterSockets.Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Client.swift; sourceTree = "<group>"; };
 		OBJ_11 /* SwifterSockets.Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Connection.swift; sourceTree = "<group>"; };
-		OBJ_12 /* SwifterSockets.Receive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Receive.swift; sourceTree = "<group>"; };
-		OBJ_13 /* SwifterSockets.Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Server.swift; sourceTree = "<group>"; };
-		OBJ_14 /* SwifterSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.swift; sourceTree = "<group>"; };
-		OBJ_15 /* SwifterSockets.Transmit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Transmit.swift; sourceTree = "<group>"; };
-		OBJ_17 /* SecureSockets.Accept.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Accept.swift; sourceTree = "<group>"; };
-		OBJ_18 /* SecureSockets.Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Client.swift; sourceTree = "<group>"; };
-		OBJ_19 /* SecureSockets.Ctx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Ctx.swift; sourceTree = "<group>"; };
-		OBJ_20 /* SecureSockets.Pkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Pkey.swift; sourceTree = "<group>"; };
-		OBJ_21 /* SecureSockets.Receive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Receive.swift; sourceTree = "<group>"; };
-		OBJ_22 /* SecureSockets.Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Server.swift; sourceTree = "<group>"; };
-		OBJ_23 /* SecureSockets.Ssl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Ssl.swift; sourceTree = "<group>"; };
-		OBJ_24 /* SecureSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.swift; sourceTree = "<group>"; };
-		OBJ_25 /* SecureSockets.Transmit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Transmit.swift; sourceTree = "<group>"; };
-		OBJ_26 /* SecureSockets.X509.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.X509.swift; sourceTree = "<group>"; };
-		OBJ_29 /* SecureSocketsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSocketsTests.swift; sourceTree = "<group>"; };
-		OBJ_30 /* build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = build; sourceTree = SOURCE_ROOT; };
-		OBJ_31 /* COpenSsl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = COpenSsl; sourceTree = SOURCE_ROOT; };
-		OBJ_33 /* SwifterSockets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwifterSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		OBJ_34 /* SecureSockets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SecureSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		OBJ_35 /* SecureSocketsTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SecureSocketsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_12 /* SwifterSockets.ConnectionPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.ConnectionPool.swift; sourceTree = "<group>"; };
+		OBJ_13 /* SwifterSockets.Receive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Receive.swift; sourceTree = "<group>"; };
+		OBJ_14 /* SwifterSockets.Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Server.swift; sourceTree = "<group>"; };
+		OBJ_15 /* SwifterSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.swift; sourceTree = "<group>"; };
+		OBJ_16 /* SwifterSockets.Transmit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Transmit.swift; sourceTree = "<group>"; };
+		OBJ_18 /* SecureSockets.Accept.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Accept.swift; sourceTree = "<group>"; };
+		OBJ_19 /* SecureSockets.Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Client.swift; sourceTree = "<group>"; };
+		OBJ_20 /* SecureSockets.Ctx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Ctx.swift; sourceTree = "<group>"; };
+		OBJ_21 /* SecureSockets.Pkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Pkey.swift; sourceTree = "<group>"; };
+		OBJ_22 /* SecureSockets.Receive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Receive.swift; sourceTree = "<group>"; };
+		OBJ_23 /* SecureSockets.Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Server.swift; sourceTree = "<group>"; };
+		OBJ_24 /* SecureSockets.Ssl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Ssl.swift; sourceTree = "<group>"; };
+		OBJ_25 /* SecureSockets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.swift; sourceTree = "<group>"; };
+		OBJ_26 /* SecureSockets.Transmit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.Transmit.swift; sourceTree = "<group>"; };
+		OBJ_27 /* SecureSockets.X509.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSockets.X509.swift; sourceTree = "<group>"; };
+		OBJ_30 /* SecureSocketsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureSocketsTests.swift; sourceTree = "<group>"; };
+		OBJ_31 /* build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = build; sourceTree = SOURCE_ROOT; };
+		OBJ_32 /* COpenSsl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = COpenSsl; sourceTree = SOURCE_ROOT; };
+		OBJ_34 /* SwifterSockets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwifterSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_35 /* SecureSockets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecureSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_36 /* SecureSocketsTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SecureSocketsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* SwifterSockets.Accept.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Accept.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		OBJ_48 /* Frameworks */ = {
+		OBJ_50 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_64 /* Frameworks */ = {
+		OBJ_66 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_65 /* SwifterSockets.framework in Frameworks */,
+				OBJ_67 /* SwifterSockets.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_73 /* Frameworks */ = {
+		OBJ_75 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_74 /* SwifterSockets.framework in Frameworks */,
-				OBJ_75 /* SecureSockets.framework in Frameworks */,
+				OBJ_76 /* SwifterSockets.framework in Frameworks */,
+				OBJ_77 /* SecureSockets.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		OBJ_16 /* SecureSockets */ = {
+		OBJ_17 /* SecureSockets */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_17 /* SecureSockets.Accept.swift */,
-				OBJ_18 /* SecureSockets.Client.swift */,
-				OBJ_19 /* SecureSockets.Ctx.swift */,
-				OBJ_20 /* SecureSockets.Pkey.swift */,
-				OBJ_21 /* SecureSockets.Receive.swift */,
-				OBJ_22 /* SecureSockets.Server.swift */,
-				OBJ_23 /* SecureSockets.Ssl.swift */,
-				OBJ_24 /* SecureSockets.swift */,
-				OBJ_25 /* SecureSockets.Transmit.swift */,
-				OBJ_26 /* SecureSockets.X509.swift */,
+				OBJ_18 /* SecureSockets.Accept.swift */,
+				OBJ_19 /* SecureSockets.Client.swift */,
+				OBJ_20 /* SecureSockets.Ctx.swift */,
+				OBJ_21 /* SecureSockets.Pkey.swift */,
+				OBJ_22 /* SecureSockets.Receive.swift */,
+				OBJ_23 /* SecureSockets.Server.swift */,
+				OBJ_24 /* SecureSockets.Ssl.swift */,
+				OBJ_25 /* SecureSockets.swift */,
+				OBJ_26 /* SecureSockets.Transmit.swift */,
+				OBJ_27 /* SecureSockets.X509.swift */,
 			);
 			name = SecureSockets;
 			path = Sources;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_27 /* Tests */ = {
+		OBJ_28 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_28 /* SecureSocketsTests */,
+				OBJ_29 /* SecureSocketsTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		OBJ_28 /* SecureSocketsTests */ = {
+		OBJ_29 /* SecureSocketsTests */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_29 /* SecureSocketsTests.swift */,
+				OBJ_30 /* SecureSocketsTests.swift */,
 			);
 			name = SecureSocketsTests;
 			path = Tests/SecureSocketsTests;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_32 /* Products */ = {
+		OBJ_33 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_33 /* SwifterSockets.framework */,
-				OBJ_34 /* SecureSockets.framework */,
-				OBJ_35 /* SecureSocketsTests.xctest */,
+				OBJ_34 /* SwifterSockets.framework */,
+				OBJ_35 /* SecureSockets.framework */,
+				OBJ_36 /* SecureSocketsTests.xctest */,
 			);
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -159,10 +161,10 @@
 			children = (
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
-				OBJ_27 /* Tests */,
-				OBJ_30 /* build */,
-				OBJ_31 /* COpenSsl */,
-				OBJ_32 /* Products */,
+				OBJ_28 /* Tests */,
+				OBJ_31 /* build */,
+				OBJ_32 /* COpenSsl */,
+				OBJ_33 /* Products */,
 			);
 			name = "";
 			sourceTree = "<group>";
@@ -171,7 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_8 /* SwifterSockets */,
-				OBJ_16 /* SecureSockets */,
+				OBJ_17 /* SecureSockets */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -182,24 +184,25 @@
 				OBJ_9 /* SwifterSockets.Accept.swift */,
 				OBJ_10 /* SwifterSockets.Client.swift */,
 				OBJ_11 /* SwifterSockets.Connection.swift */,
-				OBJ_12 /* SwifterSockets.Receive.swift */,
-				OBJ_13 /* SwifterSockets.Server.swift */,
-				OBJ_14 /* SwifterSockets.swift */,
-				OBJ_15 /* SwifterSockets.Transmit.swift */,
+				OBJ_12 /* SwifterSockets.ConnectionPool.swift */,
+				OBJ_13 /* SwifterSockets.Receive.swift */,
+				OBJ_14 /* SwifterSockets.Server.swift */,
+				OBJ_15 /* SwifterSockets.swift */,
+				OBJ_16 /* SwifterSockets.Transmit.swift */,
 			);
 			name = SwifterSockets;
-			path = "Packages/SwifterSockets-0.9.13/Sources";
+			path = "Packages/SwifterSockets-0.9.14/Sources";
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		OBJ_36 /* SwifterSockets */ = {
+		OBJ_37 /* SwifterSockets */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_37 /* Build configuration list for PBXNativeTarget "SwifterSockets" */;
+			buildConfigurationList = OBJ_38 /* Build configuration list for PBXNativeTarget "SwifterSockets" */;
 			buildPhases = (
-				OBJ_40 /* Sources */,
-				OBJ_48 /* Frameworks */,
+				OBJ_41 /* Sources */,
+				OBJ_50 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -207,42 +210,42 @@
 			);
 			name = SwifterSockets;
 			productName = SwifterSockets;
-			productReference = OBJ_33 /* SwifterSockets.framework */;
+			productReference = OBJ_34 /* SwifterSockets.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		OBJ_49 /* SecureSockets */ = {
+		OBJ_51 /* SecureSockets */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_50 /* Build configuration list for PBXNativeTarget "SecureSockets" */;
+			buildConfigurationList = OBJ_52 /* Build configuration list for PBXNativeTarget "SecureSockets" */;
 			buildPhases = (
-				OBJ_53 /* Sources */,
-				OBJ_64 /* Frameworks */,
+				OBJ_55 /* Sources */,
+				OBJ_66 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				OBJ_66 /* PBXTargetDependency */,
+				OBJ_68 /* PBXTargetDependency */,
 			);
 			name = SecureSockets;
 			productName = SecureSockets;
-			productReference = OBJ_34 /* SecureSockets.framework */;
+			productReference = OBJ_35 /* SecureSockets.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		OBJ_67 /* SecureSocketsTests */ = {
+		OBJ_69 /* SecureSocketsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = OBJ_68 /* Build configuration list for PBXNativeTarget "SecureSocketsTests" */;
+			buildConfigurationList = OBJ_70 /* Build configuration list for PBXNativeTarget "SecureSocketsTests" */;
 			buildPhases = (
-				OBJ_71 /* Sources */,
-				OBJ_73 /* Frameworks */,
+				OBJ_73 /* Sources */,
+				OBJ_75 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				OBJ_76 /* PBXTargetDependency */,
-				OBJ_77 /* PBXTargetDependency */,
+				OBJ_78 /* PBXTargetDependency */,
+				OBJ_79 /* PBXTargetDependency */,
 			);
 			name = SecureSocketsTests;
 			productName = SecureSocketsTests;
-			productReference = OBJ_35 /* SecureSocketsTests.xctest */;
+			productReference = OBJ_36 /* SecureSocketsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -261,74 +264,75 @@
 				en,
 			);
 			mainGroup = OBJ_5 /*  */;
-			productRefGroup = OBJ_32 /* Products */;
+			productRefGroup = OBJ_33 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				OBJ_36 /* SwifterSockets */,
-				OBJ_49 /* SecureSockets */,
-				OBJ_67 /* SecureSocketsTests */,
+				OBJ_37 /* SwifterSockets */,
+				OBJ_51 /* SecureSockets */,
+				OBJ_69 /* SecureSocketsTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		OBJ_40 /* Sources */ = {
+		OBJ_41 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_41 /* SwifterSockets.Accept.swift in Sources */,
-				OBJ_42 /* SwifterSockets.Client.swift in Sources */,
-				OBJ_43 /* SwifterSockets.Connection.swift in Sources */,
-				OBJ_44 /* SwifterSockets.Receive.swift in Sources */,
-				OBJ_45 /* SwifterSockets.Server.swift in Sources */,
-				OBJ_46 /* SwifterSockets.swift in Sources */,
-				OBJ_47 /* SwifterSockets.Transmit.swift in Sources */,
+				OBJ_42 /* SwifterSockets.Accept.swift in Sources */,
+				OBJ_43 /* SwifterSockets.Client.swift in Sources */,
+				OBJ_44 /* SwifterSockets.Connection.swift in Sources */,
+				OBJ_45 /* SwifterSockets.ConnectionPool.swift in Sources */,
+				OBJ_46 /* SwifterSockets.Receive.swift in Sources */,
+				OBJ_47 /* SwifterSockets.Server.swift in Sources */,
+				OBJ_48 /* SwifterSockets.swift in Sources */,
+				OBJ_49 /* SwifterSockets.Transmit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_53 /* Sources */ = {
+		OBJ_55 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_54 /* SecureSockets.Accept.swift in Sources */,
-				OBJ_55 /* SecureSockets.Client.swift in Sources */,
-				OBJ_56 /* SecureSockets.Ctx.swift in Sources */,
-				OBJ_57 /* SecureSockets.Pkey.swift in Sources */,
-				OBJ_58 /* SecureSockets.Receive.swift in Sources */,
-				OBJ_59 /* SecureSockets.Server.swift in Sources */,
-				OBJ_60 /* SecureSockets.Ssl.swift in Sources */,
-				OBJ_61 /* SecureSockets.swift in Sources */,
-				OBJ_62 /* SecureSockets.Transmit.swift in Sources */,
-				OBJ_63 /* SecureSockets.X509.swift in Sources */,
+				OBJ_56 /* SecureSockets.Accept.swift in Sources */,
+				OBJ_57 /* SecureSockets.Client.swift in Sources */,
+				OBJ_58 /* SecureSockets.Ctx.swift in Sources */,
+				OBJ_59 /* SecureSockets.Pkey.swift in Sources */,
+				OBJ_60 /* SecureSockets.Receive.swift in Sources */,
+				OBJ_61 /* SecureSockets.Server.swift in Sources */,
+				OBJ_62 /* SecureSockets.Ssl.swift in Sources */,
+				OBJ_63 /* SecureSockets.swift in Sources */,
+				OBJ_64 /* SecureSockets.Transmit.swift in Sources */,
+				OBJ_65 /* SecureSockets.X509.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		OBJ_71 /* Sources */ = {
+		OBJ_73 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_72 /* SecureSocketsTests.swift in Sources */,
+				OBJ_74 /* SecureSocketsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		OBJ_66 /* PBXTargetDependency */ = {
+		OBJ_68 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = OBJ_36 /* SwifterSockets */;
-			targetProxy = 86C5A52A1E4CD9EE001203CE /* PBXContainerItemProxy */;
+			target = OBJ_37 /* SwifterSockets */;
+			targetProxy = 86BC570F1E5620430087F0D7 /* PBXContainerItemProxy */;
 		};
-		OBJ_76 /* PBXTargetDependency */ = {
+		OBJ_78 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = OBJ_36 /* SwifterSockets */;
-			targetProxy = 86C5A52B1E4CD9EE001203CE /* PBXContainerItemProxy */;
+			target = OBJ_37 /* SwifterSockets */;
+			targetProxy = 86BC57101E5620430087F0D7 /* PBXContainerItemProxy */;
 		};
-		OBJ_77 /* PBXTargetDependency */ = {
+		OBJ_79 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = OBJ_49 /* SecureSockets */;
-			targetProxy = 86C5A52C1E4CD9EE001203CE /* PBXContainerItemProxy */;
+			target = OBJ_51 /* SecureSockets */;
+			targetProxy = 86BC57111E5620430087F0D7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -355,10 +359,9 @@
 			};
 			name = Debug;
 		};
-		OBJ_38 /* Debug */ = {
+		OBJ_39 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEFINES_MODULE = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -375,27 +378,6 @@
 				TARGET_NAME = SwifterSockets;
 			};
 			name = Debug;
-		};
-		OBJ_39 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEFINES_MODULE = YES;
-				ENABLE_TESTABILITY = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
-				);
-				HEADER_SEARCH_PATHS = "$(inherited)";
-				INFOPLIST_FILE = SecureSockets.xcodeproj/SwifterSockets_Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
-				OTHER_LDFLAGS = "$(inherited)";
-				OTHER_SWIFT_FLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = SwifterSockets;
-				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				TARGET_NAME = SwifterSockets;
-			};
-			name = Release;
 		};
 		OBJ_4 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -417,10 +399,29 @@
 			};
 			name = Release;
 		};
-		OBJ_51 /* Debug */ = {
+		OBJ_40 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEFINES_MODULE = YES;
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = SecureSockets.xcodeproj/SwifterSockets_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = SwifterSockets;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				TARGET_NAME = SwifterSockets;
+			};
+			name = Release;
+		};
+		OBJ_53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -447,10 +448,9 @@
 			};
 			name = Debug;
 		};
-		OBJ_52 /* Release */ = {
+		OBJ_54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEFINES_MODULE = YES;
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -477,7 +477,7 @@
 			};
 			name = Release;
 		};
-		OBJ_69 /* Debug */ = {
+		OBJ_71 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -503,7 +503,7 @@
 			};
 			name = Debug;
 		};
-		OBJ_70 /* Release */ = {
+		OBJ_72 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
@@ -541,29 +541,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		OBJ_37 /* Build configuration list for PBXNativeTarget "SwifterSockets" */ = {
+		OBJ_38 /* Build configuration list for PBXNativeTarget "SwifterSockets" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_38 /* Debug */,
-				OBJ_39 /* Release */,
+				OBJ_39 /* Debug */,
+				OBJ_40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		OBJ_50 /* Build configuration list for PBXNativeTarget "SecureSockets" */ = {
+		OBJ_52 /* Build configuration list for PBXNativeTarget "SecureSockets" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_51 /* Debug */,
-				OBJ_52 /* Release */,
+				OBJ_53 /* Debug */,
+				OBJ_54 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		OBJ_68 /* Build configuration list for PBXNativeTarget "SecureSocketsTests" */ = {
+		OBJ_70 /* Build configuration list for PBXNativeTarget "SecureSocketsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				OBJ_69 /* Debug */,
-				OBJ_70 /* Release */,
+				OBJ_71 /* Debug */,
+				OBJ_72 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

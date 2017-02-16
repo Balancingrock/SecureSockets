@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Transmit.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.3.4
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.3.4  - Added callback and progress activations.
 // 0.3.3  - Comment section update
 // 0.3.1  - Updated documentation for use with jazzy.
 // 0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
@@ -66,7 +67,7 @@ import COpenSsl
 ///   - buffer: A pointer to a buffer containing the bytes to be transferred.
 ///   - timeout: The time in seconds for the complete transfer attempt.
 ///   - callback: The destination for the TransmitterProtocol methods calls.
-///   - progress: The closure to invoke for progress monitoring.
+///   - progress: The closure to invoke for progress monitoring. Note that progress monitoring for ssl connections is near impossible. While the progress closure can be invoked several times during a transfer it is not possible to indicate how many bytes have been transferred. For that reason on all calls, the bytesTransferred will be zero.
 ///
 /// - Returns: See the TransferResult definition.
 
@@ -74,12 +75,15 @@ import COpenSsl
 public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: TimeInterval, callback: TransmitterProtocol?, progress: TransmitterProgressMonitor?) -> TransferResult {
     
     
+    let id = Int(bitPattern: buffer.baseAddress)
+    
+    
     // Get the socket
     
     let socket = ssl.getFd()
     if socket < 0 {
         _ = progress?(0, 0)
-        callback?.transmitterError("Missing filedescriptor from SSL")
+        callback?.transmitterError(id, "Missing filedescriptor from SSL")
         return .error(message: "SecureSockets.Transmit.sslTransfer: Missing filedescriptor from SSL")
     }
     
@@ -88,7 +92,7 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
     
     if buffer.count == 0 {
         _ = progress?(0, 0)
-        callback?.transmitterReady()
+        callback?.transmitterReady(id)
         return .ready
     }
     
@@ -112,9 +116,21 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
         let selres = waitForSelect(socket: socket, timeout: timeoutTime, forRead: true, forWrite: true)
         
         switch selres {
-        case .timeout: return .timeout
-        case let .error(message): return .error(message: message)
-        case .closed: return .closed
+        case .timeout:
+            _ = progress?(0, buffer.count)
+            callback?.transmitterTimeout(id)
+            return .timeout
+        
+        case let .error(message):
+            _ = progress?(0, buffer.count)
+            callback?.transmitterError(id, message)
+            return .error(message: message)
+            
+        case .closed:
+            _ = progress?(0, buffer.count)
+            callback?.transmitterClosed(id)
+            return .closed
+        
         case .ready: break
         }
         
@@ -129,15 +145,27 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
             
             
         // SSL has transmitted all data.
-        case .completed: return .ready
+        case .completed:
+            _ = progress?(0, buffer.count)
+            callback?.transmitterReady(id)
+            return .ready
             
             
         // A clean shutdown of the connection occured.
-        case .zeroReturn: return .closed
+        case .zeroReturn:
+            _ = progress?(0, buffer.count)
+            callback?.transmitterClosed(id)
+            return .closed
             
             
         // Need to repeat the call to SSL_read with the exact same arguments as before.
-        case .wantRead, .wantWrite: break
+        case .wantRead, .wantWrite:
+            if !(progress?(0, buffer.count) ?? true) {
+                _ = progress?(buffer.count, buffer.count)
+                callback?.transmitterReady(id)
+                return .ready
+            }
+            break
             
             
         // All error cases, none of these should be possible.
@@ -156,7 +184,7 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
 ///   - data: The data object containing the bytes to be transferred.
 ///   - timeout: The time in seconds for the complete transfer attempt.
 ///   - callback: The destination for the TransmitterProtocol methods calls.
-///   - progress: The closure to invoke for progress monitoring.
+///   - progress: The closure to invoke for progress monitoring. Note that progress monitoring for ssl connections is near impossible. While the progress closure can be invoked several times during a transfer it is not possible to indicate how many bytes have been transferred. For that reason on all calls, the bytesTransferred will be zero.
 ///
 /// - Returns: See the TransferResult definition.
 
@@ -177,7 +205,7 @@ public func sslTransfer(ssl: Ssl, data: Data, timeout: TimeInterval, callback: T
 ///   - string: The string to be transferred encoded as utf-8.
 ///   - timeout: The time in seconds for the complete transfer attempt.
 ///   - callback: The destination for the TransmitterProtocol methods calls.
-///   - progress: The closure to invoke for progress monitoring.
+///   - progress: The closure to invoke for progress monitoring. Note that progress monitoring for ssl connections is near impossible. While the progress closure can be invoked several times during a transfer it is not possible to indicate how many bytes have been transferred. For that reason on all calls, the bytesTransferred will be zero.
 ///
 /// - Returns: See the TransferResult definition.
 
@@ -188,7 +216,7 @@ public func sslTransfer(ssl: Ssl, string: String, timeout: TimeInterval, callbac
         return sslTransfer(ssl: ssl, data: data, timeout: timeout, callback: callback, progress: progress)
     } else {
         _ = progress?(0, 0)
-        callback?.transmitterError("Cannot convert string to UTF8")
+        callback?.transmitterError(0, "Cannot convert string to UTF8")
         return .error(message: "SecureSockets.Transmit.sslTransfer: Cannot convert string to UTF8")
     }
 }

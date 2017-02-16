@@ -3,7 +3,7 @@
 //  File:       SecureSockets.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.3.4
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.3.4  - Added to documentation
 // 0.3.3  - Comment section update
 //        - Added logId to the SslInterface
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -367,7 +368,7 @@ public struct SslInterface: InterfaceAccess {
     ///   - buffer: The buffer with data to be transferred.
     ///   - timeout: The maximum duration of the transfer.
     ///   - callback: The destination for the TransmitterProtocol methods calls.
-    ///   - progress: The closure to invoke for progress updates.
+    ///   - progress: The closure to invoke for progress monitoring. Note that progress monitoring for ssl connections is near impossible. While the progress closure can be invoked several times during a transfer it is not possible to indicate how many bytes have been transferred. For that reason on all calls, the bytesTransferred will be zero.
     ///
     /// - Returns: See the definition of TransferResult.
     
