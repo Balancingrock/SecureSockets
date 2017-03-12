@@ -77,7 +77,7 @@
 		OBJ_31 /* build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = build; sourceTree = SOURCE_ROOT; };
 		OBJ_32 /* COpenSsl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = COpenSsl; sourceTree = SOURCE_ROOT; };
 		OBJ_34 /* SwifterSockets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwifterSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		OBJ_35 /* SecureSockets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SecureSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		OBJ_35 /* SecureSockets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SecureSockets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_36 /* SecureSocketsTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SecureSocketsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* SwifterSockets.Accept.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwifterSockets.Accept.swift; sourceTree = "<group>"; };
@@ -156,7 +156,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -166,7 +166,6 @@
 				OBJ_32 /* COpenSsl */,
 				OBJ_33 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -263,7 +262,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_33 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";

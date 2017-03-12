@@ -86,7 +86,11 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-####v0.3.3 (Current)
+####v0.3.4 (Current)
+
+- Added callback and progress activation to sslTransfer
+
+####v0.3.3
 
 - Reassigned access levels
 - Added logId to sslInterface
