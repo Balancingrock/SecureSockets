@@ -32,21 +32,21 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		86BC570F1E5620430087F0D7 /* PBXContainerItemProxy */ = {
+		86EA3A141E75818A0095555B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = OBJ_37;
 			remoteInfo = SwifterSockets;
 		};
-		86BC57101E5620430087F0D7 /* PBXContainerItemProxy */ = {
+		86EA3A151E75818A0095555B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = OBJ_37;
 			remoteInfo = SwifterSockets;
 		};
-		86BC57111E5620430087F0D7 /* PBXContainerItemProxy */ = {
+		86EA3A161E75818A0095555B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = OBJ_1 /* Project object */;
 			proxyType = 1;
@@ -156,7 +156,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 = {
+		OBJ_5 /*  */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -166,6 +166,7 @@
 				OBJ_32 /* COpenSsl */,
 				OBJ_33 /* Products */,
 			);
+			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -190,7 +191,7 @@
 				OBJ_16 /* SwifterSockets.Transmit.swift */,
 			);
 			name = SwifterSockets;
-			path = "Packages/SwifterSockets-0.9.14/Sources";
+			path = "Packages/SwifterSockets-0.9.15/Sources";
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
@@ -262,7 +263,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5;
+			mainGroup = OBJ_5 /*  */;
 			productRefGroup = OBJ_33 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -321,17 +322,17 @@
 		OBJ_68 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = OBJ_37 /* SwifterSockets */;
-			targetProxy = 86BC570F1E5620430087F0D7 /* PBXContainerItemProxy */;
+			targetProxy = 86EA3A141E75818A0095555B /* PBXContainerItemProxy */;
 		};
 		OBJ_78 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = OBJ_37 /* SwifterSockets */;
-			targetProxy = 86BC57101E5620430087F0D7 /* PBXContainerItemProxy */;
+			targetProxy = 86EA3A151E75818A0095555B /* PBXContainerItemProxy */;
 		};
 		OBJ_79 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = OBJ_51 /* SecureSockets */;
-			targetProxy = 86BC57111E5620430087F0D7 /* PBXContainerItemProxy */;
+			targetProxy = 86EA3A161E75818A0095555B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
