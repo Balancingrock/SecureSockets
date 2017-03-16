@@ -3,7 +3,7 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.3.5
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.3.5  - Added and improved functions
 // 0.3.3  - Comment section update
 //        - Added logId to the SslInterface
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -960,12 +961,22 @@ open class X509 {
     
     /// Sets the key in the file at the given path as the public key for this certificate.
     ///
-    /// - Parameter from: The filepath of the public key.
+    /// - Parameter toPublicKeyIn: The filepath of the public key.
     ///
     /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
     
-    public func setPublicKey(from filepath: String) -> Result<Bool> {
+    public func setPublicKey(toPublicKeyIn path: String) -> Result<Bool> {
+
+        guard let pkey = Pkey(withPublicKeyFile: path) else {
+            var message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
+            message = message + "\nSecureSockets.X509.X509.setPublicKey: Failed to read public key from file: \(path)\n\(errPrintErrors())"
+            return .error(message: message)
+        }
         
+        return setPublicKey(toPublicKeyIn: pkey)
+
+        
+        /*
         // Open the file with the public key
         
         guard let pubkeyfile = fopen(filepath, "r") else {
@@ -987,26 +998,52 @@ open class X509 {
         
         
         // Now add the public key to the certificate
-        
+
         if X509_set_pubkey(optr!, pkey) == 0 {
             // 1 = success, 0 = failure
             // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
             return .error(message: "SecureSockets.X509.X509.setPublicKey: Failed to set the public key in the certificate.\n\(errPrintErrors())")
         }
 
+        return .success(true) */
+    }
+    
+    
+    /// Sets the public key for this certificate.
+    ///
+    /// - Parameter toPublicKeyIn: A Pkey containing the public key.
+    ///
+    /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
+
+    public func setPublicKey(toPublicKeyIn pkey: Pkey) -> Result<Bool>{
+        
+        if X509_set_pubkey(optr!, pkey.optr!) == 0 {
+            // 1 = success, 0 = failure
+            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+            return .error(message: "SecureSockets.X509.X509.setPublicKey: Failed to set the public key in the certificate.\n\(errPrintErrors())")
+        }
+    
         return .success(true)
     }
     
     
     /// Signs the certificate with the key from the given file.
     ///
-    /// - Parameter withKeyAt: The filepath of the private key.
+    /// - Parameter withPrivateKeyIn: The filepath of the private key.
     ///
     /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
     
-    public func sign(withKeyAt filepath: String) -> Result<Bool> {
+    public func sign(withPrivateKeyIn path: String) -> Result<Bool> {
         
-        guard let keyfile = fopen(filepath, "r") else {
+        guard let pkey = Pkey(withPrivateKeyFile: path) else {
+            var message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
+            message = message + "\nSecureSockets.X509.X509.sign: Failed to read private key from file: \(path)\n\(errPrintErrors())"
+            return .error(message: message)
+        }
+        
+        return sign(withPrivateKeyIn: pkey)
+        
+        /* guard let keyfile = fopen(filepath, "r") else {
             let message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
             return .error(message: message)
         }
@@ -1022,14 +1059,41 @@ open class X509 {
         
         // Encrypt
         
-        if X509_sign(optr, pkey, EVP_sha256()) == 0 {
+        if X509_sign(optr!, pkey, EVP_sha256()) == 0 {
             // 1 = success, 0 = failure.
             // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
             return .error(message: "SecureSockets.X509.X509.sign: Failed to encrypt the certificate.\n\(errPrintErrors())")
         }
 
+        return .success(true)*/
+    }
+    
+    
+    /// Signs the certificate with the key in the given ENV_PKEY.
+    ///
+    /// - Parameter withPrivateKeyIn: The filepath of the private key.
+    ///
+    /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
+
+    public func sign(withPrivateKeyIn pkey: Pkey) -> Result<Bool> {
+        
+        if X509_sign(optr!, pkey.optr!, EVP_sha256()) == 0 {
+            // 1 = success, 0 = failure.
+            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+            return .error(message: "SecureSockets.X509.X509.sign: Failed to encrypt the certificate.\n\(errPrintErrors())")
+        }
+        
         return .success(true)
     }
+    
+    
+    /// Write the ceritificate to file at the given url.
+    ///
+    /// - Parameter to: The url of the private key.
+    ///
+    /// - Returns: Either .success(true) or .eror(message: String) when an error occured.
+
+    public func write(to url: URL) -> Result<Bool> { return write(to: url.path) }
     
     
     /// Write the ceritificate to file at the given path.

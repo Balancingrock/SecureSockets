@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.3.5
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.3.5  - Added and improved functions
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -106,11 +107,67 @@ open class Pkey {
     public var privateKeyPassphrase: String?
 
     
+    /// Allocate space for a new EVP_PKEY structure.
+    
     public init?() {
         self.optr = EVP_PKEY_new()
         if optr == nil { return nil }
     }
     
+    
+    /// If this function fails, errno may hold a file system error, or errPrintErrors() may contain error information.
+    ///
+    /// - Parameters:
+    ///   - withPublicKeyFile: The path to file containing a public key
+    
+    public init?(withPublicKeyFile path: String) {
+        
+        
+        // Open the file with the public key
+        
+        guard let file = fopen(path, "r") else { return nil }
+        defer { fclose(file) }
+        
+        
+        // Read the key from the file and put it in a new ENV_PKEY structure
+        
+        guard let pkey = PEM_read_PUBKEY(file, nil, nil, nil) else {
+            // nil = Failure
+            // Note: the documentation does not mention it, but in case of errors there may be info in the error stack
+            return nil
+        }
+        
+        self.optr = pkey
+    }
+    
+    
+    /// If this function fails, errno may hold a file system error, or errPrintErrors() may contain error information.
+    ///
+    /// - Parameters:
+    ///   - withPrivateKeyFile: The path to file containing a private key
+    
+    public init?(withPrivateKeyFile path: String) {
+        
+        
+        // Open the file with the public key
+        
+        guard let file = fopen(path, "r") else { return nil }
+        defer { fclose(file) }
+        
+        
+        // Read the key from the file and put it in a new ENV_PKEY structure
+
+        guard let pkey = PEM_read_PrivateKey(file, nil, nil, nil) else {
+            // nil in case of failure, a pointer to pkey on success.
+            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
+            return nil
+        }
+        
+        self.optr = pkey
+    }
+
+    
+    /// Frees the openSSL structure.
     
     deinit {
         EVP_PKEY_free(optr)
@@ -202,14 +259,19 @@ open class Pkey {
     
     
     /// Write the private key to file (encrypted if a privateKey passphrase is present)
+
+    public func writePrivateKey(to url: URL) -> Result<Bool> { return writePrivateKey(to: url.path) }
     
-    public func writePrivateKeyToFile(at path: String) -> Result<Bool> {
+    
+    /// Write the private key to file (encrypted if a privateKey passphrase is present)
+    
+    public func writePrivateKey(to filepath: String) -> Result<Bool> {
         
         
         // Open the file
         
-        guard let file = fopen(path, "w") else {
-            return .error(message: "Securesockets.Pkey.Pkey.writePrivateKeyToFile: Failed to open file \(path) for writing")
+        guard let file = fopen(filepath, "w") else {
+            return .error(message: "Securesockets.Pkey.Pkey.writePrivateKeyToFile: Failed to open file \(filepath) for writing")
         }
         defer { fclose(file) }
 
@@ -225,7 +287,7 @@ open class Pkey {
         }
         
         if result != 1 {
-            return .error(message: "Securesockets.Pkey.Pkey.writePrivateKeyToFile: Failed to write the private key to file \(path)")
+            return .error(message: "Securesockets.Pkey.Pkey.writePrivateKeyToFile: Failed to write the private key to file \(filepath)")
         } else {
             return .success(true)
         }
@@ -234,13 +296,18 @@ open class Pkey {
     
     /// Write the public key to file
     
-    public func writePublicKeyToFile(at path: String) -> Result<Bool> {
+    public func writePublicKey(to url: URL) -> Result<Bool> { return writePublicKey(to: url.path) }
+
+    
+    /// Write the public key to file
+    
+    public func writePublicKey(to filepath: String) -> Result<Bool> {
         
         
         // Open the file
         
-        guard let file = fopen(path, "w") else {
-            return .error(message: "Securesockets.Pkey.Pkey.writePublicKeyToFile: Failed to open file \(path) for writing")
+        guard let file = fopen(filepath, "w") else {
+            return .error(message: "Securesockets.Pkey.Pkey.writePublicKeyToFile: Failed to open file \(filepath) for writing")
         }
         defer { fclose(file) }
         
@@ -248,7 +315,7 @@ open class Pkey {
         // Write the key to file
 
         if PEM_write_PUBKEY(file, optr) != 1 {
-            return .error(message: "Securesockets.Pkey.Pkey.writePublicKeyToFile: Failed to write the public key to file \(path)")
+            return .error(message: "Securesockets.Pkey.Pkey.writePublicKeyToFile: Failed to write the public key to file \(filepath)")
         }
         
         return .success(true)
