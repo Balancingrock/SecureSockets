@@ -3,7 +3,7 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.5
+//  Version:    0.4.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,7 +48,8 @@
 //
 // History
 //
-// 0.3.5  - Added and improved functions
+// 0.4.0  - Added and improved functions
+//        - Fixed bug where the issuer data was written to the subject.
 // 0.3.3  - Comment section update
 //        - Added logId to the SslInterface
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -586,7 +587,7 @@ open class X509 {
     /// - Returns: true on success, false on failure.
 
     public func setIssuerNameField(_ nid: Int32, _ value: String) -> Bool {
-        let issuerName = X509_get_subject_name(optr)
+        let issuerName = X509_get_issuer_name(optr)
         return X509_NAME_add_entry_by_NID(issuerName, nid, MBSTRING_UTF8, value, Int32(value.utf8.count), -1, 0) == 0
     }
     
@@ -598,7 +599,7 @@ open class X509 {
     /// - Returns: If the field is present, its string value. Otherwise nil.
 
     public func getIssuerNameField(by nid: Int32) -> String? {
-        let issuerName = X509_get_subject_name(optr)
+        let issuerName = X509_get_issuer_name(optr)
         return valueFrom(x509Name: issuerName, with: nid)
     }
 
