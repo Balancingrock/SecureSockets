@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.5
+//  Version:    0.4.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,7 +48,7 @@
 //
 // History
 //
-// 0.3.5  - Added and improved functions
+// 0.4.0  - Added and improved functions
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
 // 0.3.1  - Updated documentation for use with jazzy.

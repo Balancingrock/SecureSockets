@@ -975,38 +975,6 @@ open class X509 {
         }
         
         return setPublicKey(toPublicKeyIn: pkey)
-
-        
-        /*
-        // Open the file with the public key
-        
-        guard let pubkeyfile = fopen(filepath, "r") else {
-            // nil = Failed, the error is indicated in the global 'errno'
-            let message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
-            return .error(message: message)
-        }
-        defer { fclose(pubkeyfile) }
-        
-        
-        // Read the key from the file and put it in a new ENV_PKEY structure
-        
-        guard let pkey = PEM_read_PUBKEY(pubkeyfile, nil, nil, nil) else {
-            // nil = Failure
-            // Note: the documentation does not mention it, but in case of errors there may be info in the error stack
-            return .error(message: "SecureSockets.X509.X509.setPublicKey: Failed to read public key from file: \(filepath)\n\(errPrintErrors())")
-        }
-        defer { EVP_PKEY_free(pkey) }
-        
-        
-        // Now add the public key to the certificate
-
-        if X509_set_pubkey(optr!, pkey) == 0 {
-            // 1 = success, 0 = failure
-            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-            return .error(message: "SecureSockets.X509.X509.setPublicKey: Failed to set the public key in the certificate.\n\(errPrintErrors())")
-        }
-
-        return .success(true) */
     }
     
     
@@ -1043,30 +1011,6 @@ open class X509 {
         }
         
         return sign(withPrivateKeyIn: pkey)
-        
-        /* guard let keyfile = fopen(filepath, "r") else {
-            let message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
-            return .error(message: message)
-        }
-        defer { fclose(keyfile) }
-        
-        
-        guard let pkey = PEM_read_PrivateKey(keyfile, nil, nil, nil) else {
-            // nil in case of failure, a pointer to pkey on success.
-            return .error(message: "SecureSockets.X509.X509.sign: Failure while reading the private key")
-        }
-        defer { EVP_PKEY_free(pkey) }
-        
-        
-        // Encrypt
-        
-        if X509_sign(optr!, pkey, EVP_sha256()) == 0 {
-            // 1 = success, 0 = failure.
-            // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-            return .error(message: "SecureSockets.X509.X509.sign: Failed to encrypt the certificate.\n\(errPrintErrors())")
-        }
-
-        return .success(true)*/
     }
     
     
