@@ -49,14 +49,14 @@ Once the openSSL libaries are available (in the default location in `/usr/local`
     $ cd SecureSockets
     $ swift build
 
-##Library use in a project
+## Library use in a project
 Disclaimer: I am no expert on using modules and frameworks. Perhaps there are better ways to do this, if so, please let me know.
 
 When creating an executable with SPM we miss the setup for Cocoa etc. I have found it easier to create a project in Xcode and then to import the necessary frameworks.
 
 In the distribution a defaut xcode project is included. Use that one to create the frameworks, or generate a new one with the following steps:
 
-###Optional: create new xcode project to build the frameworks
+### Optional: create new xcode project to build the frameworks
 
 In order to create a framework from a SPM project like SecureSockets I found it easiest to generate an xcode project in the SecureSockets dictionary with:
 
@@ -67,56 +67,61 @@ After the project is created, there will be three targets: SwifterSockets, Secur
 Select all three target frameworks and navigate to the `Build Settings` subsection `Packaging` and set the `Defines Module` property to `Yes`
 Now build the targets. The SwifterSockets and SecureSockets target will be build by default, switch to the COpenSsl scheme to build that target also.
 
-###Copy the frameworks to your project
+### Copy the frameworks to your project
 
 To import the frameworks into a project navigate to the target's `General` settings and add the frameworks to the `Embedded Binaries` section (by clicking the "+" button). This ensures that the frameworks are not only present when building, but also when running.
 
 Note: When develloping code and using a debugger it is possible to step into the source code of the libaries. It is also possible to then change the source code used to build the libraries, however the binaries contained in the library are not updated until the project producing the libraries is re-build. And the libraries copied to the application.
 
-#Version history
+# Version history
 
 Note: Planned releases are for information only, they are subject to change without notice.
 
-####v1.1.0 (Open)
+#### 1.1.0 (Open)
 
 - No new features planned. Features and bugfixes will be made on an ad-hoc basis as needed to support Swiftfire development.
 - For feature requests and bugfixes please contact rien@balancingrock.nl
 
-####v1.0.0 (Planned)
+#### 1.0.0 (Planned)
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-####v0.3.4 (Current)
+#### 0.4.0 (Current)
+
+- Bugfix, when creating a certificate the issuer fields could not be set.
+- Some interfaces have been changed slightly
+- 
+#### 0.3.4
 
 - Added callback and progress activation to sslTransfer
 
-####v0.3.3
+#### 0.3.3
 
 - Reassigned access levels
 - Added logId to sslInterface
 - Updated comments
 
-####v0.3.2
+#### 0.3.2
 
 - Updated to SwifterSockets 0.9.12
 
-####v0.3.1
+#### 0.3.1
 
 - Updated documentation
 
-####v0.3.0
+#### 0.3.0
 
 - Updated error messages
 
-####v0.2.0
+#### 0.2.0
 
 - Simplified the installation and use in another project
 
-####v0.1.0
+#### 0.1.0
 
 - Initial release
 
-#Installing OpenSSL
+# Installing OpenSSL
 
 ## Download & verification
 
@@ -134,11 +139,11 @@ The next line should display the checksum. Compare that with the downloaded chec
 
 Now unpack the gz and tar file to obtain the openssl-1.1.0c folder. A singe double click should do the trick.
 
-##Adding C2Swift glue code
+## Adding C2Swift glue code
 
 Note: being pragmatic about this, I used the files as shown below. Somebody with more openSSL knowledge could probably identify much better places for this. You yourself might find better places. In the end, it does not really matter, all that is necessary is for the Swift code to find the two pieces of glue code. Where it is placed is largely uncritical (as long as the C language visibility rules are respected).
 
-###ssl.h
+### ssl.h
 
 Find the file `openssl-1.1.0c/include/openssl/ssl.h`
 
@@ -159,7 +164,7 @@ After inserting this the last bit of the file should look as follows:
 
     #endif
  
-###ssl_lib.c
+### ssl_lib.c
 
 Find the file `openssl-1.1.0c/ssl/ssl_lib.c`
 At the very end, after the #endif, include the following:
@@ -183,7 +188,7 @@ After inserting this the last bit of the file should look as follows:
         SSL_CTX_set_tlsext_servername_callback(ctx, cb);
     }
 
-###x509v3.h
+### x509v3.h
 
 Find the file `openssl-1.1.0c/include/openssl/x509v3.h`
 At the very end, before the #endif, include the following:
@@ -202,7 +207,7 @@ After inserting this the last bit of the file should look as follows:
     void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names);
     #endif
 
-###v3_addr.c
+### v3_addr.c
 
 Find the file `openssl-1.1.0c/crypto/x509v3/v3_addr.c`
 At the very end, after the #endif, include the following:
@@ -223,7 +228,7 @@ After inserting this the last bit of the file should look as follows:
     }
 
 
-##Building the libraries
+## Building the libraries
 
 Next we should build the libraries and include files.
 
