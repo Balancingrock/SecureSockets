@@ -41,7 +41,7 @@ Reference: [reference manual](http://swiftfire.nl/projects/securesockets/referen
 
 SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets ___first___ install the openSSL libaries as detailed below.
 
-Note that the openSSL files are modified in the instructions below, so an existing openSSL cannot be used!
+Note that the openSSL files are modified in the instructions below, so an existing openSSL install cannot be used!
 
 Once the openSSL libaries are available (in the default location in `/usr/local`) then proceed with the following steps to install SecureSockets.
 
@@ -49,29 +49,25 @@ Once the openSSL libaries are available (in the default location in `/usr/local`
     $ cd SecureSockets
     $ swift build
 
-## Library use in a project
-Disclaimer: I am no expert on using modules and frameworks. Perhaps there are better ways to do this, if so, please let me know.
+## Framework use in a Xcode project
 
-When creating an executable with SPM we miss the setup for Cocoa etc. I have found it easier to create a project in Xcode and then to import the necessary frameworks.
-
-In the distribution a defaut xcode project is included. Use that one to create the frameworks, or generate a new one with the following steps:
-
-### Optional: create new xcode project to build the frameworks
+### Create new Xcode project to build the frameworks
 
 In order to create a framework from a SPM project like SecureSockets I found it easiest to generate an xcode project in the SecureSockets dictionary with:
 
     $ swift package generate-xcodeproj
 
-After the project is created, there will be three targets: SwifterSockets, SecureSockets and SecureSocketsTests. The last one is not needed. As a work around for a possible bug in the Swift Package Manager, we need a another framework: COpenSsl. So go ahead and add another target to the project, select the "Cocoa Framework" template and call it "COpenSsl" (exactly as written, mind the capitalisation) 
+After the project is created, there will be three targets: SwifterSockets, SecureSockets and SecureSocketsTests. The last one is not needed. 
 
-Select all three target frameworks and navigate to the `Build Settings` subsection `Packaging` and set the `Defines Module` property to `Yes`
-Now build the targets. The SwifterSockets and SecureSockets target will be build by default, switch to the COpenSsl scheme to build that target also.
+Select the target frameworks and navigate to the `Build Settings` subsection `Packaging` and set the `Defines Module` property to `Yes`
+
+Now build the targets.
 
 ### Copy the frameworks to your project
 
 To import the frameworks into a project navigate to the target's `General` settings and add the frameworks to the `Embedded Binaries` section (by clicking the "+" button). This ensures that the frameworks are not only present when building, but also when running.
 
-Note: When develloping code and using a debugger it is possible to step into the source code of the libaries. It is also possible to then change the source code used to build the libraries, however the binaries contained in the library are not updated until the project producing the libraries is re-build. And the libraries copied to the application.
+Note: When develloping code and using a debugger it is possible to step into the source code of the frameworks. It is also possible to then change the source code used to build the frameworks, however the binaries contained in the project are not updated until the frameworks project is re-build. And the frameworks are copied to the Xcode project.
 
 # Version history
 
@@ -86,11 +82,15 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-#### 0.4.0 (Current)
+#### 0.4.1 (Current)
+
+- Improved compilation speed
+
+#### 0.4.0
 
 - Bugfix, when creating a certificate the issuer fields could not be set.
 - Some interfaces have been changed slightly
-- 
+
 #### 0.3.4
 
 - Added callback and progress activation to sslTransfer
