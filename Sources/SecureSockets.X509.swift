@@ -3,7 +3,7 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.0
+//  Version:    0.4.2
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.2  - Added checkValidityDate
 // 0.4.0  - Added and improved functions
 //        - Fixed bug where the issuer data was written to the subject.
 // 0.3.3  - Comment section update
@@ -1076,5 +1077,18 @@ open class X509 {
     
     public func checkHost(_ name: UnsafePointer<Int8>!) -> Bool {
         return X509_check_host(optr, name, 0, 0, nil) == 1
+    }
+    
+    
+    /// Checks if the certificate is valid for the given date
+    ///
+    /// - Parameter date: The date for which the check is made
+    ///
+    /// - Returns: Either .success(true) or .error("Not yet valid") or .error("No longer valid")
+    
+    public func checkValidityDate(_ date: Int64) -> Result<Bool> {
+        if date < validNotBefore { return .error(message: "Not yet valid") }
+        if date > validNotAfter { return .error(message: "No longer valid") }
+        return .success(true)
     }
 }
