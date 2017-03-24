@@ -49,6 +49,8 @@
 // History
 //
 // 0.4.2  - Added checkValidityDate
+//        - Added loadCertificates
+//        - Added init(file:)
 // 0.4.0  - Added and improved functions
 //        - Fixed bug where the issuer data was written to the subject.
 // 0.3.3  - Comment section update
@@ -647,6 +649,35 @@ open class X509 {
         } else {
             return nil
         }
+    }
+    
+    
+    /// A X509 object loaded from file
+    ///
+    /// - Parameter file: The file with a certificate in it.
+    
+    public convenience init?(file: EncodedFile?) {
+        guard let file = file else { return nil }
+        self.init()
+        if case .error = loadCertificates(from: file) { return nil }
+    }
+    
+    /// Load certificates into the store.
+    ///
+    /// - Parameter file: The file with certificates
+    ///
+    /// - Returns: .success(number-of-certificates) or .error(message)
+    
+    public func loadCertificates(from: EncodedFile) -> Result<Int> {
+        errClearError()
+        errno = 0
+        let res = X509_load_cert_file(optr!, from.path, from.encoding)
+        if res == 0 {
+            let errstr: String = (errno != 0) ? (String(validatingUTF8: Darwin.strerror(Darwin.errno)) ?? "Unknown error code") : ""
+            let message = "\(errPrintErrors())\n\(errstr)"
+            return .error(message: message)
+        }
+        return .success(Int(res))
     }
     
     
