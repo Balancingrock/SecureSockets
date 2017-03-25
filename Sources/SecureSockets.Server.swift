@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Server.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.4.2
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.2  - Bugfix: Start command would not be possible with only serverCtx and contained a erroneous force unwrap
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -391,7 +392,7 @@ public class SslServer: ServerProtocol {
     
     public func start() -> Result<Bool> {
         
-        if certificateAndPrivateKeyFiles == nil { return .error(message: "SecureSockets.Server.Server.start: Missing server certificate & private key files") }
+        if certificateAndPrivateKeyFiles == nil && serverCtx == nil { return .error(message: "SecureSockets.Server.Server.start: Missing server certificate & private key files") }
         if connectionObjectFactory == nil { return .error(message: "SecureSockets.Server.Server.start: Missing ConnectionObjectFactory closure") }
         
         
@@ -412,7 +413,7 @@ public class SslServer: ServerProtocol {
         let result = setupSslServer(
             onPort: port,
             maxPendingConnectionRequest: Int32(maxPendingConnectionRequests),
-            certificateAndPrivateKeyFiles: certificateAndPrivateKeyFiles!,
+            certificateAndPrivateKeyFiles: certificateAndPrivateKeyFiles,
             trustedClientCertificates: trustedClientCertificates,
             serverCtx: serverCtx,
             domainCtxs: domainCtxs)
