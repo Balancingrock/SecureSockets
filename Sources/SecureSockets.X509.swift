@@ -48,9 +48,7 @@
 //
 // History
 //
-// 0.4.2  - Added checkValidityDate
-//        - Added loadCertificates
-//        - Added init(file:)
+// 0.4.2  - Fixed bug in get function for validNotBefore and validNotAfter that would return wrong values.
 // 0.4.0  - Added and improved functions
 //        - Fixed bug where the issuer data was written to the subject.
 // 0.3.3  - Comment section update
@@ -652,35 +650,6 @@ open class X509 {
     }
     
     
-    /// A X509 object loaded from file
-    ///
-    /// - Parameter file: The file with a certificate in it.
-    
-    public convenience init?(file: EncodedFile?) {
-        guard let file = file else { return nil }
-        self.init()
-        if case .error = loadCertificates(from: file) { return nil }
-    }
-    
-    /// Load certificates into the store.
-    ///
-    /// - Parameter file: The file with certificates
-    ///
-    /// - Returns: .success(number-of-certificates) or .error(message)
-    
-    public func loadCertificates(from: EncodedFile) -> Result<Int> {
-        errClearError()
-        errno = 0
-        let res = X509_load_cert_file(optr!, from.path, from.encoding)
-        if res == 0 {
-            let errstr: String = (errno != 0) ? (String(validatingUTF8: Darwin.strerror(Darwin.errno)) ?? "Unknown error code") : ""
-            let message = "\(errPrintErrors())\n\(errstr)"
-            return .error(message: message)
-        }
-        return .success(Int(res))
-    }
-    
-    
     /// The common name in the subject name.
     ///
     /// The only way to be sure that this operation worked is by write followed by read and to compare the two. If an error occured, the errPrintErrors() operation _may_ provide a reason.
@@ -922,7 +891,7 @@ open class X509 {
             
             let now = Date().addingTimeInterval(Double(days * 24 * 60 * 60 + seconds))
             
-            return Int64(now.timeIntervalSince1970)
+            return Int64(now.timeIntervalSince1970 * 1000)
         }
     }
     
@@ -987,7 +956,7 @@ open class X509 {
             
             let now = Date().addingTimeInterval(Double(days * 24 * 60 * 60 + seconds))
             
-            return Int64(now.timeIntervalSince1970)
+            return Int64(now.timeIntervalSince1970 * 1000)
         }
     }
     
@@ -1108,18 +1077,5 @@ open class X509 {
     
     public func checkHost(_ name: UnsafePointer<Int8>!) -> Bool {
         return X509_check_host(optr, name, 0, 0, nil) == 1
-    }
-    
-    
-    /// Checks if the certificate is valid for the given date
-    ///
-    /// - Parameter date: The date for which the check is made
-    ///
-    /// - Returns: Either .success(true) or .error("Not yet valid") or .error("No longer valid")
-    
-    public func checkValidityDate(_ date: Int64) -> Result<Bool> {
-        if date < validNotBefore { return .error(message: "Not yet valid") }
-        if date > validNotAfter { return .error(message: "No longer valid") }
-        return .success(true)
     }
 }
