@@ -82,7 +82,11 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-#### 0.4.2 (Current)
+#### 0.4.3 (Current)
+
+- Result type was moved from SwifterSockets to BRUtils
+
+#### 0.4.2
 
 - Bugfix: X509 in get function for validNotBefore and validNotAfter that would return wrong values
 - Bugfix: Server Start command would not be possible with only serverCtx and contained a erroneous force unwrap
