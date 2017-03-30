@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.4.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -58,6 +59,7 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
+import BRUtils
 
 
 /// A wrapper class for an openSSL session (SSL).
@@ -280,7 +282,7 @@ open class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func setFd(_ sock: Int32) -> SwifterSockets.Result<Bool> {
+    public func setFd(_ sock: Int32) -> BRUtils.Result<Bool> {
         ERR_clear_error()
         if SSL_set_fd(optr, sock) != 1 {
             return .error(message: "SecureSockets.Ssl.Ssl.setFd: Failed to set socket,\n\n\(errPrintErrors())")
@@ -445,7 +447,7 @@ open class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func getVerifyResult() -> SwifterSockets.Result<Bool> {
+    public func getVerifyResult() -> BRUtils.Result<Bool> {
         
         let verifyResult = X509.VerificationResult(for: Int32(SSL_get_verify_result(optr)))
         

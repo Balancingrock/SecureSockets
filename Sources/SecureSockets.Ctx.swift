@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.4.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -58,6 +59,7 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
+import BRUtils
 
 
 /// A wrapper class for an openSSL context (SSL_CTX).

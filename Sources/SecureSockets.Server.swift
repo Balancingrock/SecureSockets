@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Server.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.2
+//  Version:    0.4.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.4.2  - Bugfix: Start command would not be possible with only serverCtx and contained a erroneous force unwrap
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
@@ -59,6 +60,7 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
+import BRUtils
 
 
 /// Starts listening on the given port for SSL connection requests.

@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Client.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.4.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.3.3  - Comment section update
 // 0.3.1  - Updated documentation for use with jazzy.
 // 0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
@@ -57,6 +58,7 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
+import BRUtils
 
 
 /// The return type for the connectToSslServer function.

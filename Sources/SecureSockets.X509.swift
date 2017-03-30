@@ -3,7 +3,7 @@
 //  File:       SecureSockets.X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.2
+//  Version:    0.4.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.4.2  - Fixed bug in get function for validNotBefore and validNotAfter that would return wrong values.
 // 0.4.0  - Added and improved functions
 //        - Fixed bug where the issuer data was written to the subject.
@@ -61,6 +62,7 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
+import BRUtils
 
 
 /// The string for the NID element in the given X509_NAME structure.

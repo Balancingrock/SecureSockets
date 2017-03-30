@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.0
+//  Version:    0.4.3
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.4.0  - Added and improved functions
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
@@ -59,6 +60,7 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
+import BRUtils
 
 
 public func getStringFrom(PEM_write_bio closure: (OpaquePointer) -> Int32) -> String? {
