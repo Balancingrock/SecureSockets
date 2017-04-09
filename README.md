@@ -84,6 +84,10 @@ Note: Planned releases are for information only, they are subject to change with
 
 #### 0.4.4 (Current)
 
+- Update SwifterSockets to 0.10.4
+
+#### 0.4.4
+
 - Update SwifterSockets to 0.10.3
 
 #### 0.4.3
