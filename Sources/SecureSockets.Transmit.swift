@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Transmit.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.4
+//  Version:    0.4.7
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.7  - Added closing of the socket when the connection is no longer available.
 // 0.3.4  - Added callback and progress activations.
 // 0.3.3  - Comment section update
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -127,6 +128,7 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
             return .error(message: message)
             
         case .closed:
+            _ = Darwin.close(socket)
             _ = progress?(0, buffer.count)
             callback?.transmitterClosed(id)
             return .closed
@@ -153,6 +155,7 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
             
         // A clean shutdown of the connection occured.
         case .zeroReturn:
+            _ = Darwin.close(socket)
             _ = progress?(0, buffer.count)
             callback?.transmitterClosed(id)
             return .closed
