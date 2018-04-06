@@ -82,7 +82,12 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-#### 0.4.11 (Current)
+#### 0.4.12 (Current)
+
+- Migrated to Swift 4, minor adjustments
+- Migrated to OpenSSL 1.1.0h
+
+#### 0.4.11
 
 - Upped SwifterSockets to 0.10.10
 

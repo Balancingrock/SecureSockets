@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Receive.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.3.3
+//  Version:    0.4.12
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.12 - Migrated to SWift 4
 // 0.3.3  - Comment section update
 // 0.3.1  - Updated documentation for use with jazzy.
 // 0.1.0  - Initial release
@@ -79,7 +80,7 @@ public func sslReceiverLoop(ssl: Ssl, bufferSize: Int, duration: TimeInterval, r
     
     // The data buffer
     
-    let buffer = UnsafeMutableRawPointer.allocate(bytes: bufferSize, alignedTo: 1)
+    let buffer = UnsafeMutableRawPointer.allocate(byteCount: bufferSize, alignment: 8)
     
     
     // Get the socket that the SSL is bound to
@@ -151,5 +152,5 @@ public func sslReceiverLoop(ssl: Ssl, bufferSize: Int, duration: TimeInterval, r
         
     } while cont
     
-    buffer.deallocate(bytes: bufferSize, alignedTo: 1)
+    buffer.deallocate()
 }

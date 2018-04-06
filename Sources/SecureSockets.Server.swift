@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Server.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.3
+//  Version:    0.4.12
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.12 - Migration to Swift 4
 // 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.4.2  - Bugfix: Start command would not be possible with only serverCtx and contained a erroneous force unwrap
 // 0.3.3  - Comment section update
@@ -150,7 +151,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
     
     switch setupTipServer(onPort: port, maxPendingConnectionRequest: maxPendingConnectionRequest) {
     case let .error(msg): return .error(message: "SecureSockets.Server.setupSslServer: Failed to start listening on port: \(port),\n\n\(msg)")
-    case let .success(desc): return .success(socket: desc, ctx: ctx)
+    case let .success(desc): return .success((socket: desc, ctx: ctx))
     }
 }
 

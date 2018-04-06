@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.3
+//  Version:    0.4.12
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.12 - Migrated to SWift 4
 // 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.4.0  - Added and improved functions
 // 0.3.3  - Comment section update
@@ -81,8 +82,8 @@ public func getStringFrom(PEM_write_bio closure: (OpaquePointer) -> Int32) -> St
     // Move the data from the BIO_mem area into a Data type
     
     var data = Data()
-    let buffer = UnsafeMutableRawPointer.allocate(bytes: 1024, alignedTo: 1)
-    defer { buffer.deallocate(bytes: 1024, alignedTo: 1) }
+    let buffer = UnsafeMutableRawPointer.allocate(byteCount: 1024, alignment: 8)
+    defer { buffer.deallocate() }
     var nofBytes = BIO_read(bio, buffer, 1024)
     while nofBytes > 0 {
         data.append(buffer.assumingMemoryBound(to: UInt8.self), count: Int(nofBytes))

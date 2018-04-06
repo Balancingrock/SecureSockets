@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.3
+//  Version:    0.4.12
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -48,6 +48,7 @@
 //
 // History
 //
+// 0.4.12 - Updated to OpenSSL 1.1.0h (SSL_OP_ALL replaced)
 // 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.3.3  - Comment section update
 //        - Reassigned access levels
@@ -306,7 +307,9 @@ open class ServerCtx: Ctx {
         
         // Set default options
         
-        SSL_CTX_set_options(optr, (UInt(SSL_OP_NO_SSLv2) + UInt(SSL_OP_NO_SSLv3) + UInt(SSL_OP_ALL)))
+        let sslOpAll: UInt = UInt(SSL_OP_CRYPTOPRO_TLSEXT_BUG + SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS + SSL_OP_LEGACY_SERVER_CONNECT + SSL_OP_TLSEXT_PADDING + SSL_OP_SAFARI_ECDHE_ECDSA_BUG)
+        
+        SSL_CTX_set_options(optr, (UInt(SSL_OP_NO_SSLv2) + UInt(SSL_OP_NO_SSLv3) + sslOpAll))
     }
 }
 
@@ -333,6 +336,8 @@ open class ClientCtx: Ctx {
         
         // Set default options
         
-        SSL_CTX_set_options(optr, (UInt(SSL_OP_NO_SSLv2) + UInt(SSL_OP_NO_SSLv3) + UInt(SSL_OP_ALL)))
+        let sslOpAll: UInt = UInt(SSL_OP_CRYPTOPRO_TLSEXT_BUG + SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS + SSL_OP_LEGACY_SERVER_CONNECT + SSL_OP_TLSEXT_PADDING + SSL_OP_SAFARI_ECDHE_ECDSA_BUG)
+
+        SSL_CTX_set_options(optr, (UInt(SSL_OP_NO_SSLv2) + UInt(SSL_OP_NO_SSLv3) + sslOpAll))
     }
 }
