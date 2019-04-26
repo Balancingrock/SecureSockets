@@ -8,8 +8,8 @@ let package = Package(
         .library(name: "SecureSockets", targets: ["SecureSockets"])
     ],
     dependencies: [
-        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "0.11.0"),
-        .package(url: "https://github.com/Balancingrock/COpenSsl", from: "0.3.0")
+        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "0.12.0"),
+        .package(url: "https://github.com/Balancingrock/COpenSsl", from: "0.5.0")
     ],
     targets: [
         .target(

@@ -82,7 +82,11 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-#### 0.5.0 (Current)
+#### 0.6.0 (Current)
+
+- Migrated to Swift 5
+
+#### 0.5.0
 
 - Migrated to SPM 4
 

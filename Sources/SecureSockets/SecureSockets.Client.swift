@@ -3,7 +3,7 @@
 //  File:       SecureSockets.Client.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.4.3
+//  Version:    0.6.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -11,7 +11,7 @@
 //  Blog:       http://swiftrien.blogspot.com
 //  Git:        https://github.com/Balancingrock/SecureSockets
 //
-//  Copyright:  (c) 2016-2017 Marinus van der Lugt, All rights reserved.
+//  Copyright:  (c) 2016-2019 Marinus van der Lugt, All rights reserved.
 //
 //  License:    Use or redistribute this code any way you like with the following two provision:
 //
@@ -22,8 +22,8 @@
 //
 //  I also ask you to please leave this header with the source code.
 //
-//  I strongly believe that voluntarism is the way for societies to function optimally. Thus I have choosen to leave it
-//  up to you to determine the price for this code. You pay me whatever you think this code is worth to you.
+//  I strongly believe that voluntarism is the way for societies to function optimally. So you can pay whatever you
+//  think our code is worth to you.
 //
 //   - You can send payment via paypal to: sales@balancingrock.nl
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
@@ -35,11 +35,6 @@
 //
 //  (It is always a good idea to visit the website/blog/google to ensure that you actually pay me and not some imposter)
 //
-//  For private and non-profit use the suggested price is the price of 1 good cup of coffee, say $4.
-//  For commercial use the suggested price is the price of 1 good meal, say $20.
-//
-//  You are however encouraged to pay more ;-)
-//
 //  Prices/Quotes for support, modifications or enhancements can be obtained from: rien@balancingrock.nl
 //
 // =====================================================================================================================
@@ -48,6 +43,7 @@
 //
 // History
 //
+// 0.6.0  - Removed string interpolation warning for Swift 5
 // 0.4.3  - Result type was moved from SwifterSockets to BRUtils
 // 0.3.3  - Comment section update
 // 0.3.1  - Updated documentation for use with jazzy.
@@ -132,7 +128,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     // Create the CTX
     
     guard let ctx = clientCtx ?? ClientCtx() else {
-        return .error(message: "SecureSockets.Client.connectToSslServer: Failed to create ClientCtx, error = '\(errPrintErrors)'")
+        return .error(message: "SecureSockets.Client.connectToSslServer: Failed to create ClientCtx, error = '\(String(describing: errPrintErrors))'")
     }
     
     
