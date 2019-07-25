@@ -1,0 +1,5 @@
+module COpenSsl {
+    umbrella header "openssl.h"
+    link "ssl"
+    link "crypto"
+}

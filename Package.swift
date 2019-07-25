@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 
 import PackageDescription
 
@@ -8,13 +8,15 @@ let package = Package(
         .library(name: "SecureSockets", targets: ["SecureSockets"])
     ],
     dependencies: [
-        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "0.12.0"),
-        .package(url: "https://github.com/Balancingrock/COpenSsl", from: "0.5.0")
+        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "0.12.0")
     ],
     targets: [
+        .systemLibrary(
+            name: "COpenSsl"
+        ),
         .target(
             name: "SecureSockets",
-            dependencies: ["SwifterSockets"]
+            dependencies: ["SwifterSockets", "COpenSsl"]
         )
     ]
 )
