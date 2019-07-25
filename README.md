@@ -39,35 +39,64 @@ Reference: [reference manual](http://swiftfire.nl/projects/securesockets/referen
 
 # Installation
 
-SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets ___first___ install the openSSL libaries as detailed below.
+SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets ___first___ install the openSSL libaries as detailed below. Note that SecureSockets currently uses openSSL 1.1.x.
 
 Note that the openSSL files are modified in the instructions below, so an existing openSSL install cannot be used!
 
-Once the openSSL libaries are available (in the default location in `/usr/local`) then proceed with the following steps to install SecureSockets.
+For the instructions in here, it will be assumed that openSSL is installed in a parallel project called `openssl` at the same level of the SecureSockets project.
+I.e like this:
+
+    ~/Documents/Projects/openssl/...
+    ~/Documents/Projects/SecureSockets/...
+
+To create a local copy use the git clone command:
 
     $ git clone https://github.com/Swiftrien/SecureSockets
     $ cd SecureSockets
+    $ swift package update
     $ swift build
 
-## Framework use in a Xcode project
+## Use without Xcode
 
-### Create new Xcode project to build the frameworks
+Include SecureSockets as a dependency in the Package.swift manifest file.
 
-In order to create a framework from a SPM project like SecureSockets I found it easiest to generate an xcode project in the SecureSockets dictionary with:
+    .package(url: "https://github.com/Balancingrock/SecureSockets.git", from: "0.7.0")
 
+Compile and link with:
+
+    $ swift build -Xswiftc -I/__your_path__/openssl/include -Xlinker -L/__your_path__/openssl/lib -Xlinker -lcrypto -Xlinker -lssl
+
+## Use with Xcode project
+
+_for Xcode 10 (or older), Xcode 11 should have native support for SPM_
+
+In order to create a Xcode project that uses sources derived with SPM I found it easiest to generate a Xcode project after the swift package manager was used to create the project:
+
+    $ mkdir project-name
+    $ cd project-name
+    $ swift package init --type=executable
+    -> edit Package.swift to include SecureSockets
+    $ swift package update
     $ swift package generate-xcodeproj
 
-After the project is created, there will be three targets: SwifterSockets, SecureSockets and SecureSocketsTests. The last one is not needed. 
+In the project you can now add a new target of the desired type.
 
-Select the target frameworks and navigate to the `Build Settings` subsection `Packaging` and set the `Defines Module` property to `Yes`
+Add the frameworks to the new target
 
-Now build the targets.
+Add the following to the build settings of the target:
 
-### Copy the frameworks to your project
+    <project-name> -> <target> -> Build Settings -> Linking -> Add to Other linker flags: -lcrypto -lssl
+    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Header Search Paths: $(SRCROOT)/../openssl/include
+    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Library Search Paths: $(SRCROOT)/../openssl/lib
+    
+The search paths assume that the openssl is at the same level in the directory as the project itself.
 
-To import the frameworks into a project navigate to the target's `General` settings and add the frameworks to the `Embedded Binaries` section (by clicking the "+" button). This ensures that the frameworks are not only present when building, but also when running.
+Note: If either of the frameworks tied to the project with SPM is updated and you want to use the updated version then do the following:
 
-Note: When develloping code and using a debugger it is possible to step into the source code of the frameworks. It is also possible to then change the source code used to build the frameworks, however the binaries contained in the project are not updated until the frameworks project is re-build. And the frameworks are copied to the Xcode project.
+    $ swift package update
+
+Be sure to update the version number of the dependency folder in Xcode as well.
+Do ___not___ regenerate the Xcode project or you will loose the target and all build settings. (it can be recreated of course)
 
 # Version history
 
@@ -82,105 +111,23 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-#### 0.6.0 (Current)
+#### 0.7.0 (Current)
+
+- Removed COpenSsl as an external dependency and made it a system library.
+
+#### 0.6.0
 
 - Migrated to Swift 5
 
 #### 0.5.0
 
-- Migrated to SPM 4
 
-#### 0.4.12
-
-- Migrated to Swift 4, minor adjustments
-- Migrated to OpenSSL 1.1.0h
-
-#### 0.4.11
-
-- Upped SwifterSockets to 0.10.10
-
-#### 0.4.10
-
-- Upped SwifterSockets to 0.10.9
-
-#### 0.4.9
-
-- Upped SwifterSockets to 0.10.8
-
-#### 0.4.8
-
-- Upped SwifterSockets to 0.10.7
-
-#### 0.4.7
-
-- Added closing of socket when connection is no longer available in SecureSocket.Transmit
-- Updated SwifterSockets to 0.10.6
-
-#### 0.4.6
-
-- Update SwifterSockets to 0.10.5
-
-#### 0.4.5
-
-- Update SwifterSockets to 0.10.4
-
-#### 0.4.4
-
-- Update SwifterSockets to 0.10.3
-
-#### 0.4.3
-
-- Result type was moved from SwifterSockets to BRUtils
-
-#### 0.4.2
-
-- Bugfix: X509 in get function for validNotBefore and validNotAfter that would return wrong values
-- Bugfix: Server Start command would not be possible with only serverCtx and contained a erroneous force unwrap
-
-#### 0.4.1
-
-- Improved compilation speed
-
-#### 0.4.0
-
-- Bugfix, when creating a certificate the issuer fields could not be set.
-- Some interfaces have been changed slightly
-
-#### 0.3.4
-
-- Added callback and progress activation to sslTransfer
-
-#### 0.3.3
-
-- Reassigned access levels
-- Added logId to sslInterface
-- Updated comments
-
-#### 0.3.2
-
-- Updated to SwifterSockets 0.9.12
-
-#### 0.3.1
-
-- Updated documentation
-
-#### 0.3.0
-
-- Updated error messages
-
-#### 0.2.0
-
-- Simplified the installation and use in another project
-
-#### 0.1.0
-
-- Initial release
 
 # Installing OpenSSL
 
 ## Download & verification
 
-SecureSockets needs openSSL 1.1.0. (Note that this version is not compatible with the previous version 1.0.2)
+SecureSockets was developped for openSSL 1.1.0. but should be compatible with 1.1.1 (Note that these versions are not compatible with the previous version 1.0.2)
 
 The download link for openSSL is: [https://www.openssl.org/source](https://www.openssl.org/source/)
 
@@ -293,13 +240,15 @@ The OpenSSL 1.1.0 installer needs PERL 5.10 or later.
 
 The [installation instructions](https://wiki.openssl.org/index.php/Compilation_and_Installation) on the openSSL site are a little confusing, but the process is very simple. In the INSTALL file in the openssl-1.1.0c directory we find the proper installation instructions for Unix.
 
-By default openssl will be installed in `/usr/local`. Check that there is no 'ssl' directory in `/usr/local`. To change the default, see the `INSTALL` document.
+BEWARE:  By default openssl will be installed in `/usr/local`. This will clash with possible `brew` installations. Hence it is recommended to specify a different location during `config`. (Note use the `--prefix` and `--openssldir` options.)
+
+Note: It is not possible to use `brew` because of the small additions as discussed before.
 
 First run config:
 
 Note: Do this while the terminal prompt is in the openssl-1.1.0 directory!
 
-    $ ./config
+    $ ./config --prefix=/__your-path__ --openssldir=/__your-path__
 
 Messages start scrolling but it is over rather quick.
 There should not be any visible issues.
