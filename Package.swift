@@ -4,6 +4,9 @@ import PackageDescription
 
 let package = Package(
     name: "SecureSockets",
+    platforms: [
+        .macOS(.v10_12)
+    ],
     products: [
         .library(name: "SecureSockets", targets: ["SecureSockets"])
     ],
@@ -16,7 +19,9 @@ let package = Package(
         ),
         .target(
             name: "SecureSockets",
-            dependencies: ["SwifterSockets", "COpenSsl"]
+            dependencies: ["SwifterSockets", "COpenSsl"],
+            swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])],
+            linkerSettings: [.linkedLibrary("ssl"), .linkedLibrary("crypto"), .unsafeFlags(["-Lopenssl/v1_1_0-macos_10_12/lib"])]
         )
     ]
 )

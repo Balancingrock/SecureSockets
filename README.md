@@ -39,21 +39,20 @@ Reference: [reference manual](http://swiftfire.nl/projects/securesockets/referen
 
 # Installation
 
-SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries. Therefore before attempting to install or use SecureSockets ___first___ install the openSSL libaries as detailed below. Note that SecureSockets currently uses openSSL 1.1.x.
+SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries.
 
-Note that the openSSL files are modified in the instructions below, so an existing openSSL install cannot be used!
+To provide a positive user experience, the SecureSockets repository contains a version of openSSL compiled for MacOS 10.12. This allows the user of the package to simply clone & build the library.
 
-For the instructions in here, it will be assumed that openSSL is installed in a parallel project called `openssl` at the same level of the SecureSockets project.
-I.e like this:
+However this is not recommened. You should not trust the distributed version of openSSL but build your own from the original sources.
 
-    ~/Documents/Projects/openssl/...
-    ~/Documents/Projects/SecureSockets/...
+Unfortunately an existing build of openSSL (for example from brew or macports) cannot be used. Some variadic functions need glue code so that Swift is able to call the (variadic) functions. This glue has to be added to the openSSL code as per instructions below.
+
+The instructions to build openSSL are included below. For now just go ahead and create a local clone, or use it as a dependency. Be sure to later replace the openSSL library with a build of your own.
 
 To create a local copy use the git clone command:
 
     $ git clone https://github.com/Swiftrien/SecureSockets
     $ cd SecureSockets
-    $ swift package update
     $ swift build
 
 ## Use without Xcode
@@ -64,7 +63,7 @@ Include SecureSockets as a dependency in the Package.swift manifest file.
 
 Compile and link with:
 
-    $ swift build -Xswiftc -I/__your_path__/openssl/include -Xlinker -L/__your_path__/openssl/lib -Xlinker -lcrypto -Xlinker -lssl
+    $ swift build -Xswiftc -I/__your_path__/openssl/v1_1_0-macos_10_12/include -Xlinker -L/__your_path__/openssl/v1_1_0-macos_10_12/lib -Xlinker -lcrypto -Xlinker -lssl
 
 ## Use with Xcode project
 
@@ -86,17 +85,15 @@ Add the frameworks to the new target
 Add the following to the build settings of the target:
 
     <project-name> -> <target> -> Build Settings -> Linking -> Add to Other linker flags: -lcrypto -lssl
-    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Header Search Paths: $(SRCROOT)/../openssl/include
-    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Library Search Paths: $(SRCROOT)/../openssl/lib
+    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include
+    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib
     
-The search paths assume that the openssl is at the same level in the directory as the project itself.
-
 Note: If either of the frameworks tied to the project with SPM is updated and you want to use the updated version then do the following:
 
     $ swift package update
 
 Be sure to update the version number of the dependency folder in Xcode as well.
-Do ___not___ regenerate the Xcode project or you will loose the target and all build settings. (it can be recreated of course)
+Do _not_ regenerate the Xcode project. It will erase the target and build settings. (Which can be recreated of course)
 
 # Version history
 
@@ -111,17 +108,18 @@ Note: Planned releases are for information only, they are subject to change with
 
 - The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
 
-#### 0.7.0 (Current)
+#### 0.7.1 (Current)
+
+- Added a local copy of openSSL
+- Updated the manifest to include the compiler options
+
+#### 0.7.0
 
 - Removed COpenSsl as an external dependency and made it a system library.
 
 #### 0.6.0
 
 - Migrated to Swift 5
-
-#### 0.5.0
-
-
 
 # Installing OpenSSL
 
