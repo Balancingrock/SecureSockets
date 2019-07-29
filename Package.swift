@@ -8,7 +8,8 @@ let package = Package(
         .macOS(.v10_12)
     ],
     products: [
-        .library(name: "SecureSockets", targets: ["SecureSockets"])
+        .library(name: "SecureSockets", targets: ["SecureSockets"]),
+        .library(name: "COpenSsl", targets: ["COpenSsl"])
     ],
     dependencies: [
         .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "0.12.0")
@@ -20,8 +21,18 @@ let package = Package(
         .target(
             name: "SecureSockets",
             dependencies: ["SwifterSockets", "COpenSsl"],
-            swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])],
-            linkerSettings: [.linkedLibrary("ssl"), .linkedLibrary("crypto"), .unsafeFlags(["-Lopenssl/v1_1_0-macos_10_12/lib"])]
+            swiftSettings: [
+                //
+                // Uncomment the following line for stand-alone or Xcode generation
+                //.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])
+            ],
+            linkerSettings: [
+                .linkedLibrary("ssl"),
+                .linkedLibrary("crypto"),
+                //
+                // Uncomment the following line for stand-alone or Xcode generation
+                //.unsafeFlags(["-Lopenssl/v1_1_0-macos_10_12/lib"])
+            ]
         )
     ]
 )

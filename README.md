@@ -41,59 +41,52 @@ Reference: [reference manual](http://swiftfire.nl/projects/securesockets/referen
 
 SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries.
 
-To provide a positive user experience, the SecureSockets repository contains a version of openSSL compiled for MacOS 10.12. This allows the user of the package to simply clone & build the library.
+To provide a positive user experience, the SecureSockets repository contains a version of openSSL 1.1.0 compiled for MacOS 10.12. This allows the user of the package to simply clone & build the library.
 
 However this is not recommened. You should not trust the distributed version of openSSL but build your own from the original sources.
 
-Unfortunately an existing build of openSSL (for example from brew or macports) cannot be used. Some variadic functions need glue code so that Swift is able to call the (variadic) functions. This glue has to be added to the openSSL code as per instructions below.
+The instructions to build openSSL are included below. For now just go ahead, but be sure to later replace the openSSL library with a build of your own.
 
-The instructions to build openSSL are included below. For now just go ahead and create a local clone, or use it as a dependency. Be sure to later replace the openSSL library with a build of your own.
+Unfortunately an existing build of openSSL (for example from `brew` or `macports`) cannot be used. Some variadic functions need glue code so that Swift is able to call the (variadic) functions. This glue has to be added to the openSSL code as per instructions further below.
+
+## Use as SPM dependency
+
+This is the default situation. Just add it to the dependencies of your project.
+
+To build your project two arguments must be set:
+
+    $ swift build -Xswiftc -I/__your_path__/openssl/v1_1_0-macos_10_12/include -Xlinker -L/__your_path__/openssl/v1_1_0-macos_10_12/lib
+
+where `__your_path__` must be set to the proper value.
+
+## Build as a standalone project
 
 To create a local copy use the git clone command:
 
     $ git clone https://github.com/Swiftrien/SecureSockets
     $ cd SecureSockets
+    
+Now edit the file `Package.swift` and uncomment the two lines that specify the compiler & linker options.
+Then:
+    
     $ swift build
 
-## Use without Xcode
+## Generate an Xcode project
+
+As for _Build as a standalone project_ but there is no need to _build_ the project, instead use:
+
+    $ swift package generate-xcodeproj
+    
+The compiler an dlinker settings will be filled in by the above command.
+
+## Use inside an XCode project as a SPM dependency
 
 Include SecureSockets as a dependency in the Package.swift manifest file.
 
-    .package(url: "https://github.com/Balancingrock/SecureSockets.git", from: "0.7.0")
+Under the target settings add the following _Build Settings_:
 
-Compile and link with:
-
-    $ swift build -Xswiftc -I/__your_path__/openssl/v1_1_0-macos_10_12/include -Xlinker -L/__your_path__/openssl/v1_1_0-macos_10_12/lib -Xlinker -lcrypto -Xlinker -lssl
-
-## Use with Xcode project
-
-_for Xcode 10 (or older), Xcode 11 should have native support for SPM_
-
-In order to create a Xcode project that uses sources derived with SPM I found it easiest to generate a Xcode project after the swift package manager was used to create the project:
-
-    $ mkdir project-name
-    $ cd project-name
-    $ swift package init --type=executable
-    -> edit Package.swift to include SecureSockets
-    $ swift package update
-    $ swift package generate-xcodeproj
-
-In the project you can now add a new target of the desired type.
-
-Add the frameworks to the new target
-
-Add the following to the build settings of the target:
-
-    <project-name> -> <target> -> Build Settings -> Linking -> Add to Other linker flags: -lcrypto -lssl
-    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include
-    <project-name> -> <target> -> Build Settings -> Search Paths -> Add to Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib
-    
-Note: If either of the frameworks tied to the project with SPM is updated and you want to use the updated version then do the following:
-
-    $ swift package update
-
-Be sure to update the version number of the dependency folder in Xcode as well.
-Do _not_ regenerate the Xcode project. It will erase the target and build settings. (Which can be recreated of course)
+_<project-name> -> <target> -> Build Settings -> Search Paths -> (Add to) Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include_
+_<project-name> -> <target> -> Build Settings -> Search Paths -> (Add to) Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib_
 
 # Version history
 
