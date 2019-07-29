@@ -21,11 +21,9 @@ let package = Package(
         .target(
             name: "SecureSockets",
             dependencies: ["SwifterSockets", "COpenSsl"],
-            swiftSettings: [
-                //
-                // Uncomment the following line for stand-alone or Xcode generation
-                //.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])
-            ],
+            //
+            // Uncomment the following line for stand-alone or Xcode generation
+            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])],
             linkerSettings: [
                 .linkedLibrary("ssl"),
                 .linkedLibrary("crypto"),
