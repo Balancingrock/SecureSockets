@@ -1,14 +1,13 @@
 // =====================================================================================================================
 //
-//  File:       SecureSockets.Client.swift
+//  File:       ConnectToSslServer.swift
 //  Project:    SecureSockets
 //
-//  Version:    0.6.0
+//  Version:    1.0.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
 //  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
-//  Blog:       http://swiftrien.blogspot.com
 //  Git:        https://github.com/Balancingrock/SecureSockets
 //
 //  Copyright:  (c) 2016-2019 Marinus van der Lugt, All rights reserved.
@@ -22,18 +21,12 @@
 //
 //  I also ask you to please leave this header with the source code.
 //
-//  I strongly believe that voluntarism is the way for societies to function optimally. So you can pay whatever you
-//  think our code is worth to you.
+//  Like you, I need to make a living:
 //
-//   - You can send payment via paypal to: sales@balancingrock.nl
+//   - You can send payment (you choose the amount) via paypal to: sales@balancingrock.nl
 //   - Or wire bitcoins to: 1GacSREBxPy1yskLMc9de2nofNv2SNdwqH
 //
-//  I prefer the above two, but if these options don't suit you, you can also send me a gift from my amazon.co.uk
-//  wishlist: http://www.amazon.co.uk/gp/registry/wishlist/34GNMPZKAQ0OO/ref=cm_sw_em_r_wsl_cE3Tub013CKN6_wb
-//
 //  If you like to pay in another way, please contact me at rien@balancingrock.nl
-//
-//  (It is always a good idea to visit the website/blog/google to ensure that you actually pay me and not some imposter)
 //
 //  Prices/Quotes for support, modifications or enhancements can be obtained from: rien@balancingrock.nl
 //
@@ -43,12 +36,7 @@
 //
 // History
 //
-// 0.6.0  - Removed string interpolation warning for Swift 5
-// 0.4.3  - Result type was moved from SwifterSockets to BRUtils
-// 0.3.3  - Comment section update
-// 0.3.1  - Updated documentation for use with jazzy.
-// 0.3.0  - Fixed error message text (removed reference to SwifterSockets.Secure)
-// 0.1.0  - Initial release
+// 1.0.0 - Removed older history
 // =====================================================================================================================
 
 import Foundation

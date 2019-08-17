@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "COpenSsl", targets: ["COpenSsl"])
     ],
     dependencies: [
-        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "0.12.0")
+        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "1.0.0")
     ],
     targets: [
         .systemLibrary(

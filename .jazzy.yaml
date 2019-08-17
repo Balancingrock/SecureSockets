@@ -6,6 +6,6 @@ module: SecureSockets
 hide_documentation_coverage: true
 xcodebuild_arguments: [-target, SecureSockets]
 github_url: https://github.com/Balancingrock/SecureSockets
-output: ~/Documents/Websites/sf/projects/securesockets/reference
+output: ~/Documents/Websites/swiftfire-website/projects/securesockets/reference
 clean: true
 theme: fullwidth

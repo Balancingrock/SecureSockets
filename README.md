@@ -97,22 +97,9 @@ Note: Planned releases are for information only, they are subject to change with
 - No new features planned. Features and bugfixes will be made on an ad-hoc basis as needed to support Swiftfire development.
 - For feature requests and bugfixes please contact rien@balancingrock.nl
 
-#### 1.0.0 (Planned)
+#### 1.0.0 (Current)
 
-- The current verion will be upgraded to 1.0.0 status when the full set necessary for Swiftfire 1.0.0 has been completed.
-
-#### 0.7.1 (Current)
-
-- Added a local copy of openSSL
-- Updated the manifest to include the compiler options
-
-#### 0.7.0
-
-- Removed COpenSsl as an external dependency and made it a system library.
-
-#### 0.6.0
-
-- Migrated to Swift 5
+- Reorganized for release 1.0.0
 
 # Installing OpenSSL
 
