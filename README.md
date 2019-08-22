@@ -1,19 +1,27 @@
 # SecureSockets
+
 A collection of secure socket layer utilities in Swift using openSSL.
 
-Depends on SwifterSockets and COpenSsl.
+SecureSockets is part of the Swiftfire webserver project.
 
-SecureSockets is part of [Swiftfire](http://swiftfire.nl), the next generation personal webserver.
+The [Swiftfire webpage](http://swiftfire.nl)
+
+The [reference manual](http://swiftfire.nl/projects/securesockets/reference/index.html)
 
 # OpenSSL
 
 OpenSSL is available from [https://openssl.org](https://openssl.org).
 
-Due to limitations in the interface between Swift and C there are two functions that must be added to the openSSL libraries. Due to limitations in the Swift Package Manager, these functions cannot be added as a seperate library. The easiest solution is to put these functions in the openSSL code.
+Due to limitations in the interface between Swift and C there is some glue code that must be added to the openSSL libraries. Due to limitations in the Swift Package Manager, these functions cannot be added as a seperate library. The easiest solution is to put these functions in the openSSL code.
 
-Instructions are included below.
+Note that this glue code means that it is not possible to use an existing build of openSSL, for example from `brew` or `macports`.
+
+For convenience a pre-compiled openSSL distribution is included in this package. While this is convenient for evaluation and development purposes, you should not use it for the final production version of your application. You owe it to your clients/users to only use fully guaranteed openSSL libraries. Which you must build yourself.
+
+Instructions are included below in the section 'Install OpenSSL'.
 
 # Features
+
 - Shields the Swift application from the complexity of the Unix socket and openSSL calls.
 - Directly interfaces with the openSSL calls using:
 	- connectToSslServer
@@ -31,73 +39,43 @@ Instructions are included below.
 	- certified server & certified clients
 	- multiple domain certificates (SNI) on a certified server
 
-# Documentation
-
-Project page: [SecureSockets](http://swiftfire.nl/projects/securesockets/securesockets.html)
-
-Reference: [reference manual](http://swiftfire.nl/projects/securesockets/reference/index.html)
-
 # Installation
 
-SecureSockets is distributed as a SPM package. But it depends on the openSSL libraries.
+## SPM
 
-To provide a positive user experience, the SecureSockets repository contains a version of openSSL 1.1.0 compiled for MacOS 10.12. This allows the user of the package to simply clone & build the library.
-
-However this is not recommened. You should not trust the distributed version of openSSL but build your own from the original sources.
-
-The instructions to build openSSL are included below. For now just go ahead, but be sure to later replace the openSSL library with a build of your own.
-
-Unfortunately an existing build of openSSL (for example from `brew` or `macports`) cannot be used. Some variadic functions need glue code so that Swift is able to call the (variadic) functions. This glue has to be added to the openSSL code as per instructions further below.
-
-## Use as SPM dependency
-
-This is the default situation. Just add it to the dependencies of your project.
-
-To build your project two arguments must be set:
+VJson can be used by the Swift Package Manager. Just add it to your package manifest as a dependency. However it is necessary to add two arguments to the build command:
 
     $ swift build -Xswiftc -I/__your_path__/openssl/v1_1_0-macos_10_12/include -Xlinker -L/__your_path__/openssl/v1_1_0-macos_10_12/lib
 
 where `__your_path__` must be set to the proper value.
 
-## Build as a standalone project
+## Xcode
 
-To create a local copy use the git clone command:
+1. Clone the repository and create a Xcode project:
 
-    $ git clone https://github.com/Swiftrien/SecureSockets
-    $ cd SecureSockets
-    
-Now edit the file `Package.swift` and uncomment the two lines that specify the compiler & linker options.
-Then:
-    
-    $ swift build
+~~~~
+	$ git clone https://github.com/Balancingrock/SecureSockets
+	$ cd SecureSockets
+	$ swift package generate-xcodeproj
+~~~~
 
-## Generate an Xcode project
+1. Double click that project to open it. Once open set the `Defines Module` to 'yes' in the `Build Settings -> Packaging` before creating the framework. (Otherwise the import of the framework in another project won't work)
 
-As for _Build as a standalone project_ but there is no need to _build_ the project, instead use:
+1. In the project that will use SecureSockets, add the SecureSockets.framework by opening the `General` settings of the target and add the SecureSockets.framework to the `Embedded Binaries`.
 
-    $ swift package generate-xcodeproj
-    
-The compiler an dlinker settings will be filled in by the above command.
+1. In the project that uses SecureSockets add the following to the framework target and the application target under the `Build Settings`:
 
-## Use inside an XCode project as a SPM dependency
+	_<target> -> Build Settings -> Search Paths -> (Add to) Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include_
+	
+	_<target> -> Build Settings -> Search Paths -> (Add to) Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib_
 
-Include SecureSockets as a dependency in the Package.swift manifest file.
-
-Under the target settings add the following _Build Settings_:
-
-_<project-name> -> <target> -> Build Settings -> Search Paths -> (Add to) Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include_
-_<project-name> -> <target> -> Build Settings -> Search Paths -> (Add to) Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib_
+1. In the Swift source code where you want to use it, import SecureSockets at the top of the file.
 
 # Version history
 
-Note: Planned releases are for information only, they are subject to change without notice.
+No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
 
-#### 1.1.0 (Open)
-
-- No new features planned. Features and bugfixes will be made on an ad-hoc basis as needed to support Swiftfire development.
-- For feature requests and bugfixes please contact rien@balancingrock.nl
-
-#### 1.0.0 (Current)
+#### 1.0.0
 
 - Reorganized for release 1.0.0
 
