@@ -12,7 +12,7 @@ The [reference manual](http://swiftfire.nl/projects/securesockets/reference/inde
 
 OpenSSL is available from [https://openssl.org](https://openssl.org).
 
-Due to limitations in the interface between Swift and C there is some glue code that must be added to the openSSL libraries. Due to limitations in the Swift Package Manager, these functions cannot be added as a seperate library. The easiest solution is to put these functions in the openSSL code.
+Due to limitations in the interface between Swift and C there is some glue code that must be added to the openSSL libraries. Due to limitations in the Swift Package Manager, these functions cannot be added as a separate library. The easiest solution is to put these functions in the openSSL code.
 
 Note that this glue code means that it is not possible to use an existing build of openSSL, for example from `brew` or `macports`.
 
@@ -65,9 +65,9 @@ where `__your_path__` must be set to the proper value.
 
 1. In the project that uses SecureSockets add the following to the framework target and the application target under the `Build Settings`:
 
-	_<target> -> Build Settings -> Search Paths -> (Add to) Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include_
+	_\<target\> -> Build Settings -> Search Paths -> (Add to) Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include_
 	
-	_<target> -> Build Settings -> Search Paths -> (Add to) Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib_
+	_\<target\> -> Build Settings -> Search Paths -> (Add to) Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib_
 
 1. In the Swift source code where you want to use it, import SecureSockets at the top of the file.
 
