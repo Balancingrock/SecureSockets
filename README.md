@@ -53,11 +53,9 @@ where `__your_path__` must be set to the proper value.
 
 1. Clone the repository and create a Xcode project:
 
-~~~~
-	$ git clone https://github.com/Balancingrock/SecureSockets
-	$ cd SecureSockets
-	$ swift package generate-xcodeproj
-~~~~
+        $ git clone https://github.com/Balancingrock/SecureSockets
+        $ cd SecureSockets
+        $ swift package generate-xcodeproj
 
 1. Double click that project to open it. Once open set the `Defines Module` to 'yes' in the `Build Settings -> Packaging` before creating the framework. (Otherwise the import of the framework in another project won't work)
 
