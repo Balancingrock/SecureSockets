@@ -3,7 +3,7 @@
 //  File:       SslTransfer.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -68,7 +70,7 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
     if socket < 0 {
         _ = progress?(0, 0)
         callback?.transmitterError(id, "Missing filedescriptor from SSL")
-        return .error(message: "SecureSockets.Transmit.sslTransfer: Missing filedescriptor from SSL")
+        return .error(message: "SecureSockets.SslTransfer.sslTransfer: Missing filedescriptor from SSL")
     }
     
     
@@ -157,7 +159,7 @@ public func sslTransfer(ssl: Ssl, buffer: UnsafeBufferPointer<UInt8>, timeout: T
         // All error cases, none of these should be possible.
         case .wantConnect, .wantAccept, .wantX509Lookup, .wantAsync, .wantAsyncJob, .syscall, .undocumentedSslError, .undocumentedSslFunctionResult, .ssl, .bios_errno, .errorMessage:
             
-            return .error(message: "SecureSockets.Transmit.sslTransfer: error during SSL_write, '\(result)' was reported")
+            return .error(message: "SecureSockets.SslTransfer.sslTransfer: error during SSL_write, '\(result)' was reported")
         }
     }
 }
@@ -202,6 +204,6 @@ public func sslTransfer(ssl: Ssl, string: String, timeout: TimeInterval, callbac
     } else {
         _ = progress?(0, 0)
         callback?.transmitterError(0, "Cannot convert string to UTF8")
-        return .error(message: "SecureSockets.Transmit.sslTransfer: Cannot convert string to UTF8")
+        return .error(message: "SecureSockets.SslTransfer.sslTransfer: Cannot convert string to UTF8")
     }
 }

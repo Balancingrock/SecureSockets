@@ -3,7 +3,7 @@
 //  File:       Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Documentation updates
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -72,12 +74,12 @@ open class Ctx {
     public var x509: X509? { return X509(ctx: self) }
     
     
-    // A list with Ctx's for domains beiing hosted by the server that uses this Ctx. Should be empty for client Ctx's. May be empty for server Ctx's if the server hosts just one domain.
+    /// A list with Ctx's for the domains beiing hosted by the server that uses this Ctx. Should be empty for client Ctx's. May be empty for server Ctx's if the server hosts just one domain.
     
     public private(set) var domainCtxs = [Ctx]()
     
     
-    /// Assigns the certificate in the given file.
+    /// Assigns the certificate in the given file to this Ctx.
     ///
     /// - Parameter file: An encoded file in PEM or ASN1 format with the certificate.
     ///
@@ -98,7 +100,7 @@ open class Ctx {
     }
     
     
-    /// Assigns the private key in the given file.
+    /// Assigns the private key in the given file to this Ctx.
     ///
     /// - Parameter file: An encoded file in PEM or ASN1 format with the private key.
     ///
@@ -119,7 +121,7 @@ open class Ctx {
     }
     
     
-    /// Verifies if the private key and the certificate that were last set belong together.
+    /// Verifies if the private key and the certificate previously written to this Ctx belong together.
     ///
     /// The private key most recently set will be tested for compatibilty with the public key in the certificate that was most recently set.
     ///
@@ -140,7 +142,7 @@ open class Ctx {
     }
     
     
-    /// Adds the file or folder at the given path to the list of trusted certificates.
+    /// Adds the file or folder at the given path to the list of trusted certificates. If a directory is given, all certificates in that directory are regarded as trusted.
     ///
     /// - Note: There is no test performed on the trusted certificated, the paths are accepted as is.
     ///
@@ -267,7 +269,7 @@ open class Ctx {
 }
 
 
-/// A context for a server.
+/// A context with default values usable as a server CTX.
 
 open class ServerCtx: Ctx {
     
@@ -296,7 +298,7 @@ open class ServerCtx: Ctx {
 }
 
 
-/// A context for a client.
+/// A context with default values usable as a client CTX.
 
 open class ClientCtx: Ctx {
     

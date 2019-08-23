@@ -3,7 +3,7 @@
 //  File:       SslInterface.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -49,7 +51,14 @@ import COpenSsl
 
 public struct SslInterface: InterfaceAccess {
     
+    
+    /// The SSL session that is used.
+    
     public private(set) var ssl: Ssl?
+    
+    
+    /// The socket on which the connection was established.
+    
     public private(set) var socket: Int32?
     
     
@@ -60,7 +69,7 @@ public struct SslInterface: InterfaceAccess {
     public var logId: Int32 { return socket ?? -1 }
     
     
-    // True when the connection is preent.
+    /// True when the connection is present.
     
     public var isValid: Bool {
         get {

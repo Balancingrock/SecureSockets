@@ -3,7 +3,7 @@
 //  File:       SslError.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
 // =====================================================================================================================
 
@@ -50,7 +51,7 @@ import COpenSsl
 ///
 /// The following may be of help.
 ///
-/// Document: https://tools.ietf.org/html/draft-ietf-tls-tls13-18
+/// Document: https://tools.ietf.org/html/rfc8446
 ///
 /// This document is the current spec for TLS1.3 and expires April 29, 2017.
 ///

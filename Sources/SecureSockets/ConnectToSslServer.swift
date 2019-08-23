@@ -3,7 +3,7 @@
 //  File:       ConnectToSslServer.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -91,7 +93,7 @@ public enum ConnectResult: CustomStringConvertible {
 ///   - port: The port number on which to connect.
 ///   - host: The name of the host to be reached (usually something like 'domain.com'). If a server hosts multiple certified domains, this name is used to select the certificate at the server.
 ///   - timeout: The time within which the connection should be established.
-///   - clientCtx: An openSSL context wrapper (Ctx) that can be used for a client. If none is provided, a SwifterSockets.Secure.ClientCtx will be created. __Note__: If clientCtx is nil (default) or has no trusted server certificate preloaded, then at least one trustedServerCertificate must be provided.
+///   - clientCtx: An openSSL context wrapper (Ctx) that can be used for a client. If none is provided, a SecureSockets.Ctx.ClientCtx will be created. __Note__: If clientCtx is nil (default) or has no trusted server certificate preloaded, then at least one trustedServerCertificate must be provided.
 ///   - certificateAndPrivateKeyFiles: The certificate and private key to be used as the client certificate. Only needed for certified clients.
 ///   - trustedServerCertificates: A list of paths to file(s) or folder(s) that contain the certificate(s) of the acceptable servers. If none is provided, a clientCtx must be provided that has a trusted server certificate set.
 ///   - callback: A closure that is called when a certificate verification failed. It is up to the closure to accept or reject the server. If the closure is nil, the server will be rejected when the certificate verification failed.
@@ -104,7 +106,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     // Make sure there is at least a trusted certificate file or a callee provided ctxSetup.
     
     if (((trustedServerCertificates?.count ?? 0) == 0) && (clientCtx == nil)) {
-        fatalError("SecureSockets.Client.connectToSslServer: Need either trustedServerCertificate or ctxSetup")
+        fatalError("SecureSockets.ConnectToSslServer.connectToSslServer: Need either trustedServerCertificate or ctxSetup")
     }
     
     
@@ -116,7 +118,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     // Create the CTX
     
     guard let ctx = clientCtx ?? ClientCtx() else {
-        return .error(message: "SecureSockets.Client.connectToSslServer: Failed to create ClientCtx, error = '\(String(describing: errPrintErrors))'")
+        return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to create ClientCtx, error = '\(String(describing: errPrintErrors))'")
     }
     
     
@@ -125,11 +127,11 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     
     if let ck = certificateAndPrivateKeyFiles {
         switch ctx.useCertificate(file: ck.certificate) {
-        case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to use certificate at path \(ck.certificate.path),\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to use certificate at path \(ck.certificate.path),\n\(message)")
         case .success: break
         }
         switch ctx.usePrivateKey(file: ck.privateKey) {
-        case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to use private key at path \(ck.privateKey.path),\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to use private key at path \(ck.privateKey.path),\n\(message)")
         case .success: break
         }
     }
@@ -142,7 +144,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
         for certpath in (trustedServerCertificates ?? [String]()) {
             
             switch ctx.loadVerify(location: certpath) {
-            case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to set load verificaty for path \(certpath),\n\(message)")
+            case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to set load verificaty for path \(certpath),\n\(message)")
             case .success: break
             }
         }
@@ -157,7 +159,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     
     ERR_clear_error()
     guard let ssl = Ssl(context: ctx) else {
-        return .error(message: "SecureSockets.Client.connectToSslServer: Failed to create Ssl,\n\n\(errPrintErrors())")
+        return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to create Ssl,\n\n\(errPrintErrors())")
     }
     
     
@@ -170,7 +172,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     
     var socket: Int32
     switch connectToTipServer(atAddress: address, atPort: port) {
-    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to connect to server at \(address) on port \(port),\n\(message)")
+    case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to connect to server at \(address) on port \(port),\n\(message)")
     case let .success(s): socket = s
     }
     
@@ -178,7 +180,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     /// Attach SSL to socket
     
     switch ssl.setFd(socket) {
-    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to set socket to ssl,\n\(message)")
+    case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to set socket to ssl,\n\(message)")
     case .success: break
     }
     
@@ -187,8 +189,8 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     
     switch ssl.connect(socket: socket, timeout: timeoutTime) {
     case .timeout: return .timeout
-    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Failed to connect via SSL,\n\(message)")
-    case .closed: return .error(message: "SecureSockets.Client.connectToSslServer: Connection unexpectedly closed")
+    case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Failed to connect via SSL,\n\(message)")
+    case .closed: return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Connection unexpectedly closed")
     case .ready: break
     }
     
@@ -196,7 +198,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
     // Verify step 1: Verify that a certificate was received.
     
     guard let x509 = ssl.getPeerCertificate() else {
-        return .error(message: "SecureSockets.Client.connectToSslServer: Verification failed, no certificate received")
+        return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Verification failed, no certificate received")
     }
     
     
@@ -210,7 +212,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
         
         let acceptCertificate = callback?(x509) ?? false
         if !acceptCertificate {
-            return .error(message: "SecureSockets.Client.connectToSslServer: Server certificate verification failed,\n\(message)")
+            return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Server certificate verification failed,\n\(message)")
         }
         
         fallthrough
@@ -231,7 +233,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
 ///   - port: The port number on which to connect.
 ///   - host: The name of the host to be reached (usually something like 'domain.com'). If a server hosts multiple certified domains, this name is used to select the certificate at the server.
 ///   - timeout: The time within which the connection should be established.
-///   - clientCtx: An openSSL context wrapper (Ctx) that can be used for a client. If none is provided, a SwifterSockets.Secure.ClientCtx will be created. __Note__: If clientCtx is nil (default) or has no trusted server certificate preloaded, then at least one trustedServerCertificate must be provided.
+///   - clientCtx: An openSSL context wrapper (Ctx) that can be used for a client. If none is provided, a SecureSockets.Ctx.ClientCtx will be created. __Note__: If clientCtx is nil (default) or has no trusted server certificate preloaded, then at least one trustedServerCertificate must be provided.
 ///   - certificateAndPrivateKeyFiles: The certificate and private key to be used as the client certificate. Only needed for certified clients.
 ///   - trustedServerCertificates: A list of paths to file(s) or folder(s) that contain the certificate(s) of the acceptable servers. If none is provided, a clientCtx must be provided that has a trusted server certificate set.
 ///   - callback: A closure that is called when a certificate verification failed. It is up to the closure to accept or reject the server. If the closure is nil, the server will be rejected when the certificate verification failed.
@@ -255,9 +257,9 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
         trustedServerCertificates: trustedServerCertificates,
         callback: callback) {
         
-    case let .error(message): return .error(message: "SecureSockets.Client.connectToSslServer: Error,\n\(message)")
+    case let .error(message): return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Error,\n\(message)")
         
-    case .timeout: return .error(message: "SecureSockets.Client.connectToSslServer: Timeout")
+    case .timeout: return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: Timeout")
         
     case let .success(ssl, socket):
         
@@ -276,7 +278,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
             
         } else {
             
-            return .error(message: "SecureSockets.Client.connectToSslServer: connectionObjectFactory closure did not provide a connection object")
+            return .error(message: "SecureSockets.ConnectToSslServer.connectToSslServer: connectionObjectFactory closure did not provide a connection object")
         }
     }
 }

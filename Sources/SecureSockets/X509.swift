@@ -3,7 +3,7 @@
 //  File:       X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
 // =====================================================================================================================
 
@@ -530,7 +531,7 @@ open class X509 {
     }
     
     
-    /// The openSSL Opaque structure pointer.
+    /// The opaque pointer to the X509 structure.
     
     public private(set) var optr: OpaquePointer!
     

@@ -3,7 +3,7 @@
 //  File:       FileEncoding.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -49,17 +51,17 @@ import COpenSsl
 public enum FileEncoding {
     
     
-    // ANS1 contains 1 key or certificate per file.
+    /// ANS1 contains 1 key or certificate per file.
     
     case ans1
     
     
-    // PEM formats can contain multiple certificates and/or keys per file. Often only the first one is used.
+    /// PEM formats can contain multiple certificates and/or keys per file. Often only the first one is used.
     
     case pem
     
     
-    // The SSL file encoding constant for this item.
+    /// The SSL file encoding constant for this item.
     
     var asInt32: Int32 {
         switch self {

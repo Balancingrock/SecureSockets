@@ -3,10 +3,11 @@
 copyright: Copyright 2016-2019 rien@balancingrock.nl
 author: Balancingrock
 author_url: balancingrock.nl
+documentation: docs/*.md
 module: SecureSockets
-hide_documentation_coverage: true
+hide_documentation_coverage: false
 xcodebuild_arguments: [-target, SecureSockets]
 github_url: https://github.com/Balancingrock/SecureSockets
-output: ~/Documents/Websites/swiftfire.nl/website/projects/securesockets/reference
+output: ~/Documents/Websites/swiftfire.nl/projects/securesockets/reference
 clean: true
 theme: fullwidth

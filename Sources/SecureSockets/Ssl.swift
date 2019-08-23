@@ -3,7 +3,7 @@
 //  File:       Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Doumentation update
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -205,7 +207,7 @@ open class Ssl {
     }
     
     
-    // The OpaquePointer to the OpenSSL session structure.
+    /// The OpaquePointer to the OpenSSL session structure.
     
     public private(set) var optr: OpaquePointer
     
@@ -445,7 +447,7 @@ open class Ssl {
     /// Tries to read num bytes from the peer.
     ///
     /// - Parameters:
-    ///   - buf: A pointer to a memory area containg at least 'num' bytes.
+    ///   - buf: A pointer to a memory area containing at least 'num' bytes.
     ///   - num: The maximum number of bytes to read.
     ///
     /// - Returns: The Result code from the operation.
@@ -513,7 +515,7 @@ open class Ssl {
     /// Writes num bytes from the buffer to the ssl session for transfer to the peer.
     ///
     /// - Parameters:
-    ///   - buf: A pointer to a memory area containg at least 'num' bytes.
+    ///   - buf: A pointer to a memory area containing at least 'num' bytes.
     ///   - num: The maximum number of bytes to read.
     ///
     /// - Returns: The result code from the operation.

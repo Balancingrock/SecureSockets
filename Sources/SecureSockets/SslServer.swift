@@ -3,7 +3,7 @@
 //  File:       SslServer.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Document updates
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -69,15 +71,15 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
     // Prevent errors
     
     if (serverCtx == nil) && (certificateAndPrivateKeyFiles == nil) {
-        assert(false, "SecureSockets.Server.setupSslServer: createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil") // debug only
-        return .error(message: "SecureSockets.Server.setupSslServer: createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil")
+        assert(false, "SecureSockets.SslServer.setupSslServer: createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil") // debug only
+        return .error(message: "SecureSockets.SslServer.setupSslServer: createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil")
     }
     
     
     // Create or let a CTX be created
     
     guard let ctx = serverCtx ?? ServerCtx() else {
-        return .error(message: "SecureSockets.Server.setupSslServer: Failed to create a CTX")
+        return .error(message: "SecureSockets.SslServer.setupSslServer: Failed to create a CTX")
     }
     
     
@@ -88,7 +90,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         // Set the certificate
         
         switch ctx.useCertificate(file: ck.certificate) {
-        case let .error(message): return .error(message: "SecureSockets.Server.setupSslServer: Failed to use certificate at path: \(ck.certificate.path),\n\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.SslServer.setupSslServer: Failed to use certificate at path: \(ck.certificate.path),\n\n\(message)")
         case .success: break
         }
         
@@ -96,7 +98,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         // Set the private key
         
         switch ctx.usePrivateKey(file: ck.privateKey) {
-        case let .error(message): return .error(message: "SecureSockets.Server.setupSslServer: Failed to use private key at path: \(ck.privateKey.path),\n\n\(message)")
+        case let .error(message): return .error(message: "SecureSockets.SslServer.setupSslServer: Failed to use private key at path: \(ck.privateKey.path),\n\n\(message)")
         case .success: break
         }
     }
@@ -109,7 +111,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         for certpath in trustedClientCertificates! {
             
             switch ctx.loadVerify(location: certpath) {
-            case let .error(message): return .error(message: "SecureSockets.Server.setupSslServer: Failed to set trusted certificate  at path: \(certpath),\n\n\(message)")
+            case let .error(message): return .error(message: "SecureSockets.SslServer.setupSslServer: Failed to set trusted certificate  at path: \(certpath),\n\n\(message)")
             case .success: break
             }
         }
@@ -131,7 +133,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
     // Start listening.
     
     switch setupTipServer(onPort: port, maxPendingConnectionRequest: maxPendingConnectionRequest) {
-    case let .error(msg): return .error(message: "SecureSockets.Server.setupSslServer: Failed to start listening on port: \(port),\n\n\(msg)")
+    case let .error(msg): return .error(message: "SecureSockets.SslServer.setupSslServer: Failed to start listening on port: \(port),\n\n\(msg)")
     case let .success(desc): return .success((socket: desc, ctx: ctx))
     }
 }
@@ -218,7 +220,7 @@ public class SslServer: ServerProtocol {
         case addressHandler(AddressHandler?)
         
         
-        /// This closure is started right after the SSL handshake was completed, before the connection object factory is called. If it returns 'true' processing resumes as normal and the connection object factor is called. If it returns false, the connection will be terminated.
+        /// This closure is started right after the SSL handshake was completed, before the connection object factory is called. If it returns 'true' processing resumes as normal and the connection object factory is called. If it returns false, the connection will be terminated.
         ///
         /// Default = nil
         
@@ -232,7 +234,7 @@ public class SslServer: ServerProtocol {
         case certificateAndPrivateKeyFiles(CertificateAndPrivateKeyFiles?)
         
         
-        /// An optional list of paths to certificates (either files or folders).
+        /// An optional list of paths to certificates for trusted clients (either files or folders).
         ///
         /// Default = nil
         
@@ -253,30 +255,90 @@ public class SslServer: ServerProtocol {
     
     
     // Optioned properties
+    // ===================
     
+    
+    /// See `SslServer.Option.port`
+
     public private(set) var port: String = "443"
+    
+    
+    /// See `SslServer.Option.maxPendingConnectionRequests`
+    
     public private(set) var maxPendingConnectionRequests: Int = 20
+    
+    
+    /// See `SslServer.Option.acceptLoopDuration`
+
     public private(set) var acceptLoopDuration: TimeInterval = 5
+
+    
+    /// See `SslServer.Option.acceptQueue`
+
     public private(set) var acceptQueue: DispatchQueue!
+    
+    
+    /// See `SslServer.Option.connectionObjectFactory`
+
     public private(set) var connectionObjectFactory: ConnectionObjectFactory?
+    
+    
+    /// See `SslServer.Option.transmitQueueQoS`
+
     public private(set) var transmitQueueQoS: DispatchQoS = .default
+    
+    
+    /// See `SslServer.Option.transmitTimeout`
+
     public private(set) var transmitTimeout: TimeInterval = 1
+    
+    
+    /// See `SslServer.Option.aliveHandler`
+
     public private(set) var aliveHandler: TipServer.AliveHandler?
+    
+    
+    /// See `SslServer.Option.errorHandler`
+
     public private(set) var errorHandler: ErrorHandler?
+    
+    
+    /// See `SslServer.Option.addressHandler`
+
     public private(set) var addressHandler: AddressHandler?
+    
+    
+    /// See `SslServer.Option.sslSessionHandler`
+
     public private(set) var sslSessionHandler: SslSessionHandler?
+    
+    
+    /// See `SslServer.Option.certificateAndPrivateKeyFiles`
+
     public private(set) var certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles?
+    
+    
+    /// See `SslServer.Option.trustedClientCertificates`
+
     public private(set) var trustedClientCertificates: [String]?
+    
+    
+    /// See `SslServer.Option.serverCtx`
+
     public private(set) var serverCtx: Ctx?
+    
+    
+    /// See `SslServer.Option.domainCtxs`
+
     public private(set) var domainCtxs: [Ctx]?
     
     
-    // Interface properties
+    /// The socket on which the SSL server is running. Nil if the server is not running.
     
     public private(set) var socket: Int32?
     
     
-    /// - Returns true when the server is running
+    /// True when the server is running, false if not.
     
     public var isRunning: Bool { return socket != nil }
     
@@ -287,7 +349,7 @@ public class SslServer: ServerProtocol {
     private var ctx: Ctx?
     
     
-    /// Creates a new SslServer but does not set any options. The default SslServer is not capable of running. Use 'setOption' to provided the minimum configuration.
+    /// Creates a new SslServer but does not set any options. The default SslServer is not capable of running. Use 'setOptions' to provided the minimum configuration.
     ///
     /// As a minimum set either the serverCtx or the certificateAndPrivateKeyFiles.
     
@@ -314,7 +376,7 @@ public class SslServer: ServerProtocol {
     
     public func setOptions(_ options: [Option]) -> Result<Bool> {
         
-        guard ctx == nil else { return .error(message: "SecureSockets.Server.Server.setOptions: Socket is already active, no changes made") }
+        guard ctx == nil else { return .error(message: "SecureSockets.SslServer.SslServer.setOptions: Socket is already active, no changes made") }
         
         for option in options {
         
@@ -359,7 +421,7 @@ public class SslServer: ServerProtocol {
     
     public func addTrustedClientCertificate(at path: String) -> Result<Bool> {
         
-        return ctx?.loadVerify(location: path) ?? .error(message: "SecureSockets.Server.Server.addTrustedClientCertificate: No ctx present")
+        return ctx?.loadVerify(location: path) ?? .error(message: "SecureSockets.SslServer.SslServer.addTrustedClientCertificate: No ctx present")
     }
 
     
@@ -376,8 +438,8 @@ public class SslServer: ServerProtocol {
     
     public func start() -> Result<Bool> {
         
-        if certificateAndPrivateKeyFiles == nil && serverCtx == nil { return .error(message: "SecureSockets.Server.Server.start: Missing server certificate & private key files") }
-        if connectionObjectFactory == nil { return .error(message: "SecureSockets.Server.Server.start: Missing ConnectionObjectFactory closure") }
+        if certificateAndPrivateKeyFiles == nil && serverCtx == nil { return .error(message: "SecureSockets.SslServer.SslServer.start: Missing server certificate & private key files") }
+        if connectionObjectFactory == nil { return .error(message: "SecureSockets.SslServer.SslServer.start: Missing ConnectionObjectFactory closure") }
         
         
         // Exit if already running

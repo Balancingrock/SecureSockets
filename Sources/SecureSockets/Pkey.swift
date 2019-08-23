@@ -3,7 +3,7 @@
 //  File:       Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.0
+//  Version:    1.0.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,7 +36,9 @@
 //
 // History
 //
+// 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
+//
 // =====================================================================================================================
 
 import Foundation
@@ -44,6 +46,12 @@ import SwifterSockets
 import COpenSsl
 import BRUtils
 
+
+/// Returns a string containing the contents of the PEM structure.
+///
+/// - Parameter PEM_write_bio: A closure that writes the PEM content to the given BIO memory area.
+///
+/// - Returns: The content that was written to the BIO memory area interpreted as a String. Nil is there was an error, or nothing was written to the BIO area.
 
 public func getStringFrom(PEM_write_bio closure: (OpaquePointer) -> Int32) -> String? {
     
@@ -78,15 +86,19 @@ public func getStringFrom(PEM_write_bio closure: (OpaquePointer) -> Int32) -> St
 }
 
 
-/// A wrapper class for the EVP_PKEY structure.
+/// A wrapper class for the openSSL EVP_PKEY structure.
 
 open class Pkey {
     
+    
+    /// The pointer to the openSSL EVP_PKEY structure
     
     public private(set) var optr: OpaquePointer!
     
     
     /// If this string is set, then a private key will be encrypted with this passphrase.
+    ///
+    /// This can add a level of security when private keys must be transferred or are kept in a place that is accesable by others than just the security administrator.
     
     public var privateKeyPassphrase: String?
 
@@ -158,7 +170,7 @@ open class Pkey {
     }
     
     
-    /// - Returns: The private key if there is any. If the passphrase is set, then the private key will be encrypted with this passphrase before it is returned. If nil is returned errPrintErrors() may contain iformation about an error.
+    /// - Returns: The private key if there is any. If the passphrase is set, then the private key will be encrypted with this passphrase before it is returned. If nil is returned errPrintErrors() may contain information about an error.
     
     public var privateKey: String? {
         
@@ -178,7 +190,9 @@ open class Pkey {
     }
     
     
-    /// - Returns: The public key if there is any. If nil is returned errPrintErrors() may contain iformation about an error.
+    /// Returns the public key is there is one. If it returns nil while a key is expected, the errPrintErrors() operation may hold an error message that explains why.
+    ///
+    /// - Returns: The public key or nil.
     
     public var publicKey: String? {
         
@@ -191,7 +205,13 @@ open class Pkey {
     }
 
     
-    /// Create a new RSA key and assign it to this object.
+    /// Create a new RSA key pair and assign it to this object.
+    ///
+    /// - Parameters:
+    ///   - withLength: The size for the keys. It is advised to use at least 4096 bits.
+    ///   - andExponent: An often used exponent is 2^16 + 1 = 65537
+    ///
+    /// - Returns: Either .success(true) or .error(message: String)
     
     public func assignNewRsa(withLength length: Int32, andExponent exponent: Int) -> Result<Bool> {
         
@@ -242,13 +262,21 @@ open class Pkey {
     }
     
     
-    /// Write the private key to file (encrypted if a privateKey passphrase is present)
+    /// Write the private key to file (encrypted if a privateKey passphrase is present).
+    ///
+    /// - Parameter to: The URL for the file to be written.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String)
 
     public func writePrivateKey(to url: URL) -> Result<Bool> { return writePrivateKey(to: url.path) }
     
     
-    /// Write the private key to file (encrypted if a privateKey passphrase is present)
-    
+    /// Write the private key to file (encrypted if a privateKey passphrase is present).
+    ///
+    /// - Parameter to: The path for the file to be written.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String)
+
     public func writePrivateKey(to filepath: String) -> Result<Bool> {
         
         
@@ -279,12 +307,20 @@ open class Pkey {
     
     
     /// Write the public key to file
-    
+    ///
+    /// - Parameter to: The URL for the file to be written.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String)
+
     public func writePublicKey(to url: URL) -> Result<Bool> { return writePublicKey(to: url.path) }
 
     
     /// Write the public key to file
-    
+    ///
+    /// - Parameter to: The path for the file to be written.
+    ///
+    /// - Returns: Either .success(true) or .error(message: String)
+
     public func writePublicKey(to filepath: String) -> Result<Bool> {
         
         
