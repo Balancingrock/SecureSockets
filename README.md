@@ -18,7 +18,7 @@ Note that this glue code means that it is not possible to use an existing build 
 
 For convenience a pre-compiled openSSL distribution is included in this package. While this is convenient for evaluation and development purposes, you should not use it for the final production version of your application. You owe it to your clients/users to only use fully guaranteed openSSL libraries. Which you must build yourself.
 
-Instructions are included in [Install OpenSSL](docs/Installing%20OpenSSL.md).
+Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 
 # Features
 
