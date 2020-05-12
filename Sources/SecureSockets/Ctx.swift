@@ -3,14 +3,14 @@
 //  File:       Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.1
+//  Version:    1.1.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
 //  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Git:        https://github.com/Balancingrock/SecureSockets
 //
-//  Copyright:  (c) 2016-2019 Marinus van der Lugt, All rights reserved.
+//  Copyright:  (c) 2016-2020 Marinus van der Lugt, All rights reserved.
 //
 //  License:    Use or redistribute this code any way you like with the following two provision:
 //
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 // 1.0.1 - Documentation updates
 // 1.0.0 - Removed older history
 //
@@ -44,7 +45,6 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
-import BRUtils
 
 
 /// A wrapper class for an openSSL context (SSL_CTX).
@@ -85,13 +85,13 @@ open class Ctx {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func useCertificate(file encodedFile: EncodedFile) -> Result<Bool> {
+    public func useCertificate(file encodedFile: EncodedFile) -> Result<Bool, SecureSocketsError> {
         
         ERR_clear_error()
         
         if SSL_CTX_use_certificate_file(optr, encodedFile.path, encodedFile.encoding) != 1 {
             
-            return .error(message: "SecureSockets.Ctx.Ctx.useCertificate: Could not add certificate to CTX,\n\n\(errPrintErrors())")
+            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Could not add certificate to CTX,\n\n\(errPrintErrors())"))
             
         } else {
             
@@ -106,13 +106,13 @@ open class Ctx {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func usePrivateKey(file encodedFile: EncodedFile) -> Result<Bool> {
+    public func usePrivateKey(file encodedFile: EncodedFile) -> Result<Bool, SecureSocketsError> {
         
         ERR_clear_error()
         
         if SSL_CTX_use_PrivateKey_file(optr, encodedFile.path, encodedFile.encoding) != 1 {
             
-            return .error(message: "SecureSockets.Ctx.Ctx.usePrivateKey: Could not add private key to CTX,\n\n\(errPrintErrors())")
+            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Could not add private key to CTX,\n\n\(errPrintErrors())"))
             
         } else {
             
@@ -127,13 +127,13 @@ open class Ctx {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func checkPrivateKey() -> Result<Bool> {
+    public func checkPrivateKey() -> Result<Bool, SecureSocketsError> {
         
         ERR_clear_error()
         
         if SSL_CTX_check_private_key(optr) != 1 {
             
-            return .error(message: "SecureSockets.Ctx.Ctx.checkPrivateKey: Private Key check failed,\n\n\(String(describing: errPrintErrors))")
+            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Private Key check failed,\n\n\(String(describing: errPrintErrors))"))
             
         } else {
             
@@ -150,7 +150,7 @@ open class Ctx {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func loadVerify(location path: String) -> Result<Bool> {
+    public func loadVerify(location path: String) -> Result<Bool, SecureSocketsError> {
         
         var isDirectory: ObjCBool = false
         
@@ -162,20 +162,20 @@ open class Ctx {
                 
                 if SSL_CTX_load_verify_locations(optr, nil, path) != 1 {
                     
-                    return .error(message: "SecureSockets.Ctx.Ctx.loadVerify: Could not set verify location for folder \(path),\n\n'\(errPrintErrors())")
+                    return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Could not set verify location for folder \(path),\n\n'\(errPrintErrors())"))
                 }
                 
             } else {
                 
                 if SSL_CTX_load_verify_locations(optr, path, nil) != 1 {
                     
-                    return .error(message: "SecureSockets.Ctx.Ctx.loadVerify: Could not set verify location for file \(path),\n\n'\(errPrintErrors())")
+                    return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Could not set verify location for file \(path),\n\n'\(errPrintErrors())"))
                 }
             }
             
         } else {
             
-            return .error(message: "SecureSockets.Ctx.Ctx.loadVerify: File or folder no longer exists at \(path)")
+            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): File or folder no longer exists at \(path)"))
         }
         
         return .success(true)

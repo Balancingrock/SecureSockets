@@ -81,7 +81,7 @@ public struct CertificateAndPrivateKeyFiles {
         // Load the certificate into the CTX
         
         switch ctx.useCertificate(file: certificate) {
-        case let .error(message): errorProcessing?(message); return nil
+        case let .failure(message): errorProcessing?(message.localizedDescription); return nil
         case .success: break
         }
         
@@ -89,7 +89,7 @@ public struct CertificateAndPrivateKeyFiles {
         // Load the private key into the CTX
         
         switch ctx.usePrivateKey(file: privateKey) {
-        case let .error(message): errorProcessing?(message); return nil
+        case let .failure(message): errorProcessing?(message.localizedDescription); return nil
         case .success: break
         }
         
@@ -97,7 +97,7 @@ public struct CertificateAndPrivateKeyFiles {
         // Test if they belong together
         
         switch ctx.checkPrivateKey() {
-        case let .error(message): errorProcessing?(message); return nil
+        case let .failure(message): errorProcessing?(message.localizedDescription); return nil
         case .success: break
         }
     }

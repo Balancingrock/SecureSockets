@@ -128,11 +128,11 @@ public func sslAccept(onSocket acceptSocket: Int32, useCtx ctx: Ctx, timeout: Ti
         
         guard let ssl = Ssl(context: ctx) else {
             let message = errPrintErrors()
-            return .error(message: "SecureSockets.SslAccept.sslAccept: Failed to allocate a new SSL structure,\n\(message)")
+            return .error(message: "\(#file).\(#function).\(#line): Failed to allocate a new SSL structure,\n\(message)")
         }
         
         switch ssl.setFd(receiveSocket) {
-        case let .error(message): return .error(message: "SecureSockets.SslAccept.sslAccept: Could not set socket,\n\(message)")
+        case let .failure(message): return .error(message: "\(#file).\(#function).\(#line): Could not set socket,\n\(message.localizedDescription)")
         case .success: break
         }
         

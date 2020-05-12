@@ -73,6 +73,11 @@ where `__your_path__` must be set to the proper value.
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
 
+#### 1.1.0
+
+- Switched from BRUtils.Result to Swift.Result
+- Rewrote a few pointer usages to silence Swift 5.2 warnings
+
 #### 1.0.1
 
 - Documentation Updates

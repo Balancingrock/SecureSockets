@@ -3,14 +3,14 @@
 //  File:       Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.1
+//  Version:    1.1.0
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
 //  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Git:        https://github.com/Balancingrock/SecureSockets
 //
-//  Copyright:  (c) 2016-2019 Marinus van der Lugt, All rights reserved.
+//  Copyright:  (c) 2016-2020 Marinus van der Lugt, All rights reserved.
 //
 //  License:    Use or redistribute this code any way you like with the following two provision:
 //
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 // 1.0.1 - Doumentation update
 // 1.0.0 - Removed older history
 //
@@ -44,7 +45,6 @@
 import Foundation
 import SwifterSockets
 import COpenSsl
-import BRUtils
 
 
 /// A wrapper class for an openSSL session (SSL).
@@ -267,10 +267,10 @@ open class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func setFd(_ sock: Int32) -> BRUtils.Result<Bool> {
+    public func setFd(_ sock: Int32) -> Swift.Result<Bool, SecureSocketsError> {
         ERR_clear_error()
         if SSL_set_fd(optr, sock) != 1 {
-            return .error(message: "SecureSockets.Ssl.Ssl.setFd: Failed to set socket,\n\n\(errPrintErrors())")
+            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to set socket,\n\n\(errPrintErrors())"))
         }
         return .success(true)
     }
@@ -330,13 +330,13 @@ open class Ssl {
                 
                 switch selres {
                 case .timeout: return .timeout
-                case .closed: return .error(message: "SecureSockets.Ssl.Ssl.connect: Connection was unexpectedly closed,\n\n\(errPrintErrors())")
+                case .closed: return .error(message: "\(#file).\(#function).\(#line): Connection was unexpectedly closed,\n\n\(errPrintErrors())")
                 case .ready: break // Continues the SSL_CONNECT loop
-                case let .error(message): return .error(message: "SecureSockets.Ssl.Ssl.connect: Socket error,\n\n \(message)")
+                case let .error(message): return .error(message: "\(#file).\(#function).\(#line): Socket error,\n\n \(message)")
                 }
                 
             default:
-                return .error(message: "SecureSockets.Ssl.Ssl.connect: Error,\n\n\(errPrintErrors())")
+                return .error(message: "\(#file).\(#function).\(#line): Error,\n\n\(errPrintErrors())")
             }
         }
         
@@ -432,12 +432,12 @@ open class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func getVerifyResult() -> BRUtils.Result<Bool> {
+    public func getVerifyResult() -> Swift.Result<Bool, SecureSocketsError> {
         
         let verifyResult = X509.VerificationResult(for: Int32(SSL_get_verify_result(optr)))
         
         if verifyResult != .x509_v_ok {
-            return .error(message: "SecureSockets.Ssl.Ssl.getVerifyResult: Verification failed,\n\n\(verifyResult.description)")
+            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Verification failed,\n\n\(verifyResult.description)"))
         } else {
             return .success(true)
         }
