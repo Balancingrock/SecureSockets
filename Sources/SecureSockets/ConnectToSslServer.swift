@@ -257,9 +257,9 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
         trustedServerCertificates: trustedServerCertificates,
         callback: callback) {
         
-    case let .error(message): return .failure(SecureSocketsError.withMessage("Connection to SSL server failed\nError message = \(message)"))
+    case let .error(message): return .failure(SecureSocketsError("Connection to SSL server failed\nError message = \(message)"))
         
-    case .timeout: return .failure(SecureSocketsError.withMessage("Connection to SSL server failed with timeout"))
+    case .timeout: return .failure(SecureSocketsError("Connection to SSL server failed with timeout"))
         
     case let .success(ssl, socket):
         
@@ -278,7 +278,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
             
         } else {
             
-            return .failure(SecureSocketsError.withMessage("connectionObjectFactory did not provide a connection object"))
+            return .failure(SecureSocketsError("connectionObjectFactory did not provide a connection object"))
         }
     }
 }

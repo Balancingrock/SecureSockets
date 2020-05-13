@@ -72,14 +72,14 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
     
     if (serverCtx == nil) && (certificateAndPrivateKeyFiles == nil) {
         assert(false, "SecureSockets.SslServer.setupSslServer: createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil") // debug only
-        return .failure(SecureSocketsError.withMessage("createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil"))
+        return .failure(SecureSocketsError("createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil"))
     }
     
     
     // Create or let a CTX be created
     
     guard let ctx = serverCtx ?? ServerCtx() else {
-        return .failure(SecureSocketsError.withMessage("Failed to create a CTX"))
+        return .failure(SecureSocketsError("Failed to create a CTX"))
     }
     
     
@@ -90,7 +90,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         // Set the certificate
         
         switch ctx.useCertificate(file: ck.certificate) {
-        case let .failure(message): return .failure(SecureSocketsError.withMessage("Failed to use certificate at path: \(ck.certificate.path)\n\(message.localizedDescription)"))
+        case let .failure(message): return .failure(SecureSocketsError("Failed to use certificate at path: \(ck.certificate.path)\n\(message.localizedDescription)"))
         case .success: break
         }
         
@@ -98,7 +98,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         // Set the private key
         
         switch ctx.usePrivateKey(file: ck.privateKey) {
-        case let .failure(message): return .failure(SecureSocketsError.withMessage("Failed to use private key at path: \(ck.privateKey.path),\n\(message.localizedDescription)"))
+        case let .failure(message): return .failure(SecureSocketsError("Failed to use private key at path: \(ck.privateKey.path),\n\(message.localizedDescription)"))
         case .success: break
         }
     }
@@ -111,7 +111,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         for certpath in trustedClientCertificates! {
             
             switch ctx.loadVerify(location: certpath) {
-            case let .failure(message): return .failure(SecureSocketsError.withMessage("Failed to set trusted certificate at path: \(certpath)\n\(message.localizedDescription)"))
+            case let .failure(message): return .failure(SecureSocketsError("Failed to set trusted certificate at path: \(certpath)\n\(message.localizedDescription)"))
             case .success: break
             }
         }
@@ -133,7 +133,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
     // Start listening.
     
     switch setupTipServer(onPort: port, maxPendingConnectionRequest: maxPendingConnectionRequest) {
-    case let .failure(msg): return .failure(SecureSocketsError.withMessage("Failed to start listening on port: \(port)\n\(msg.localizedDescription)"))
+    case let .failure(msg): return .failure(SecureSocketsError("Failed to start listening on port: \(port)\n\(msg.localizedDescription)"))
     case let .success(desc): return .success((socket: desc, ctx: ctx))
     }
 }
@@ -376,7 +376,7 @@ public class SslServer: ServerProtocol {
     
     public func setOptions(_ options: [Option]) -> SecureSocketsResult<Bool> {
         
-        guard ctx == nil else { return .failure(SecureSocketsError.withMessage("Socket is already active, no changes made")) }
+        guard ctx == nil else { return .failure(SecureSocketsError("Socket is already active, no changes made")) }
         
         for option in options {
         
@@ -421,7 +421,7 @@ public class SslServer: ServerProtocol {
     
     public func addTrustedClientCertificate(at path: String) -> SecureSocketsResult<Bool> {
         
-        return ctx?.loadVerify(location: path) ?? .failure(SecureSocketsError.withMessage("No ctx present"))
+        return ctx?.loadVerify(location: path) ?? .failure(SecureSocketsError("No ctx present"))
     }
 
     
@@ -436,13 +436,13 @@ public class SslServer: ServerProtocol {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func start() -> Result<Bool, SwifterSocketsError> {
+    public func start() -> SwifterSocketsResult<Bool> {
         
         if certificateAndPrivateKeyFiles == nil && serverCtx == nil {
-            return .failure(SwifterSocketsError.message("\(#file).\(#function).\(#line): Missing server certificate & private key files"))
+            return .failure(SwifterSocketsError("Missing server certificate & private key files"))
         }
         if connectionObjectFactory == nil {
-            return .failure(SwifterSocketsError.message("\(#file).\(#function).\(#line): Missing ConnectionObjectFactory closure"))
+            return .failure(SwifterSocketsError("Missing ConnectionObjectFactory closure"))
         }
         
         
@@ -472,7 +472,7 @@ public class SslServer: ServerProtocol {
             
         case let .failure(message):
             
-            return .failure(SwifterSocketsError.message(message.localizedDescription))
+            return .failure(SwifterSocketsError(message.localizedDescription))
             
             
         case let .success((socket_in, ctx_in)):

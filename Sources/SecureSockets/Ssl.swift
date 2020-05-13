@@ -271,7 +271,7 @@ open class Ssl {
     public func setFd(_ sock: Int32) -> SecureSocketsResult<Bool> {
         ERR_clear_error()
         if SSL_set_fd(optr, sock) != 1 {
-            return .failure(SecureSocketsError.withMessage("Failed to set socket\n\(errPrintErrors())"))
+            return .failure(SecureSocketsError("Failed to set socket\n\(errPrintErrors())"))
         }
         return .success(true)
     }
@@ -438,7 +438,7 @@ open class Ssl {
         let verifyResult = X509.VerificationResult(for: Int32(SSL_get_verify_result(optr)))
         
         if verifyResult != .x509_v_ok {
-            return .failure(SecureSocketsError.withMessage("Verification failed\n\(verifyResult.description)"))
+            return .failure(SecureSocketsError("Verification failed\n\(verifyResult.description)"))
         } else {
             return .success(true)
         }

@@ -45,15 +45,11 @@ import Foundation
 
 /// Used for the failure option of Swift.Result
 
-public enum SecureSocketsError: Error {
-    case message(String)
-    var errorDescription: String? {
-        switch self {
-        case .message(let str): return str
-        }
-    }
-    static func withMessage(file: String = #file, function: String = #function, line: Int = #line, _ str: String) -> SecureSocketsError {
-        return SecureSocketsError.message("\(file).\(function).\(line): \(str)")
+public struct SecureSocketsError: Error {
+    let message : String
+    var errorDescription: String? { return message }
+    init(file: String = #file, function: String = #function, line: Int = #line, _ str: String) {
+        message = "\(file).\(function).\(line): \(str)"
     }
 }
 

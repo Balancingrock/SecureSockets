@@ -91,7 +91,7 @@ open class Ctx {
         
         if SSL_CTX_use_certificate_file(optr, encodedFile.path, encodedFile.encoding) != 1 {
             
-            return .failure(SecureSocketsError.withMessage("Could not add certificate to CTX\n\(errPrintErrors())"))
+            return .failure(SecureSocketsError("Could not add certificate to CTX\n\(errPrintErrors())"))
             
         } else {
             
@@ -112,7 +112,7 @@ open class Ctx {
         
         if SSL_CTX_use_PrivateKey_file(optr, encodedFile.path, encodedFile.encoding) != 1 {
             
-            return .failure(SecureSocketsError.withMessage("Could not add private key to CTX\n\(errPrintErrors())"))
+            return .failure(SecureSocketsError("Could not add private key to CTX\n\(errPrintErrors())"))
             
         } else {
             
@@ -133,7 +133,7 @@ open class Ctx {
         
         if SSL_CTX_check_private_key(optr) != 1 {
             
-            return .failure(SecureSocketsError.withMessage("Private Key check failed\n\(errPrintErrors()))"))
+            return .failure(SecureSocketsError("Private Key check failed\n\(errPrintErrors()))"))
             
         } else {
             
@@ -162,20 +162,20 @@ open class Ctx {
                 
                 if SSL_CTX_load_verify_locations(optr, nil, path) != 1 {
                     
-                    return .failure(SecureSocketsError.withMessage("Could not set verify location for folder \(path)\n\(errPrintErrors())"))
+                    return .failure(SecureSocketsError("Could not set verify location for folder \(path)\n\(errPrintErrors())"))
                 }
                 
             } else {
                 
                 if SSL_CTX_load_verify_locations(optr, path, nil) != 1 {
                     
-                    return .failure(SecureSocketsError.withMessage("Could not set verify location for file \(path)\n\(errPrintErrors())"))
+                    return .failure(SecureSocketsError("Could not set verify location for file \(path)\n\(errPrintErrors())"))
                 }
             }
             
         } else {
             
-            return .failure(SecureSocketsError.withMessage("File or folder no longer exists at \(path)"))
+            return .failure(SecureSocketsError("File or folder no longer exists at \(path)"))
         }
         
         return .success(true)

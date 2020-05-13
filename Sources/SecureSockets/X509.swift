@@ -955,7 +955,7 @@ open class X509 {
         guard let pkey = Pkey(withPublicKeyFile: path) else {
             var message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
             message = message + "\nSecureSockets.X509.X509.setPublicKey: Failed to read public key from file: \(path)\n\(errPrintErrors())"
-            return .failure(SecureSocketsError.withMessage(message))
+            return .failure(SecureSocketsError(message))
         }
         
         return setPublicKey(toPublicKeyIn: pkey)
@@ -973,7 +973,7 @@ open class X509 {
         if X509_set_pubkey(optr!, pkey.optr!) == 0 {
             // 1 = success, 0 = failure
             // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-            return .failure(SecureSocketsError.withMessage("Failed to set the public key in the certificate\n\(errPrintErrors())"))
+            return .failure(SecureSocketsError("Failed to set the public key in the certificate\n\(errPrintErrors())"))
         }
     
         return .success(true)
@@ -991,7 +991,7 @@ open class X509 {
         guard let pkey = Pkey(withPrivateKeyFile: path) else {
             var message = String(validatingUTF8: strerror(errno)) ?? "Unknown error code"
             message = message + "\nSecureSockets.X509.X509.sign: Failed to read private key from file: \(path)\n\(errPrintErrors())"
-            return .failure(SecureSocketsError.withMessage(message))
+            return .failure(SecureSocketsError(message))
         }
         
         return sign(withPrivateKeyIn: pkey)
@@ -1009,7 +1009,7 @@ open class X509 {
         if X509_sign(optr!, pkey.optr!, EVP_sha256()) == 0 {
             // 1 = success, 0 = failure.
             // Note: The OpenSSL doc does not say that there will be error information in the stack but it hints at it by referring to the ERR_get_error.
-            return .failure(SecureSocketsError.withMessage("Failed to encrypt the certificate.\n\(errPrintErrors())"))
+            return .failure(SecureSocketsError("Failed to encrypt the certificate.\n\(errPrintErrors())"))
         }
         
         return .success(true)
@@ -1037,7 +1037,7 @@ open class X509 {
         // Open the file for writing
         
         guard let file = fopen(filepath, "w") else {
-            return .failure(SecureSocketsError.withMessage("Failed to open file \(filepath) for writing"))
+            return .failure(SecureSocketsError("Failed to open file \(filepath) for writing"))
         }
         defer { fclose(file) }
         
@@ -1047,7 +1047,7 @@ open class X509 {
         if PEM_write_X509(file, optr) == 0 {
             // 1 = success, 0 = failure.
             // The OpenSSL doc do not state or hint at additional error info on the error stack.
-            return .failure(SecureSocketsError.withMessage("Failed to write certificate to file \(filepath)"))
+            return .failure(SecureSocketsError("Failed to write certificate to file \(filepath)"))
         }
         
         return .success(true)
