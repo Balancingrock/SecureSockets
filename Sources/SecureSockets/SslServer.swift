@@ -65,21 +65,21 @@ import COpenSsl
 
 /// - Returns: Either .success(socket: Int32, ctx: Ctx) or .error(message: String)
 
-public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int32, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedClientCertificates: [String]? = nil, serverCtx: Ctx? = nil, domainCtxs: [Ctx]? = nil) -> Result<(socket: Int32, ctx: Ctx), SecureSocketsError> {
+public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int32, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedClientCertificates: [String]? = nil, serverCtx: Ctx? = nil, domainCtxs: [Ctx]? = nil) -> SecureSocketsResult<(socket: Int32, ctx: Ctx)> {
     
     
     // Prevent errors
     
     if (serverCtx == nil) && (certificateAndPrivateKeyFiles == nil) {
         assert(false, "SecureSockets.SslServer.setupSslServer: createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil") // debug only
-        return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil"))
+        return .failure(SecureSocketsError.withMessage("createServerWideCtx and certificateAndPrivateKeyFiles cannot both be nil"))
     }
     
     
     // Create or let a CTX be created
     
     guard let ctx = serverCtx ?? ServerCtx() else {
-        return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to create a CTX"))
+        return .failure(SecureSocketsError.withMessage("Failed to create a CTX"))
     }
     
     
@@ -90,7 +90,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         // Set the certificate
         
         switch ctx.useCertificate(file: ck.certificate) {
-        case let .failure(message): return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to use certificate at path: \(ck.certificate.path)\n\(message.localizedDescription)"))
+        case let .failure(message): return .failure(SecureSocketsError.withMessage("Failed to use certificate at path: \(ck.certificate.path)\n\(message.localizedDescription)"))
         case .success: break
         }
         
@@ -98,7 +98,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         // Set the private key
         
         switch ctx.usePrivateKey(file: ck.privateKey) {
-        case let .failure(message): return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to use private key at path: \(ck.privateKey.path),\n\(message.localizedDescription)"))
+        case let .failure(message): return .failure(SecureSocketsError.withMessage("Failed to use private key at path: \(ck.privateKey.path),\n\(message.localizedDescription)"))
         case .success: break
         }
     }
@@ -111,7 +111,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
         for certpath in trustedClientCertificates! {
             
             switch ctx.loadVerify(location: certpath) {
-            case let .failure(message): return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to set trusted certificate  at path: \(certpath),\n\(message.localizedDescription)"))
+            case let .failure(message): return .failure(SecureSocketsError.withMessage("Failed to set trusted certificate at path: \(certpath)\n\(message.localizedDescription)"))
             case .success: break
             }
         }
@@ -133,7 +133,7 @@ public func setupSslServer(onPort port: String, maxPendingConnectionRequest: Int
     // Start listening.
     
     switch setupTipServer(onPort: port, maxPendingConnectionRequest: maxPendingConnectionRequest) {
-    case let .failure(msg): return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to start listening on port: \(port),\n\n\(msg.localizedDescription)"))
+    case let .failure(msg): return .failure(SecureSocketsError.withMessage("Failed to start listening on port: \(port)\n\(msg.localizedDescription)"))
     case let .success(desc): return .success((socket: desc, ctx: ctx))
     }
 }
@@ -374,9 +374,9 @@ public class SslServer: ServerProtocol {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func setOptions(_ options: [Option]) -> Result<Bool, SecureSocketsError> {
+    public func setOptions(_ options: [Option]) -> SecureSocketsResult<Bool> {
         
-        guard ctx == nil else { return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Socket is already active, no changes made")) }
+        guard ctx == nil else { return .failure(SecureSocketsError.withMessage("Socket is already active, no changes made")) }
         
         for option in options {
         
@@ -408,7 +408,7 @@ public class SslServer: ServerProtocol {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func setOptions(_ options: Option ...) -> Result<Bool, SecureSocketsError> {
+    public func setOptions(_ options: Option ...) -> SecureSocketsResult<Bool> {
         return setOptions(options)
     }
     
@@ -419,9 +419,9 @@ public class SslServer: ServerProtocol {
     ///
     /// - Returns: Either .success(true) or .error(message: String).
     
-    public func addTrustedClientCertificate(at path: String) -> Result<Bool, SecureSocketsError> {
+    public func addTrustedClientCertificate(at path: String) -> SecureSocketsResult<Bool> {
         
-        return ctx?.loadVerify(location: path) ?? .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): No ctx present"))
+        return ctx?.loadVerify(location: path) ?? .failure(SecureSocketsError.withMessage("No ctx present"))
     }
 
     

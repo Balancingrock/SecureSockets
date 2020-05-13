@@ -47,18 +47,6 @@ import SwifterSockets
 import COpenSsl
 
 
-/// Used for the failure option of Swift.Result
-
-public enum SecureSocketsError: Error {
-    case message(String)
-    var errorDescription: String? {
-        switch self {
-        case .message(let str): return str
-        }
-    }
-}
-
-
 /// The return type for the connectToSslServer function.
 
 public enum ConnectResult: CustomStringConvertible {
@@ -254,7 +242,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
 /// - Returns: Either .success(connection: Connection) or .error(message: String). If a connection is returned the receiverLoop will have been started.
 
 
-public func connectToSslServer(atAddress address: String, atPort port: String, host: String? = nil, timeout: TimeInterval, clientCtx: Ctx? = nil, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedServerCertificates: [String]? = nil, callback: ((_ x509: X509) -> Bool)? = nil, connectionObjectFactory: ConnectionObjectFactory) -> Result<Connection, SecureSocketsError> {
+public func connectToSslServer(atAddress address: String, atPort port: String, host: String? = nil, timeout: TimeInterval, clientCtx: Ctx? = nil, certificateAndPrivateKeyFiles: CertificateAndPrivateKeyFiles? = nil, trustedServerCertificates: [String]? = nil, callback: ((_ x509: X509) -> Bool)? = nil, connectionObjectFactory: ConnectionObjectFactory) -> SecureSocketsResult<Connection> {
     
     
     // Initiate the connection
@@ -269,9 +257,9 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
         trustedServerCertificates: trustedServerCertificates,
         callback: callback) {
         
-    case let .error(message): return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line)r: Error,\n\(message)"))
+    case let .error(message): return .failure(SecureSocketsError.withMessage("Connection to SSL server failed\nError message = \(message)"))
         
-    case .timeout: return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Timeout"))
+    case .timeout: return .failure(SecureSocketsError.withMessage("Connection to SSL server failed with timeout"))
         
     case let .success(ssl, socket):
         
@@ -290,7 +278,7 @@ public func connectToSslServer(atAddress address: String, atPort port: String, h
             
         } else {
             
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): connectionObjectFactory closure did not provide a connection object"))
+            return .failure(SecureSocketsError.withMessage("connectionObjectFactory did not provide a connection object"))
         }
     }
 }

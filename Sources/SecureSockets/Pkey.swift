@@ -217,14 +217,14 @@ open class Pkey {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func assignNewRsa(withLength length: Int32, andExponent exponent: Int) -> Result<Bool, SecureSocketsError> {
+    public func assignNewRsa(withLength length: Int32, andExponent exponent: Int) -> SecureSocketsResult<Bool> {
         
         
         // Create a BIGNUM for the exponent
         
         var exp = BN_new()
         guard exp != nil else {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to create a BigNumber"))
+            return .failure(SecureSocketsError.withMessage("Failed to create a BigNumber"))
         }
         defer { BN_free(exp) }
         
@@ -233,14 +233,14 @@ open class Pkey {
         
         let result = BN_dec2bn(&exp, exponent.description)
         if result == 0 {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): BigNumber could not set value"))
+            return .failure(SecureSocketsError.withMessage("BigNumber could not set value"))
         }
         
         
         // Create the RSA key pair
         
         guard let rsa = RSA_new() else {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Could not create new RSA structure"))
+            return .failure(SecureSocketsError.withMessage("Could not create new RSA structure"))
         }
         // Will be freed when the pkey (later) is freed.
         
@@ -248,7 +248,7 @@ open class Pkey {
         // Generate the keys
         
         if RSA_generate_key_ex(rsa, length, exp, nil) == 0 {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): RSA_generate_key_ex failure, error stack = \(SecureSockets.errPrintErrors())"))
+            return .failure(SecureSocketsError.withMessage("RSA_generate_key_ex failure, error stack = \(SecureSockets.errPrintErrors())"))
         }
         
         
@@ -259,7 +259,7 @@ open class Pkey {
             // Normally the 'rsa' is freed when the 'pkey' is freed, but the assignment failed, so it seems reasonable to assume that the 'rsa' must be freed manually.
             // Since it is extremely unlikely that the assigment fails, this line of code is probably never executed during testing, so beware!
             defer { RSA_free(rsa) }
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): EVP_PKEY_assign failure, error stack = \(SecureSockets.errPrintErrors())"))
+            return .failure(SecureSocketsError.withMessage("EVP_PKEY_assign failure\n\(errPrintErrors())"))
         }
 
         return .success(true)
@@ -272,7 +272,7 @@ open class Pkey {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
 
-    public func writePrivateKey(to url: URL) -> Result<Bool, SecureSocketsError> { return writePrivateKey(to: url.path) }
+    public func writePrivateKey(to url: URL) -> SecureSocketsResult<Bool> { return writePrivateKey(to: url.path) }
     
     
     /// Write the private key to file (encrypted if a privateKey passphrase is present).
@@ -281,13 +281,13 @@ open class Pkey {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
 
-    public func writePrivateKey(to filepath: String) -> Result<Bool, SecureSocketsError> {
+    public func writePrivateKey(to filepath: String) -> SecureSocketsResult<Bool> {
         
         
         // Open the file
         
         guard let file = fopen(filepath, "w") else {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to open file \(filepath) for writing"))
+            return .failure(SecureSocketsError.withMessage("Failed to open file \(filepath) for writing"))
         }
         defer { fclose(file) }
 
@@ -307,7 +307,7 @@ open class Pkey {
         }
         
         if result != 1 {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to write the private key to file \(filepath)"))
+            return .failure(SecureSocketsError.withMessage("Failed to write the private key to file \(filepath)"))
         } else {
             return .success(true)
         }
@@ -320,7 +320,7 @@ open class Pkey {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
 
-    public func writePublicKey(to url: URL) -> Result<Bool, SecureSocketsError> { return writePublicKey(to: url.path) }
+    public func writePublicKey(to url: URL) -> SecureSocketsResult<Bool> { return writePublicKey(to: url.path) }
 
     
     /// Write the public key to file
@@ -329,13 +329,13 @@ open class Pkey {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
 
-    public func writePublicKey(to filepath: String) -> Result<Bool, SecureSocketsError> {
+    public func writePublicKey(to filepath: String) -> SecureSocketsResult<Bool> {
         
         
         // Open the file
         
         guard let file = fopen(filepath, "w") else {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to open file \(filepath) for writing"))
+            return .failure(SecureSocketsError.withMessage("Failed to open file \(filepath) for writing"))
         }
         defer { fclose(file) }
         
@@ -343,7 +343,7 @@ open class Pkey {
         // Write the key to file
 
         if PEM_write_PUBKEY(file, optr) != 1 {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to write the public key to file \(filepath)"))
+            return .failure(SecureSocketsError.withMessage("Failed to write the public key to file \(filepath)"))
         }
         
         return .success(true)

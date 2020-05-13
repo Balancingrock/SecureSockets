@@ -37,6 +37,7 @@
 // History
 //
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
+//       - Renamed Result to SslResult to avoid conflicts with Swift.Result
 // 1.0.1 - Doumentation update
 // 1.0.0 - Removed older history
 //
@@ -54,7 +55,7 @@ open class Ssl {
     
     /// The return condition from several methods
     
-    public enum Result: CustomStringConvertible, Equatable {
+    public enum SslResult: CustomStringConvertible, Equatable {
         
         
         /// openssl.org: The TLS/SSL I/O operation completed. This result code is returned if and only if ret > 0.
@@ -178,7 +179,7 @@ open class Ssl {
         
         /// Compares two ssl results, returns true when they are equal.
         
-        public static func == (lhs: Result, rhs: Result) -> Bool {
+        public static func == (lhs: SslResult, rhs: SslResult) -> Bool {
             switch lhs {
             case let .completed(lnum): if case let .completed(rnum) = rhs { return lnum == rnum } else { return false }
             case .zeroReturn: if case .zeroReturn = rhs { return true } else { return false }
@@ -201,7 +202,7 @@ open class Ssl {
         
         /// Compares two ssl results, returns true when they are not equal.
         
-        public static func != (lhs: Result, rhs: Result) -> Bool {
+        public static func != (lhs: SslResult, rhs: SslResult) -> Bool {
             return !(lhs == rhs)
         }
     }
@@ -267,10 +268,10 @@ open class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func setFd(_ sock: Int32) -> Swift.Result<Bool, SecureSocketsError> {
+    public func setFd(_ sock: Int32) -> SecureSocketsResult<Bool> {
         ERR_clear_error()
         if SSL_set_fd(optr, sock) != 1 {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Failed to set socket,\n\n\(errPrintErrors())"))
+            return .failure(SecureSocketsError.withMessage("Failed to set socket\n\(errPrintErrors())"))
         }
         return .success(true)
     }
@@ -285,16 +286,16 @@ open class Ssl {
     }
     
     
-    /// Returns a Result for the parameter returned by SSL_connect(), SSL_accept(), SSL_doHandshake(), SSL_read(), SSL_peek() or SSL_write().
+    /// Returns a SslResult for the parameter returned by SSL_connect(), SSL_accept(), SSL_doHandshake(), SSL_read(), SSL_peek() or SSL_write().
     ///
     /// openSSL: In addition to ssl and ret, SSL_get_error() inspects the current thread's OpenSSL error queue. Thus, SSL_get_error() must be used in the same thread that performed the TLS/SSL I/O operation, and no other OpenSSL function calls should appear in between. The current thread's error queue must be empty before the TLS/SSL I/O operation is attempted, or SSL_get_error() will not work reliably.
     ///
     /// - Parameter ret: The return value from one of the SSL_.... routines.
     ///
-    /// - Returns: The corresponding Result.
+    /// - Returns: The corresponding SslResult.
     
-    public func getError(_ ret: Int32) -> Result {
-        return Result(for: SSL_get_error(optr, ret))
+    public func getError(_ ret: Int32) -> SslResult {
+        return SslResult(for: SSL_get_error(optr, ret))
     }
     
     
@@ -346,9 +347,9 @@ open class Ssl {
     
     /// Accepts an SSL_connect() from a client. It waits for a TLS/SSL client to initiate the TLS/SSL handshake. The communication channel must already have been set and assigned to the ssl.
     ///
-    /// - Returns: The Result for the operation.
+    /// - Returns: The SslResult for the operation.
     
-    public func accept() -> Result {
+    public func accept() -> SslResult {
         
         ERR_clear_error()
         
@@ -367,7 +368,7 @@ open class Ssl {
             
             // openssl.org: The TLS/SSL handshake was successfully completed, a TLS/SSL connection has been established.
             
-            return Result.completed(0)
+            return SslResult.completed(0)
             
             
         case let (x) where x < 0:
@@ -379,7 +380,7 @@ open class Ssl {
             
         case let (x) where x > 1:
             
-            return Result.undocumentedSslFunctionResult(res)
+            return SslResult.undocumentedSslFunctionResult(res)
             
             
         default: fatalError("All cases are covered, this should be impossible")
@@ -389,9 +390,9 @@ open class Ssl {
     
     /// Will wait for a SSL/TLS handshake to take place. If the connection is in client mode, the handshake will be started.
     ///
-    /// - Returns: The Result for the operation.
+    /// - Returns: The SslResult for the operation.
     
-    public func doHandshake() -> Result {
+    public func doHandshake() -> SslResult {
         
         ERR_clear_error()
         
@@ -432,12 +433,12 @@ open class Ssl {
     ///
     /// - Returns: Either .success(true) or .error(message: String)
     
-    public func getVerifyResult() -> Swift.Result<Bool, SecureSocketsError> {
+    public func getVerifyResult() -> SecureSocketsResult<Bool> {
         
         let verifyResult = X509.VerificationResult(for: Int32(SSL_get_verify_result(optr)))
         
         if verifyResult != .x509_v_ok {
-            return .failure(SecureSocketsError.message("\(#file).\(#function).\(#line): Verification failed,\n\n\(verifyResult.description)"))
+            return .failure(SecureSocketsError.withMessage("Verification failed\n\(verifyResult.description)"))
         } else {
             return .success(true)
         }
@@ -450,9 +451,9 @@ open class Ssl {
     ///   - buf: A pointer to a memory area containing at least 'num' bytes.
     ///   - num: The maximum number of bytes to read.
     ///
-    /// - Returns: The Result code from the operation.
+    /// - Returns: The SslResult code from the operation.
     
-    public func read(buf: UnsafeMutableRawPointer, num: Int32) -> Result {
+    public func read(buf: UnsafeMutableRawPointer, num: Int32) -> SslResult {
         
         
         // Clear the openSSL error stack
@@ -475,7 +476,7 @@ open class Ssl {
             
             // openssl.org: The read operation was successful; the return value is the number of bytes actually read from the TLS/SSL connection.
             
-            return Result.completed(res)
+            return SslResult.completed(res)
             
             
         case 0:
@@ -484,7 +485,7 @@ open class Ssl {
             
             let result = getError(res)
             
-            if result == Result.syscall {
+            if result == SslResult.syscall {
                 
                 // openssl.org: Some non-recoverable I/O error occurred. The OpenSSL error queue may contain more information on the error. For socket I/O on Unix systems, consult errno for details.
                 
@@ -494,7 +495,7 @@ open class Ssl {
                 
                 if errno != 0 { message += "\nIO error (errno) = " + (String(validatingUTF8: strerror(errno)) ?? "Unknown error code '\(errno)'") }
                 
-                return Result.errorMessage(message)
+                return SslResult.errorMessage(message)
             }
             
             return result
@@ -520,7 +521,7 @@ open class Ssl {
     ///
     /// - Returns: The result code from the operation.
     
-    public func write(buf: UnsafeRawPointer, num: Int32) -> Result {
+    public func write(buf: UnsafeRawPointer, num: Int32) -> SslResult {
         
         
         // Clear the openSSL error stack
