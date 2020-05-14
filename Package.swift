@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "COpenSsl", targets: ["COpenSsl"])
     ],
     dependencies: [
-        .package(url: "../SwifterSockets", from: "1.1.0")
+        .package(url: "https://github.com/Balancingrock/SwifterSockets", from: "1.1.0")
     ],
     targets: [
         .systemLibrary(
@@ -22,14 +22,14 @@ let package = Package(
             name: "SecureSockets",
             dependencies: ["SwifterSockets", "COpenSsl"],
             //
-            // Uncomment the following line for stand-alone or Xcode generation
-            swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])],
+            // Uncomment the following line for stand-alone or Xcode generation when included in another project
+            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_0-macos_10_12/include"])],
             linkerSettings: [
                 .linkedLibrary("ssl"),
                 .linkedLibrary("crypto"),
                 //
-                // Uncomment the following line for stand-alone or Xcode generation
-                .unsafeFlags(["-Lopenssl/v1_1_0-macos_10_12/lib"])
+                // Uncomment the following line for stand-alone or Xcode generation when included in another project
+                //.unsafeFlags(["-Lopenssl/v1_1_0-macos_10_12/lib"])
             ]
         )
     ]
