@@ -3,7 +3,7 @@
 //  File:       SslServer.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.1.0
+//  Version:    1.1.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.1 - Linux compatibility
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 // 1.0.1 - Document updates
 // 1.0.0 - Removed older history
@@ -44,7 +45,7 @@
 
 import Foundation
 import SwifterSockets
-import COpenSsl
+import CopensslGlue
 
 
 /// Starts listening on the given port for SSL connection requests.

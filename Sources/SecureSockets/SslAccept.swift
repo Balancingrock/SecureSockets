@@ -3,14 +3,14 @@
 //  File:       SslAccept.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.0.1
+//  Version:    1.1.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
 //  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Git:        https://github.com/Balancingrock/SecureSockets
 //
-//  Copyright:  (c) 2016-2019 Marinus van der Lugt, All rights reserved.
+//  Copyright:  (c) 2016-2020 Marinus van der Lugt, All rights reserved.
 //
 //  License:    Use or redistribute this code any way you like with the following two provision:
 //
@@ -36,13 +36,14 @@
 //
 // History
 //
+// 1.1.1 - Linux compatibility
 // 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
 // =====================================================================================================================
 
 import Foundation
 import SwifterSockets
-import COpenSsl
+import CopensslGlue
 
 
 /// A closure with this signature can be invoked after an Ssl.accept completes.

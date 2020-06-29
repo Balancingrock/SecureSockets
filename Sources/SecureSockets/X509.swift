@@ -44,7 +44,7 @@
 
 import Foundation
 import SwifterSockets
-import COpenSsl
+import CopensslGlue
 
 
 /// The string for the NID element in the given X509_NAME structure.
@@ -113,7 +113,7 @@ public func getX509SubjectAltNames(from x509: UnsafeMutablePointerX509!) -> [Str
     
     // Get the alternative names from the cert (there may be none!)
     
-    guard let names = OpaquePointer(X509_get_ext_d2i(x509, NID_subject_alt_name, nil, nil)) else { return nil }
+    guard let names = X509_get_ext_d2i(x509, NID_subject_alt_name, nil, nil) else { return nil }
     
     
     // Storage for the names that are found
@@ -123,13 +123,13 @@ public func getX509SubjectAltNames(from x509: UnsafeMutablePointerX509!) -> [Str
     
     // Loop over all names (keep in mind that 'names' is an OpaquePointer)
     
-    let count = sk_GENERAL_NAMES_num(names)
+    let count = sk_GENERAL_NAMES_num(OpaquePointer(names))
     for i in 0 ..< count {
         
         
         // Get name at index i
         
-        let aName = sk_GENERAL_NAME_value(names, i)
+        let aName = skGeneralNameValue(names, i)
         
         
         // If it is a domain name, add it to the results

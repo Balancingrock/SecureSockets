@@ -1,4 +1,4 @@
-module COpenSsl {
+module Copenssl {
     umbrella header "openssl.h"
     link "ssl"
     link "crypto"

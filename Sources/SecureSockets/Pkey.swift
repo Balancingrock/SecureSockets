@@ -45,7 +45,7 @@
 
 import Foundation
 import SwifterSockets
-import COpenSsl
+import CopensslGlue
 
 
 /// Returns a string containing the contents of the PEM structure.

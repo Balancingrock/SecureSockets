@@ -45,7 +45,7 @@
 
 import Foundation
 import SwifterSockets
-import COpenSsl
+import CopensslGlue
 
 
 /// A wrapper class for an openSSL context (SSL_CTX).
@@ -55,7 +55,7 @@ open class Ctx {
     
     /// The pointer to the openSSL context structure
     
-    public private(set) var optr: UnsafeMutablePointerSslCtx
+    public private(set) var optr: UnsafeMutablePointerSslCtx!
     
     
     // Free's the openSSl structure
@@ -216,7 +216,7 @@ open class Ctx {
     // The callback from openSSL. This callback must be installed before the server is started.
     
     private let sni_callback: @convention(c) (_ ssl: UnsafeMutablePointerSsl?, _ num: UnsafeMutablePointer<Int32>?, _ arg: UnsafeMutableRawPointer?) -> Int32 = {
-        
+    
         (ssl_ptr, _, arg) -> Int32 in
         
         
@@ -258,12 +258,26 @@ open class Ctx {
         
         // Set the new CTX to the current SSL session
         
+        #if os(macOS) || os(iOS) || os(tvOS)
+        
         if SSL_set_SSL_CTX(ssl_ptr, newCtx.optr) == nil {
             // The new ctx did not have a certificate (found by source code inspection of ssl_lib.c)
             // This should be impossible since that would have caused this CTX to be rejected
             return SSL_TLSEXT_ERR_NOACK
         }
         
+        #endif
+        
+        
+        #if os(Linux)
+        
+        if SSL_set_SSL_CTX(UnsafeMutablePointerSsl(mutating: ssl_ptr), newCtx.optr) == nil {
+            // The new ctx did not have a certificate (found by source code inspection of ssl_lib.c)
+            // This should be impossible since that would have caused this CTX to be rejected
+            return SSL_TLSEXT_ERR_NOACK
+        }
+        
+        #endif
         
         return SSL_TLSEXT_ERR_OK
     }

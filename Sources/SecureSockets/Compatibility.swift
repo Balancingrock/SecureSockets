@@ -1,6 +1,6 @@
 // =====================================================================================================================
 //
-//  File:       PtrDefinitions.swift
+//  File:       Compatibility.swift
 //  Project:    SecureSockets
 //
 //  Version:    1.1.1
@@ -41,18 +41,18 @@
 // =====================================================================================================================
 
 import Foundation
-import COpenSsl
+import Copenssl
 
 
 // Note: Right now I see a difference between Xcode 11.5 and the Linux 18.04 distribution. I am not quite sure if this
-// is a linux/macOS difference or a Swift version difference. If I am wrong about this the conditional compilation will
-// be changed accordingly.
+// is a linux/macOS difference or a Swift version difference.
 
 #if os(macOS) || os(iOS) || os(tvOS)
 
 public typealias UnsafeMutablePointerBio = OpaquePointer
 public typealias UnsafeMutablePointerEvpPkey = OpaquePointer
 public typealias UnsafeMutablePointerSsl = OpaquePointer
+public typealias UnsafePointerSsl = OpaquePointer
 public typealias UnsafeMutablePointerSslCtx = OpaquePointer
 public typealias UnsafeMutablePointerX509 = OpaquePointer
 public typealias UnsafeMutablePointerX509Name = OpaquePointer
@@ -61,11 +61,12 @@ public typealias UnsafeMutablePointerX509Name = OpaquePointer
 
 #if os(Linux)
 
-public typealias UnsafeMutablePointerBio = UnsafeMutablePointer<BIO>
-public typealias UnsafeMutablePointerEvpPkey = UnsafeMutablePointer<EVP_PKEY>
-public typealias UnsafeMutablePointerSsl = UnsafePointer<SSL>
-public typealias UnsafeMutablePointerSslCtx = UnsafeMutablePointer<SSL_CTX>
-public typealias UnsafeMutablePointerX509 = UnsafeMutablePointer<X509>
-public typealias UnsafeMutablePointerX509Name = UnsafeMutablePointer<X509_NAME>
+public typealias UnsafeMutablePointerBio = UnsafeMutablePointer<Copenssl.BIO>
+public typealias UnsafeMutablePointerEvpPkey = UnsafeMutablePointer<Copenssl.EVP_PKEY>
+public typealias UnsafeMutablePointerSsl = UnsafeMutablePointer<Copenssl.SSL>
+public typealias UnsafePointerSsl = UnsafePointer<Copenssl.SSL>
+public typealias UnsafeMutablePointerSslCtx = UnsafeMutablePointer<Copenssl.SSL_CTX>
+public typealias UnsafeMutablePointerX509 = UnsafeMutablePointer<Copenssl.X509>
+public typealias UnsafeMutablePointerX509Name = UnsafeMutablePointer<Copenssl.X509_NAME>
 
 #endif

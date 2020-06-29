@@ -46,12 +46,12 @@
 
 import Foundation
 import SwifterSockets
-import COpenSsl
+import CopensslGlue
 
 
 /// A wrapper class for an openSSL session (SSL).
 
-open class Ssl {
+public class Ssl {
     
     
     /// The return condition from several methods
@@ -211,7 +211,7 @@ open class Ssl {
     
     /// The pointer to the OpenSSL session structure.
     
-    public private(set) var optr: UnsafeMutablePointerSsl
+    public private(set) var optr: UnsafeMutablePointerSsl!
     
     
     /// The Ctx used by this session.
