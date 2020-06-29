@@ -3,14 +3,14 @@
 //  File:       X509.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.1.0
+//  Version:    1.1.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
 //  Website:    http://swiftfire.nl/projects/securesockets/securesockets.html
 //  Git:        https://github.com/Balancingrock/SecureSockets
 //
-//  Copyright:  (c) 2016-2019 Marinus van der Lugt, All rights reserved.
+//  Copyright:  (c) 2016-2020 Marinus van der Lugt, All rights reserved.
 //
 //  License:    Use or redistribute this code any way you like with the following two provision:
 //
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.1 - Linux compatibility
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 // 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
@@ -54,7 +55,7 @@ import COpenSsl
 ///
 /// - Returns: nil if the value is not present. The String value if it was read correctly.
 
-public func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
+public func valueFrom(x509Name: UnsafeMutablePointerX509Name!, with nid: Int32) -> String? {
     
     
     // Get the position of the common name in the subject
@@ -103,11 +104,11 @@ public func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
 
 /// The Subject Alt Names stored in the extension.
 ///
-/// - Parameter from: An OpaquePointer to an x509 structure that was created by -or retrieved from- OpenSSL.
+/// - Parameter from: A pointer to an x509 structure that was created by -or retrieved from- OpenSSL.
 ///
 /// - Returns: nil if no subject alt names could be read, an array with Strings if subject alt names were read.
 
-public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
+public func getX509SubjectAltNames(from x509: UnsafeMutablePointerX509!) -> [String]? {
     
     
     // Get the alternative names from the cert (there may be none!)
@@ -531,9 +532,9 @@ open class X509 {
     }
     
     
-    /// The opaque pointer to the X509 structure.
+    /// The pointer to the X509 structure.
     
-    public private(set) var optr: OpaquePointer!
+    public private(set) var optr: UnsafeMutablePointerX509!
     
     
     /// Sets the string value for a given NID in the subject name.
@@ -593,7 +594,7 @@ open class X509 {
     public private(set) var errorMessage: String?
     
     
-    /// Frees the memory associated with the opaque pointer.
+    /// Frees the memory associated with the pointer.
     
     deinit { X509_free(optr) }
     

@@ -73,6 +73,10 @@ where `__your_path__` must be set to the proper value.
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
 
+#### 1.1.1
+
+- Linux compatibility
+
 #### 1.1.0
 
 - Switched from BRUtils.Result to Swift.Result

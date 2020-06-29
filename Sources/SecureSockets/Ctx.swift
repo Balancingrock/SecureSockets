@@ -3,7 +3,7 @@
 //  File:       Ctx.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.1.0
+//  Version:    1.1.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.1 - Linux compatibility
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 // 1.0.1 - Documentation updates
 // 1.0.0 - Removed older history
@@ -54,7 +55,7 @@ open class Ctx {
     
     /// The pointer to the openSSL context structure
     
-    public private(set) var optr: OpaquePointer
+    public private(set) var optr: UnsafeMutablePointerSslCtx
     
     
     // Free's the openSSl structure
@@ -62,11 +63,11 @@ open class Ctx {
     deinit { SSL_CTX_free(optr) }
     
     
-    /// Initialises a new object from the given opaquepointer. The (openSSL) reference count of the structure must be 1.
+    /// Initialises a new object from the given pointer. The (openSSL) reference count of the structure must be 1.
     ///
     /// - Parameter ctx: A pointer to a SSL_CTX structure with an reference count of 1.
     
-    public init(ctx: OpaquePointer) { self.optr = ctx }
+    public init(ctx: UnsafeMutablePointerSslCtx) { self.optr = ctx }
     
     
     /// The certificate for this context (if any).
@@ -214,7 +215,7 @@ open class Ctx {
     
     // The callback from openSSL. This callback must be installed before the server is started.
     
-    private let sni_callback: @convention(c) (_ ssl: OpaquePointer?, _ num: UnsafeMutablePointer<Int32>?, _ arg: UnsafeMutableRawPointer?) -> Int32 = {
+    private let sni_callback: @convention(c) (_ ssl: UnsafePointerSsl?, _ num: UnsafeMutablePointer<Int32>?, _ arg: UnsafeMutableRawPointer?) -> Int32 = {
         
         (ssl_ptr, _, arg) -> Int32 in
         

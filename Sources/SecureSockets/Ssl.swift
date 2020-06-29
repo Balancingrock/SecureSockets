@@ -3,7 +3,7 @@
 //  File:       Ssl.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.1.0
+//  Version:    1.1.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.1 - Linux compatibility
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 //       - Renamed Result to SslResult to avoid conflicts with Swift.Result
 // 1.0.1 - Doumentation update
@@ -208,9 +209,9 @@ open class Ssl {
     }
     
     
-    /// The OpaquePointer to the OpenSSL session structure.
+    /// The pointer to the OpenSSL session structure.
     
-    public private(set) var optr: OpaquePointer
+    public private(set) var optr: UnsafePointerSsl
     
     
     /// The Ctx used by this session.

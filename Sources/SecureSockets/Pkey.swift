@@ -3,7 +3,7 @@
 //  File:       Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.1.0
+//  Version:    1.1.1
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -36,6 +36,7 @@
 //
 // History
 //
+// 1.1.1 - Linux compatibility
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
 // 1.0.1 - Documentation update
 // 1.0.0 - Removed older history
@@ -53,7 +54,7 @@ import COpenSsl
 ///
 /// - Returns: The content that was written to the BIO memory area interpreted as a String. Nil is there was an error, or nothing was written to the BIO area.
 
-public func getStringFrom(PEM_write_bio closure: (OpaquePointer) -> Int32) -> String? {
+public func getStringFrom(PEM_write_bio closure: (UnsafeMutablePointerBio) -> Int32) -> String? {
     
     
     // Allocate BIO_mem area (don't use a file because that could expose vital data)
@@ -93,7 +94,7 @@ open class Pkey {
     
     /// The pointer to the openSSL EVP_PKEY structure
     
-    public private(set) var optr: OpaquePointer!
+    public private(set) var optr: UnsafeMutablePointerEvpPkey!
     
     
     /// If this string is set, then a private key will be encrypted with this passphrase.
