@@ -43,11 +43,11 @@
 import Foundation
 
 
-// Note: Right now I see a difference between Xcode 11.5 and the Linux 18.04 distribution. I am not quite sure if this is
-// a linux/macOS difference or a Swift version difference. Though I would expect the later. If I am wrong about this the
-// conditional compilation will be changed accordingly.
+// Note: Right now I see a difference between Xcode 11.5 and the Linux 18.04 distribution. I am not quite sure if this
+// is a linux/macOS difference or a Swift version difference. If I am wrong about this the conditional compilation will
+// be changed accordingly.
 
-#if swift(>=5.0)
+#if os(macOS) || os(iOS) || os(tvOS)
 
 public typealias UnsafeMutablePointerBio = OpaquePointer
 public typealias UnsafeMutablePointerEvpPkey = OpaquePointer
@@ -56,7 +56,9 @@ public typealias UnsafeMutablePointerSslCtx = OpaquePointer
 public typealias UnsafeMutablePointerX509 = OpaquePointer
 public typealias UnsafeMutablePointerX509Name = OpaquePointer
 
-#else
+#endif
+
+#if os(Linux)
 
 public typealias UnsafeMutablePointerBio = UnsafeMutablePointer<BIO>
 public typealias UnsafeMutablePointerEvpPkey = UnsafeMutablePointer<EVP_PKEY>
