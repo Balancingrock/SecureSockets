@@ -60,7 +60,7 @@ public typealias UnsafeMutablePointerX509Name = OpaquePointer
 
 public typealias UnsafeMutablePointerBio = UnsafeMutablePointer<BIO>
 public typealias UnsafeMutablePointerEvpPkey = UnsafeMutablePointer<EVP_PKEY>
-public typealias UnsafePointerSsl = OpaquePointer<SSL>
+public typealias UnsafePointerSsl = UnsafePointer<SSL>
 public typealias UnsafeMutablePointerSslCtx = UnsafeMutablePointer<SSL_CTX>
 public typealias UnsafeMutablePointerX509 = UnsafeMutablePointer<X509>
 public typealias UnsafeMutablePointerX509Name = UnsafeMutablePointer<X509_NAME>
