@@ -211,7 +211,7 @@ open class Ssl {
     
     /// The pointer to the OpenSSL session structure.
     
-    public private(set) var optr: UnsafePointerSsl
+    public private(set) var optr: UnsafeMutablePointerSsl
     
     
     /// The Ctx used by this session.

@@ -215,7 +215,7 @@ open class Ctx {
     
     // The callback from openSSL. This callback must be installed before the server is started.
     
-    private let sni_callback: @convention(c) (_ ssl: UnsafePointerSsl?, _ num: UnsafeMutablePointer<Int32>?, _ arg: UnsafeMutableRawPointer?) -> Int32 = {
+    private let sni_callback: @convention(c) (_ ssl: UnsafeMutablePointerSsl?, _ num: UnsafeMutablePointer<Int32>?, _ arg: UnsafeMutableRawPointer?) -> Int32 = {
         
         (ssl_ptr, _, arg) -> Int32 in
         
