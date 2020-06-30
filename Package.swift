@@ -23,13 +23,13 @@ let package = Package(
             dependencies: ["SwifterSockets", "Copenssl", "CopensslGlue"],
             //
             // Uncomment the following line for stand-alone or Xcode generation when included in another project
-            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])],
+            swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])],
             linkerSettings: [
                 .linkedLibrary("ssl"),
                 .linkedLibrary("crypto"),
                 //
                 // Uncomment the following line for stand-alone or Xcode generation when included in another project
-                //.unsafeFlags(["-Lopenssl/v1_1_1g-macos_10_15/lib"])
+                .unsafeFlags(["-Lopenssl/v1_1_1g-macos_10_15/lib"])
             ]
         )
     ]

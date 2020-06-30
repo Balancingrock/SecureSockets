@@ -56,7 +56,7 @@ import CopensslGlue
 ///
 /// - Returns: nil if the value is not present. The String value if it was read correctly.
 
-public func valueFrom(x509Name: UnsafeMutablePointerX509Name!, with nid: Int32) -> String? {
+public func valueFrom(x509Name: OpaquePointer!, with nid: Int32) -> String? {
     
     
     // Get the position of the common name in the subject
@@ -109,7 +109,7 @@ public func valueFrom(x509Name: UnsafeMutablePointerX509Name!, with nid: Int32) 
 ///
 /// - Returns: nil if no subject alt names could be read, an array with Strings if subject alt names were read.
 
-public func getX509SubjectAltNames(from x509: UnsafeMutablePointerX509!) -> [String]? {
+public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
     
     
     // Get the alternative names from the cert (there may be none!)
@@ -535,7 +535,7 @@ open class X509 {
     
     /// The pointer to the X509 structure.
     
-    public private(set) var optr: UnsafeMutablePointerX509!
+    public private(set) var optr: OpaquePointer!
     
     
     /// Sets the string value for a given NID in the subject name.
