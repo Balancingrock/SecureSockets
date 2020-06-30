@@ -12,7 +12,7 @@ The [reference manual](http://swiftfire.nl/projects/securesockets/reference/inde
 
 OpenSSL is available from [https://openssl.org](https://openssl.org).
 
-For convenience a pre-compiled openSSL distributions are included in this package. While this is convenient for evaluation and development purposes, you should not use it for the final production version of your application. You owe it to your clients/users to only use fully guaranteed openSSL libraries. Which you must build yourself.
+For convenience pre-compiled openSSL distributions are included in this package. While this is convenient for evaluation and development purposes, you should not use them for the final production version of your application. You owe it to your clients/users to only use fully guaranteed openSSL libraries. Which you have to build yourself.
 
 Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 
@@ -34,7 +34,7 @@ Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 	- certified server operations
 	- certified server & certified clients
 	- multiple domain certificates (SNI) on a certified server
-- Available for macOS/iOS/tvOS and Linux (Ubuntu, we used the Mint distribution)
+- Builds for macOS and Linux (Ubuntu, we used the Mint distribution)
 
 # Installation
 
