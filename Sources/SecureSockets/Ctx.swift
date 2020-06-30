@@ -46,6 +46,7 @@
 import Foundation
 import SwifterSockets
 import Copenssl
+import CopensslGlue
 
 
 /// A wrapper class for an openSSL context (SSL_CTX).
