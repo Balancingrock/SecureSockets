@@ -45,7 +45,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// Starts listening on the given port for SSL connection requests.

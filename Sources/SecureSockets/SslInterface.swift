@@ -45,7 +45,7 @@
 import Foundation
 
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// The structure that glues a Connection to an SSL interface.

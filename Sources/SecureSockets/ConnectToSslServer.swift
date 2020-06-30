@@ -45,7 +45,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// The return type for the connectToSslServer function.

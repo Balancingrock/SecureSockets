@@ -46,7 +46,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// A wrapper class for an openSSL session (SSL).

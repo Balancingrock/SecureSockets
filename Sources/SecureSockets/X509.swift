@@ -44,7 +44,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// The string for the NID element in the given X509_NAME structure.

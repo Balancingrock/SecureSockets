@@ -42,7 +42,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// Starts a receiver loop on an SSL session.

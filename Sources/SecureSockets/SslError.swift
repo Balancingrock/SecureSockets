@@ -42,7 +42,7 @@
 // =====================================================================================================================
 
 import Foundation
-import CopensslGlue
+import Copenssl
 
 
 /// When encountering error messages of the following kind

@@ -44,7 +44,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// Transmits the buffer content using a SSL session.

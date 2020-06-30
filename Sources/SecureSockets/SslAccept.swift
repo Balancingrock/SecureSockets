@@ -43,7 +43,7 @@
 
 import Foundation
 import SwifterSockets
-import CopensslGlue
+import Copenssl
 
 
 /// A closure with this signature can be invoked after an Ssl.accept completes.

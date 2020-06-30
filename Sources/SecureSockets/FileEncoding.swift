@@ -43,8 +43,7 @@
 // =====================================================================================================================
 
 import Foundation
-
-import CopensslGlue
+import Copenssl
 
 
 /// The supported filetypes for keys and certificates.
