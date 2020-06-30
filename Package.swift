@@ -22,14 +22,24 @@ let package = Package(
             name: "SecureSockets",
             dependencies: ["SwifterSockets", "Copenssl", "CopensslGlue"],
             //
-            // Uncomment the following line for stand-alone or Xcode generation when included in another project
+            // Comment out the following line when SecureSockets is a dependency in another project
+            //
+            // For macOS
             swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])],
+            //
+            // For Linux (Mint 19.3)
+            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-mint_19_3/include"])],
             linkerSettings: [
                 .linkedLibrary("ssl"),
                 .linkedLibrary("crypto"),
                 //
-                // Uncomment the following line for stand-alone or Xcode generation when included in another project
+                // Comment out the following line when SecureSockets is a dependency in another project
+                //
+                // For macOS
                 .unsafeFlags(["-Lopenssl/v1_1_1g-macos_10_15/lib"])
+                //
+                // For Linux (mint 19.3)
+                //.unsafeFlags(["-Lopenssl/v1_1_1g-mint_19_3/lib"])
             ]
         )
     ]

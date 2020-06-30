@@ -12,11 +12,7 @@ The [reference manual](http://swiftfire.nl/projects/securesockets/reference/inde
 
 OpenSSL is available from [https://openssl.org](https://openssl.org).
 
-Due to limitations in the interface between Swift and C there is some glue code that must be added to the openSSL libraries. Due to limitations in the Swift Package Manager, these functions cannot be added as a separate library. The easiest solution is to put these functions in the openSSL code.
-
-Note that this glue code means that it is not possible to use an existing build of openSSL, for example from `brew` or `macports`.
-
-For convenience a pre-compiled openSSL distribution is included in this package. While this is convenient for evaluation and development purposes, you should not use it for the final production version of your application. You owe it to your clients/users to only use fully guaranteed openSSL libraries. Which you must build yourself.
+For convenience a pre-compiled openSSL distributions are included in this package. While this is convenient for evaluation and development purposes, you should not use it for the final production version of your application. You owe it to your clients/users to only use fully guaranteed openSSL libraries. Which you must build yourself.
 
 Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 
@@ -38,18 +34,42 @@ Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 	- certified server operations
 	- certified server & certified clients
 	- multiple domain certificates (SNI) on a certified server
+- Available for macOS/iOS/tvOS and Linux (Ubuntu, we used the Mint distribution)
 
 # Installation
 
-## SPM
+## As a product on macOS
 
-VJson can be used by the Swift Package Manager. Just add it to your package manifest as a dependency. However it is necessary to add two arguments to the build command:
+When SecureSockets is build as its own product the installation is extremely simple:
 
-    $ swift build -Xswiftc -I/__your_path__/openssl/v1_1_0-macos_10_12/include -Xlinker -L/__your_path__/openssl/v1_1_0-macos_10_12/lib
+    $ git clone https://github.com/balancingrock/SecureSockets.git
+    $ cd SecureSockets
+    $ swift build
 
-where `__your_path__` must be set to the proper value.
+That is it.
 
-## Xcode
+## As a product on Linux
+
+    $ git clone https://github.com/balancingrock/SecureSockets.git
+    $ cd SecureSockets
+    <<fix Package.swift>>
+    $ swift build
+
+The step `<<fix Package.swift>>` is to un-comment the openssl linux libraries and to comment-out the openssl macOS libaries.
+
+## As a dependency on the command line
+
+SecureSockets can be used by the Swift Package Manager. Just add it to your package manifest as a dependency.
+
+However there are two unsafe settings in the `Package.swift` manifest file that must be commented out before the project can be build. The are clearly marked in the manifest file. Instead these options must be specified on the command line when the product is build:
+
+    $ swift build -Xswiftc -I/<<path>>/openssl/<<version-platform>>/include -Xlinker -L/<<path>>/openssl/<<version-platform>>/lib
+
+where `<<path>>` must be set to the proper value and `<<version-make>>` to the openssl version and the platform necessary.
+
+And of course the `Package.swift` manifest file must be adjusted for the platform, i.e. macOS or Linux.
+
+## As a product in Xcode
 
 1. Clone the repository and create a Xcode project:
 
@@ -57,17 +77,14 @@ where `__your_path__` must be set to the proper value.
         $ cd SecureSockets
         $ swift package generate-xcodeproj
 
-1. Double click that project to open it. Once open set the `Defines Module` to 'yes' in the `Build Settings -> Packaging` before creating the framework. (Otherwise the import of the framework in another project won't work)
+1. Double click the project to open it.
 
-1. In the project that will use SecureSockets, add the SecureSockets.framework by opening the `General` settings of the target and add the SecureSockets.framework to the `Embedded Binaries`.
+1. In the navigator select `SecureSockets`, then under `Targets` select `CopensslGlue` then select `Build Settings`
+    - In `Linking` add the value `-lssl -lcrypto` to `Other Linker Flags`.
+    - In `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/lib` to `Library Search Paths`
+    - in `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/include` to `Header Search Paths` (be sure to leave a blank character between the content that was already present and the additional content)
 
-1. In the project that uses SecureSockets add the following to the framework target and the application target under the `Build Settings`:
-
-	_\<target\> -> Build Settings -> Search Paths -> (Add to) Header Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/include_
-	
-	_\<target\> -> Build Settings -> Search Paths -> (Add to) Library Search Paths: $(SRCROOT)/openssl/v1_1_0-macos_10_12/lib_
-
-1. In the Swift source code where you want to use it, import SecureSockets at the top of the file.
+The build should now run flawless.
 
 # Version history
 
@@ -76,6 +93,8 @@ No new features planned. Updates are made on an ad-hoc basis as needed to suppor
 #### 1.1.1
 
 - Linux compatibility
+- Renaming COpenSsl to Copenssl
+- Added CopensslGlue to simplify the build process.
 
 #### 1.1.0
 

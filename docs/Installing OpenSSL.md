@@ -2,133 +2,67 @@
 
 ## Download & verification
 
-SecureSockets was developped for openSSL 1.1.0. but should be compatible with 1.1.1 (Note that these versions are not compatible with the previous version 1.0.2)
+SecureSockets was developped for openSSL 1.1.0. and is compatible with 1.1.1 (Note that these versions are not compatible with the previous version 1.0.2)
 
 The download link for openSSL is: [https://www.openssl.org/source](https://www.openssl.org/source/)
 
-Right-click the openssl-1.1.0c.tar.gz file and select "save-as" to download it to your downloads folder.
+MacOS: Right-click the <<version>>.tar.gz file and select "save-as" to download it to your downloads folder. Use the save-as option because we need the <<version>>.tar.gz file.
 
-Use the save-as option because we want the openssl-1.1.0c.tar.gz file. Also download the sha256 checksum. After the download finishes, open up a terminal window and cd to the download folder. Calculate the sha256 checksum of the gz file with:
+Linux: Download the <<version>>.tar.gz file.
 
-    $ shasum -a 256 openssl-1.1.0c.tar.gz
+Also download the sha256 checksum. 
 
-The next line should display the checksum. Compare that with the downloaded checksum, they should of course be equal. (Open a text editor and put the two checksums below each other, that way it is easy to verify)
+Then open a command line window (Linux) or use Terminal (macOS) and change to the downoads directory:
 
-Now unpack the gz and tar file to obtain the openssl-1.1.0c folder. A singe double click should do the trick.
+    $ cd ~/Downloads
 
-## Adding C2Swift glue code
+Calculate the sha256 checksum of the gz file with:
 
-Note: being pragmatic about this, I used the files as shown below. Somebody with more openSSL knowledge could probably identify much better places for this. You yourself might find better places. In the end, it does not really matter, all that is necessary is for the Swift code to find the two pieces of glue code. Where it is placed is largely uncritical (as long as the C language visibility rules are respected).
+    $ shasum -a 256 <<version>>.tar.gz
 
-### ssl.h
+The next line should display the checksum.
 
-Find the file `openssl-1.1.0c/include/openssl/ssl.h`
+Compare that with the downloaded checksum.
 
-At the very end, but before the last line insert:
+    $ more <<version>>.tar.gz.sha256
 
-    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg);
+The next line displays the checksum as it should be.
 
-After inserting this the last bit of the file should look as follows:
+Both checksums should of course be equal. (Open a text editor and put the two checksums below each other, that way it is easy to verify)
 
-    # define SSL_R_X509_LIB                                   268
-    # define SSL_R_X509_VERIFICATION_SETUP_PROBLEMS           269
+Now unpack the gz and tar file to obtain the installation folder.
 
-    # ifdef  __cplusplus
-    }
-    # endif
+    $ tar -xf <<version>>.tar.gz
 
-    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg);
-
-    #endif
- 
-### ssl_lib.c
-
-Find the file `openssl-1.1.0c/ssl/ssl_lib.c`
-At the very end, after the #endif, include the following:
-
-    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg) {
-        SSL_CTX_set_tlsext_servername_arg(ctx, arg);
-        SSL_CTX_set_tlsext_servername_callback(ctx, cb);
-    }
-
-After inserting this the last bit of the file should look as follows:
-
-    const CTLOG_STORE *SSL_CTX_get0_ctlog_store(const SSL_CTX *ctx)
-    {
-        return ctx->ctlog_store;
-    }
-
-    #endif
-
-    void sslCtxSetTlsExtServernameCallback(SSL_CTX *ctx, int (*cb)(const SSL *ssl, int *num, void *arg), void *arg) {
-        SSL_CTX_set_tlsext_servername_arg(ctx, arg);
-        SSL_CTX_set_tlsext_servername_callback(ctx, cb);
-    }
-
-### x509v3.h
-
-Find the file `openssl-1.1.0c/include/openssl/x509v3.h`
-At the very end, before the #endif, include the following:
-
-    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names);
-
-After inserting this the last bit of the file should look as follows:
-
-    # define X509V3_R_UNSUPPORTED_TYPE                        167
-    # define X509V3_R_USER_TOO_LONG                           132
-
-    # ifdef  __cplusplus
-    }
-    # endif
-
-    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names);
-    #endif
-
-### v3_addr.c
-
-Find the file `openssl-1.1.0c/crypto/x509v3/v3_addr.c`
-At the very end, after the #endif, include the following:
-
-    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names) {
-        sk_GENERAL_NAME_pop_free(san_names, GENERAL_NAME_free);
-    }
-
-After inserting this the last bit of the file should look as follows:
-
-        return addr_validate_path_internal(NULL, chain, ext);
-    }
-
-    #endif                          /* OPENSSL_NO_RFC3779 */
-
-    void skGeneralNamePopFree(STACK_OF(GENERAL_NAME) *san_names) {
-        sk_GENERAL_NAME_pop_free(san_names, GENERAL_NAME_free);
-    }
-
-
-## Building the libraries
+## Building the library
 
 Next we should build the libraries and include files.
 
-The OpenSSL 1.1.0 installer needs PERL 5.10 or later.
+The openSSL installer needs PERL 5.10 or later.
 
     $ perl -v
 
-The [installation instructions](https://wiki.openssl.org/index.php/Compilation_and_Installation) on the openSSL site are a little confusing, but the process is very simple. In the INSTALL file in the openssl-1.1.0c directory we find the proper installation instructions for Unix.
+On a clean Linux (Mint) install it may be necessary to install Perl and the necessary Text modules. See NOTES.PERL.
 
-BEWARE:  By default openssl will be installed in `/usr/local`. This will clash with possible `brew` installations. Hence it is recommended to specify a different location during `config`. (Note use the `--prefix` and `--openssldir` options.)
+We follow these [installation instructions](https://wiki.openssl.org/index.php/Compilation_and_Installation). On first glance this may seem confusing, but the process is actually very simple.
 
-Note: It is not possible to use `brew` because of the small additions as discussed before.
+First switch to the directory with the extracted files:
 
-First run config:
+    $ cd <<version>>
 
-Note: Do this while the terminal prompt is in the openssl-1.1.0 directory!
+If you like take a look at the README file, alternatively go right ahead and configure the build scripts:
 
-    $ ./config --prefix=/__your-path__ --openssldir=/__your-path__
+    $ ./config --prefix=<<path>> --openssldir=<<path>>
 
-Messages start scrolling but it is over rather quick.
+We use the path `/home/me/Documents/Projects/openssl/<<version>>` on Linux and `/Users/me/Documents/Projects/openssl/<<version>>` on macOS. Any location is fine as long as no conflicts are created. Keep in mind that the path cannot contain the infamous `~` character. Also for SecureSockets it is best to use the same value for the `--prefix` and `--openssldir` options. Lastly if you do not use a path that has write access from your user account, then you must use the `sudo` command in front of the last make step (see below).
+
+BEWARE:  By default openssl will be installed in `/usr/local`. This is not only not needed, but may class with an existing installation too.
+
+After the command line is typed a coupe of messages will appear but it is over rather quick.
 There should not be any visible issues.
+If it did report any issues, then most likely the preconditions for installation were not met (for example PERL is missing some modules). Check the INSTALL, README and NOTES files for more information.
 
-Next is:
+When configure is complete:
 
     $ make
 
@@ -136,7 +70,7 @@ This takes a little longer. When it stops (and again no visible problems):
 
     $ make test
 
-A lot of tests are executed, some may be skipped. The result should show:
+A lot of tests are executed, some may be skipped. The result should show something like:
 
     All tests successful.
     Files=89, Tests=477, 44 wallclock secs ( 0.37 usr  0.16 sys + 30.58 cusr  7.34 csys = 38.45 CPU)
@@ -144,8 +78,13 @@ A lot of tests are executed, some may be skipped. The result should show:
 
 The next step:
 
-    $ sudo make install
+    $ make install
+
+If your account does not have the necessary write access to the path settings using in `config` above, then use `sudo` in front.
 
 Again a lot of messages scrolls over the screen. (Note that this step takes by far the most time)
 
 Since this is for API use only there is no need to adjust PATH variables or anything.
+
+That is all. However the installation process created much more than we actually need. We only need the directories: `<<version>>/include` and `version/lib`. And from the `version/lib` directory we only need the `ssl.a` and `crypto.a` files.
+It is recommened to copy these files to the `SecureSockets/openssl/<<version>>` directory overwriting the files already in there.
