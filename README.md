@@ -2,7 +2,7 @@
 
 A collection of secure socket layer utilities in Swift using openSSL.
 
-<small>Never mind the github report that it is mostly C, that report is misleading because of openssl include files</small>
+<sub>Never mind the github report that it is mostly C, that report is misleading because of openssl include files</sub>
 
 SecureSockets is part of the Swiftfire webserver project.
 
