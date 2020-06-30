@@ -40,48 +40,44 @@ Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 
 # Installation
 
-## As a product on macOS
+The manifest file `Package.swift` has been prepared with a dependcy build in mind. Hence it must be edited to build to a stand-alone SecureSockets target.
 
-When SecureSockets is build as its own product the installation is extremely simple:
+## As a stand alone
 
-    $ git clone https://github.com/balancingrock/SecureSockets.git
-    $ cd SecureSockets
-    $ swift build
-
-That is it.
-
-## As a product on Linux
+When SecureSockets is build as stand-alone product the installation is as follows:
 
     $ git clone https://github.com/balancingrock/SecureSockets.git
     $ cd SecureSockets
-    <<fix Package.swift>>
+    <<edit Package.swift>>
     $ swift build
 
-The step `<<fix Package.swift>>` is to un-comment the openssl linux libraries and to comment-out the openssl macOS libaries.
+The step `<<edit Package.swift>>` is to un-comment either the openssl linux libraries or the openssl macOS libaries.
 
 ## As a dependency on the command line
 
 SecureSockets can be used by the Swift Package Manager. Just add it to your package manifest as a dependency.
 
-However there are two unsafe settings in the `Package.swift` manifest file that must be commented out before the project can be build. The are clearly marked in the manifest file. Instead these options must be specified on the command line when the product is build:
+To build the project that uses SecureSockets add the following options to the build command:
 
     $ swift build -Xswiftc -I/<<path>>/openssl/<<version-platform>>/include -Xlinker -L/<<path>>/openssl/<<version-platform>>/lib
 
 where `<<path>>` must be set to the proper value and `<<version-make>>` to the openssl version and the platform necessary.
 
-And of course the `Package.swift` manifest file must be adjusted for the platform, i.e. macOS or Linux.
+Alternatively it may be possible to include these in the product manifest.
 
-## As a product in Xcode
+## As a dependency using Xcode for development
 
-1. Clone the repository and create a Xcode project:
+The Swiftfire project is used as an example.
 
-        $ git clone https://github.com/Balancingrock/SecureSockets
-        $ cd SecureSockets
+1. Clone the project repository and create a Xcode project:
+
+        $ git clone https://github.com/Balancingrock/Swiftfire.git
+        $ cd Swiftfire
         $ swift package generate-xcodeproj
 
 1. Double click the project to open it.
 
-1. In the navigator select `SecureSockets`, then under `Targets` select `CopensslGlue` then select `Build Settings`
+1. In the navigator select `Swiftfire`, then under `Targets` select `CopensslGlue` then select `Build Settings`
     - In `Linking` add the value `-lssl -lcrypto` to `Other Linker Flags`.
     - In `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/lib` to `Library Search Paths`
     - in `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/include` to `Header Search Paths` (be sure to leave a blank character between the content that was already present and the additional content)
