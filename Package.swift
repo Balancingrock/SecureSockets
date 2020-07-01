@@ -4,9 +4,6 @@ import PackageDescription
 
 let package = Package(
     name: "SecureSockets",
-    platforms: [
-        .macOS(.v10_12)
-    ],
     products: [
         .library(name: "SecureSockets", targets: ["SecureSockets"]),
         .library(name: "Copenssl", targets: ["Copenssl"]),
