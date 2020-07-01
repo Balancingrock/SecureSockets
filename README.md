@@ -82,7 +82,11 @@ The Swiftfire project is used as an example.
     - In `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/lib` to `Library Search Paths`
     - in `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/include` to `Header Search Paths` (be sure to leave a blank character between the content that was already present and the additional content)
 
-The build should now run flawless.
+1. In the navigator select `Swiftfire`, then under `Targets` select `SecureSockets` then select `Build Settings`
+- In `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/lib` to `Library Search Paths`
+- in `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/include` to `Header Search Paths` (be sure to leave a blank character between the content that was already present and the additional content)
+
+The build process should now be able to complete.
 
 # Version history
 
