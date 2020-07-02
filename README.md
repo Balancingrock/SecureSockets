@@ -40,7 +40,7 @@ Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 
 # Installation
 
-The manifest file `Package.swift` has been prepared with a dependcy build in mind. Hence it must be edited to build to a stand-alone SecureSockets target.
+The manifest file `Package.swift` has been prepared with a dependency build in mind. Hence it must be edited to build to a stand-alone SecureSockets target.
 
 ## As a stand alone
 
@@ -83,7 +83,6 @@ The Swiftfire project is used as an example.
     - in `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/include` to `Header Search Paths` (be sure to leave a blank character between the content that was already present and the additional content)
 
 1. In the navigator select `Swiftfire`, then under `Targets` select `SecureSockets` then select `Build Settings`
-- In `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/lib` to `Library Search Paths`
 - in `Search Paths` add the value `$(SRCROOT)/openssl/v1_1_1g-macos_10_15/include` to `Header Search Paths` (be sure to leave a blank character between the content that was already present and the additional content)
 
 The build process should now be able to complete.
@@ -91,6 +90,10 @@ The build process should now be able to complete.
 # Version history
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
+
+#### 1.1.3
+
+- Removed unnecessary lines
 
 #### 1.1.2
 

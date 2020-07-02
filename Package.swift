@@ -22,23 +22,10 @@ let package = Package(
             // When building SecureSockets as stand alone, select one of the following
             //
             // For macOS
-            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])],
+            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])]
             //
             // For Linux (Mint 19.3)
             //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-mint_19_3/include"])],
-            //
-            linkerSettings: [
-                .linkedLibrary("ssl"),
-                .linkedLibrary("crypto"),
-                //
-                // When building SecureSockets as stand alone, select one of the following
-                //
-                // For macOS
-                //.unsafeFlags(["-Lopenssl/v1_1_1g-macos_10_15/lib"])
-                //
-                // For Linux (mint 19.3)
-                //.unsafeFlags(["-Lopenssl/v1_1_1g-mint_19_3/lib"])
-            ]
         )
     ]
 )
