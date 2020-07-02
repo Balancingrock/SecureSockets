@@ -17,15 +17,16 @@ let package = Package(
         .target(name: "CopensslGlue"),
         .target(
             name: "SecureSockets",
-            dependencies: ["SwifterSockets", "Copenssl", "CopensslGlue"],
+            dependencies: ["SwifterSockets", "Copenssl", "CopensslGlue"]
             //
             // When building SecureSockets as stand alone, select one of the following
+            // Note: The comma in front is necessary!
             //
             // For macOS
-            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])]
+            //, swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])]
             //
             // For Linux (Mint 19.3)
-            //swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-mint_19_3/include"])]
+            //, swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-mint_19_3/include"])]
         )
     ]
 )
