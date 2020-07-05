@@ -130,8 +130,9 @@ public func getX509SubjectAltNames(from x509: OpaquePointer!) -> [String]? {
         
         // Get name at index i
         
-        let aName = skGeneralNameValue(names, i)
-        
+        //let aName = skGeneralNameValue(names, i)
+        let aName = sk_GENERAL_NAME_value(OpaquePointer(names), i)
+
         
         // If it is a domain name, add it to the results
         
