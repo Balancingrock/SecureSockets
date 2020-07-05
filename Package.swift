@@ -26,7 +26,7 @@ let package = Package(
             //, swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-macos_10_15/include"])]
             //
             // For Linux (Mint 19.3)
-            //, swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-mint_19_3/include"])]
+            , swiftSettings: [.unsafeFlags(["-Iopenssl/v1_1_1g-mint_19_3/include"])]
         )
     ]
 )
