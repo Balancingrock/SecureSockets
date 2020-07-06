@@ -91,6 +91,10 @@ The build process should now be able to complete.
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
 
+#### 1.1.4 & 1.1.5
+
+- Removed uneccesary glue code
+
 #### 1.1.3
 
 - Removed unnecessary lines
