@@ -36,7 +36,7 @@ Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 	- certified server operations
 	- certified server & certified clients
 	- multiple domain certificates (SNI) on a certified server
-- Builds for macOS and Linux (Ubuntu, we used the Mint distribution)
+- Builds for macOS, iOS, tvOS and Linux (Ubuntu, we used the Mint 19.3 distribution)
 
 # Installation
 
@@ -90,6 +90,10 @@ The build process should now be able to complete.
 # Version history
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
+
+#### 1.1.6
+
+- Added swift version, platform and a LICESE file.
 
 #### 1.1.4 & 1.1.5
 
