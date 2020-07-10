@@ -91,7 +91,7 @@ The build process should now be able to complete.
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
 
-#### 1.1.6
+#### 1.1.6 & 1.1.7
 
 - Added swift version, platform and a LICESE file.
 
