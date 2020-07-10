@@ -3,7 +3,7 @@
 //  File:       Pkey.swift
 //  Project:    SecureSockets
 //
-//  Version:    1.1.6
+//  Version:    1.1.8
 //
 //  Author:     Marinus van der Lugt
 //  Company:    http://balancingrock.nl
@@ -29,6 +29,7 @@
 //
 // History
 //
+// 1.1.8 - Removed assignNewRsa from non- macOS/Linux targets
 // 1.1.6 - Updated LICENSE
 // 1.1.1 - Linux compatibility
 // 1.1.0 - Switched to Swift.Result instead of BRUtils.Result
@@ -204,6 +205,8 @@ open class Pkey {
     }
 
     
+    #if os(macOS) || os(Linux)
+    
     /// Create a new RSA key pair and assign it to this object.
     ///
     /// - Parameters:
@@ -259,6 +262,8 @@ open class Pkey {
 
         return .success(true)
     }
+    
+    #endif
     
     
     /// Write the private key to file (encrypted if a privateKey passphrase is present).

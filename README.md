@@ -36,7 +36,11 @@ Instructions are included in [Installing OpenSSL](docs/Installing%20OpenSSL.md).
 	- certified server operations
 	- certified server & certified clients
 	- multiple domain certificates (SNI) on a certified server
-- Builds for macOS, iOS, tvOS and Linux (Ubuntu, we used the Mint 19.3 distribution)
+- Builds for macOS, iOS, tvOS and Linux (Ubuntu, we used the Mint 19.3 distribution) (Reduced API for iOS and tvOS)
+
+__Note on iOS and tvOS usage__: While SecureSockets does build for these platforms, we ourselves have not used it on these platforms. Also we have no guidelines on how to integrate it into an iOS/tvOS project. In addition it will be necessary to cross-compile openSSL for these platforms, a task that is made easier by the script at [OpenSSL-for-iPhone](https://github.com/x2on/OpenSSL-for-iPhone).
+
+If you have used SecureSockets on iOS or tvOS, and are willing to share the process on how to do so, please let us know at: rien@balancingrock.nl.
 
 # Installation
 
@@ -91,21 +95,11 @@ The build process should now be able to complete.
 
 No new features planned. Updates are made on an ad-hoc basis as needed to support Swiftfire development.
 
-#### 1.1.6 & 1.1.7
+#### 1.1.2 - 1.1.8
 
+- Rapid prototyping for iOS and tvOS compatibility
+- Removed assignNewRsa from non- macOS/Linux targets
 - Added swift version, platform and a LICESE file.
-
-#### 1.1.4 & 1.1.5
-
-- Removed uneccesary glue code
-
-#### 1.1.3
-
-- Removed unnecessary lines
-
-#### 1.1.2
-
-- Removed platform from the manifest
 
 #### 1.1.1
 
