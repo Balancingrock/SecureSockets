@@ -6,13 +6,13 @@ SecureSockets was developped for openSSL 1.1.0. and is compatible with 1.1.1 (No
 
 The download link for openSSL is: [https://www.openssl.org/source](https://www.openssl.org/source/)
 
-MacOS: Right-click the <<version>>.tar.gz file and select "save-as" to download it to your downloads folder. Use the save-as option because we need the <<version>>.tar.gz file.
+MacOS: Right-click the `<<version>>.tar.gz` file and select "save-as" to download it to your downloads directory. Use the save-as option because we need the `<<version>>.tar.gz` file.
 
-Linux: Download the <<version>>.tar.gz file.
+Linux: Download the `<<version>>.tar.gz` file.
 
 Also download the sha256 checksum. 
 
-Then open a command line window (Linux) or use Terminal (macOS) and change to the downoads directory:
+Then open a command line window (Linux) or use Terminal (macOS) and change to the downloads directory:
 
     $ cd ~/Downloads
 
